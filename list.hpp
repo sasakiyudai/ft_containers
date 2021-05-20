@@ -11,7 +11,7 @@ namespace ft
 		list_node *next;
 		T value;
 
-		list_node(list_node *prev, list_node *next):prev(prev), next(next) {}
+		list_node(list_node *prev, list_node *next):prev(prev), next(next), value() {}
 	};
 
 	template <class T>
@@ -218,7 +218,7 @@ namespace ft
 				{
 					iterator tmp(cnt);
 					cnt++;
-					size--;
+					len--;
 					delete tmp.get_node();
 				}
 				if (node1)
