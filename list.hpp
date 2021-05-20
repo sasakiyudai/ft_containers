@@ -70,7 +70,7 @@ namespace ft
 
 			~list ()
 			{
-				// erase(begin(), end());
+				erase(begin(), end());
 				delete tail;
 			}
 
@@ -183,6 +183,58 @@ namespace ft
 				node->next->prev = node;
 				len++;
 				return iterator(node);
+			}
+
+			void insert(iterator position, size_type n, const value_type& val)
+			{
+				list_node *node1 = position.get_node()->prev;
+				list_node *node2 = position.get_node();
+				list_node *cnt = node1;
+
+				while (n > 0)
+				{
+					list_node *node = new list_node(cnt, NULL);
+					node->value = val;
+					if (node->prev)
+						node->prev->next = node;
+					else
+						head = node;
+					cnt = node;
+					len++;
+					n--;
+				}
+				node2->prev = cnt;
+				if (cnt)
+					cnt->next = node2;
+			}
+
+			iterator erase(iterator first, iterator last)
+			{
+				list_node *node1 = first.get_node()->prev;
+				list_node *node2 = last.get_node();
+				iterator cnt = first;
+
+				while (cnt != last)
+				{
+					iterator tmp(cnt);
+					cnt++;
+					size--;
+					delete tmp.get_node();
+				}
+				if (node1)
+					node1->next = node2;
+				else
+					head = node2;
+				node2->prev = node1;
+				return iterator(node2);
+			}
+
+			iterator erase(iterator position)
+			{
+				iterator last = position;
+				
+				last++;
+				return erase(position, last);
 			}
 
 	};
