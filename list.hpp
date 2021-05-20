@@ -173,7 +173,7 @@ namespace ft
 
 			iterator insert(iterator position, const value_type& val)
 			{
-				list_node *node = new list_node(position.node->prev, position.node);
+				list_node *node = new list_node(position.get_node()->prev, position.get_node());
 
 				node->value = val;
 				if (node->prev)
@@ -202,9 +202,9 @@ namespace ft
 			typedef std::ptrdiff_t difference_type;
 			typedef T* pointer;
 			typedef T& reference;
+			typedef list_node<T> list_node;
                                                                                                                          
 		private:
-			typedef list_node<T> list_node;
 			list_node *node;
 		
 		public:
@@ -213,6 +213,11 @@ namespace ft
 			list_iterator(const list_iterator &other):node(other.node) {}
 
 			~list_iterator() {}
+
+			list_node *get_node()
+			{
+				return node;
+			}
 
 			list_iterator<T> &operator=(const list_iterator<T> &other)
 			{
