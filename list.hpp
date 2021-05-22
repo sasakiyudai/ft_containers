@@ -29,7 +29,9 @@ namespace ft
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef list_iterator<T> iterator;
-			// typedef list_iterator<const T> const_iterator;
+			typedef list_iterator<const T> const_iterator;
+			typedef reverse__iterator<iterator> reverse_iterator;
+			typedef reverse__iterator<const_iterator> const_reverse_iterator;
 			typedef typename allocator_type::difference_type difference_type;
 			typedef typename allocator_type::size_type size_type;
 		
@@ -87,22 +89,40 @@ namespace ft
 				return iterator(head);
 			}
 
-			/* const_iterator begin() const
+			const_iterator begin() const
 			{
-
-			} */
+				return const_iterator(reinterpret_cast<list_node *>(head));
+			}
 
 			iterator end()
 			{
 				return iterator(tail);
 			}
 
-			/* const_iterator end() const
+			const_iterator end() const
 			{
+				return const_iterator(reinterpret_cast<list_node *>(tail));
+			}
 
-			} */
+			reverse_iterator rbegin()
+			{
+				return reverse_iterator(end());
+			}
 
-			/* todo : reverse */
+			const_reverse_iterator rbegin() const
+			{
+				return const_reverse_iterator(end());
+			}
+
+			reverse_iterator rend()
+			{
+				return reverse_iterator(begin());
+			}
+
+			const_reverse_iterator rend() const
+			{
+				return const_reverse_iterator(begin());
+			}
 
 			bool empty() const
 			{
@@ -188,9 +208,6 @@ namespace ft
 
 			void insert(iterator position, size_type n, const value_type& val)
 			{
-				/* list tmp(n, val);
-
-				splice(position, tmp); */
 				list_node *node1 = position.get_node()->prev;
 				list_node *node2 = position.get_node();
 				list_node *cnt = node1;
@@ -216,9 +233,6 @@ namespace ft
 			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type
     		insert (iterator position, InputIterator first, InputIterator last)
 			{
-				/* list tmp(first, last);
-
-				splice(position, tmp); */
 				list_node *node1 = position.get_node()->prev;
 				list_node *node2 = position.get_node();
 				list_node *cnt = node1;
@@ -314,12 +328,6 @@ namespace ft
 			}
 
 	};
-
-	struct input_iterator_tag { };
-	struct output_iterator_tag { };
-	struct forward_iterator_tag : public input_iterator_tag { };
-	struct bidirectional_iterator_tag : public forward_iterator_tag { };
-	struct random_access_iterator_tag : public bidirectional_iterator_tag { };
 
 	template <class T>
 	class list_iterator

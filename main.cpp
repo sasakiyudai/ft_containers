@@ -87,6 +87,32 @@ int main()
 
 	judge();
 
+	{
+		std::list<int> mylist;
+		int sum (0);
+
+		for (int i=1;i<=10;++i) mylist.push_back(i);
+		while (!mylist.empty())
+		{
+			sum += mylist.front();
+			mylist.pop_front();
+		}
+		fs1 << "total: " << sum << '\n' << std::flush;
+
+		ft::list<int> mylist_;
+		int sum_ (0);
+
+		for (int i=1;i<=10;++i) mylist_.push_back(i);
+		while (!mylist_.empty())
+		{
+			sum_ += mylist_.front();
+			mylist_.pop_front();
+		}
+		fs2 << "total: " << sum_ << '\n' << std::flush;
+	}
+
+	judge();
+
 
 	std::cout << std::endl;
 	fs1.close();
