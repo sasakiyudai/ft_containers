@@ -1,6 +1,7 @@
 #include <memory> // allocator
 #include <iostream> // debug
-#include <limits> //
+#include <limits> // max
+#include "util.hpp"
 
 namespace ft
 {
@@ -29,8 +30,8 @@ namespace ft
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef list_iterator<T> iterator;
 			// typedef list_iterator<const T> const_iterator;
-			typedef std::ptrdiff_t difference_type;
-			typedef size_t size_type;
+			typedef typename allocator_type::difference_type difference_type;
+			typedef typename allocator_type::size_type size_type;
 		
 		private:
 			typedef list_node<T> list_node;
@@ -187,6 +188,9 @@ namespace ft
 
 			void insert(iterator position, size_type n, const value_type& val)
 			{
+				/* list tmp(n, val);
+
+				splice(position, tmp); */
 				list_node *node1 = position.get_node()->prev;
 				list_node *node2 = position.get_node();
 				list_node *cnt = node1;
@@ -202,6 +206,33 @@ namespace ft
 					cnt = node;
 					len++;
 					n--;
+				}
+				node2->prev = cnt;
+				if (cnt)
+					cnt->next = node2;
+			}
+
+			template <class InputIterator>
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type
+    		insert (iterator position, InputIterator first, InputIterator last)
+			{
+				/* list tmp(first, last);
+
+				splice(position, tmp); */
+				list_node *node1 = position.get_node()->prev;
+				list_node *node2 = position.get_node();
+				list_node *cnt = node1;
+
+				for (InputIterator ite = first; ite != last; ite++)
+				{
+					list_node *node = new list_node(cnt, NULL);
+					node->value = *ite;
+					if (node->prev)
+						node->prev->next = node;
+					else
+						head = node;
+					cnt = node;
+					len++;
 				}
 				node2->prev = cnt;
 				if (cnt)
@@ -235,6 +266,51 @@ namespace ft
 				
 				last++;
 				return erase(position, last);
+			}
+
+			void splice(iterator position, list &x)
+			{
+				splice(position, x, x.begin(), x.end());
+			}
+
+			void splice(iterator position, list& x, iterator i)
+			{
+				iterator tmp = i;
+
+				tmp++;
+				splice(position, x, i, tmp);
+			}
+
+			void splice(iterator position, list& x, iterator first, iterator last)
+			{
+				list_node *node1 = position.get_node()->prev;
+				list_node *node2 = position.get_node();
+				list_node *_node1 = first.get_node()->prev;
+				list_node *_node2 = last.get_node();
+				size_type splice_length = 0;
+
+				while (first != last)
+				{
+					list_node *tmp = first.get_node();
+
+					if (node1)
+						node1->next = tmp;
+					else
+						head = tmp;
+					tmp->prev = node1;
+					node1 = tmp;
+					first++;
+					splice_length++;
+				}
+				node1->next = node2;
+				node2->prev = node1;
+				if (_node1)
+					_node1->next = _node2;
+				else
+					x.head = node2;
+				_node2->prev = _node1;
+				len += splice_length;
+				x.len -= splice_length;
 			}
 
 	};

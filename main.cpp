@@ -1,5 +1,6 @@
 #include "list.hpp"
 #include <list>
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -22,28 +23,70 @@ int main()
 	std::cout << "=== LIST ===" << std::endl;
 	{
 		std::list<int> ls;
-		fs1 << *ls.begin() << std::endl;
+
+		fs1 << *ls.begin() << std::endl << std::flush;
 		ls.insert(ls.begin(), 42);
-		fs1 << *ls.begin() << std::endl;
+		fs1 << *ls.begin() << std::endl << std::flush;
 
 		ft::list<int> li;
-		fs2 << *li.begin() << std::endl;
+
+		fs2 << *li.begin() << std::endl << std::flush;
 		li.insert(li.begin(), 42);
-		fs2 << *li.begin() << std::endl;
+		fs2 << *li.begin() << std::endl << std::flush;
 	}
+
 	judge();
+
 	{
 		std::list<int> ls;
-		fs1 << *ls.begin() << std::endl;
-		ls.insert(ls.begin(), 42);
-		fs1 << *ls.begin() << std::endl;
+
+		fs1 << *ls.end() << std::endl << std::flush;
+		ls.insert(ls.end(), 42);
+		fs1 << *ls.begin() << std::endl << std::flush;
 
 		ft::list<int> li;
-		fs2 << *li.begin() << std::endl;
-		li.insert(li.begin(), 42);
-		fs2 << *li.begin() << std::endl;
+
+		fs2 << *li.end() << std::endl << std::flush;
+		li.insert(li.end(), 42);
+		fs2 << *li.begin() << std::endl << std::flush;
 	}
+
 	judge();
+
+	{
+		std::list<int> mylist;
+  		std::list<int>::iterator it;
+
+  		for (int i=1; i<=5; ++i) mylist.push_back(i);
+  		it = mylist.begin();
+  		++it;
+		mylist.insert (it,10);
+		mylist.insert (it,2,20);
+		--it;
+		std::vector<int> myvector (2,30);
+		mylist.insert (it,myvector.begin(),myvector.end());
+		for (it=mylist.begin(); it!=mylist.end(); ++it)
+			fs1 << ' ' << *it << std::flush;
+		fs1 << '\n' << std::flush;
+
+		ft::list<int> mylist_;
+  		ft::list<int>::iterator it_;
+
+  		for (int i=1; i<=5; ++i) mylist_.push_back(i);
+  		it_ = mylist_.begin();
+  		++it_;
+		mylist_.insert (it_,10);
+		mylist_.insert (it_,2,20);
+		--it_;
+		std::vector<int> myvector_ (2,30);
+		mylist_.insert (it_,myvector_.begin(),myvector_.end());
+		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
+			fs2 << ' ' << *it_ << std::flush;
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
 
 	std::cout << std::endl;
 	fs1.close();
