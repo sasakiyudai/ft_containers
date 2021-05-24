@@ -18,6 +18,9 @@ namespace ft
 	template <class T>
 	class list_iterator;
 
+	template <class T>
+	class const_list_iterator;
+
 	template <class T, class Allocator = std::allocator<T> >
 	class list
 	{
@@ -29,7 +32,7 @@ namespace ft
 			typedef typename allocator_type::pointer pointer;
 			typedef typename allocator_type::const_pointer const_pointer;
 			typedef list_iterator<T> iterator;
-			typedef list_iterator<const T> const_iterator;
+			typedef const_list_iterator<T> const_iterator;
 			typedef reverse__iterator<iterator> reverse_iterator;
 			typedef reverse__iterator<const_iterator> const_reverse_iterator;
 			typedef typename allocator_type::difference_type difference_type;
@@ -54,7 +57,7 @@ namespace ft
 			{
 				head = tail = new list_node(NULL, NULL);
 				allocator = alloc;
-				// assign(n, val);
+				assign(n, val);
 			}
 			template <class InputIterator>
   			list (InputIterator first, InputIterator last,
@@ -62,13 +65,13 @@ namespace ft
 			{
 				head = tail = new list_node(NULL, NULL);
 				allocator = alloc;
-				// assign(first, last);
+				assign(first, last);
 			}
 			list (const list& x):len(0)
 			{
 				head = tail = new list_node(NULL, NULL);
 				allocator = x.allocator;
-				// assign(x.begin(), x.end());
+				assign(x.begin(), x.end());
 			}
 
 			~list ()
@@ -79,8 +82,8 @@ namespace ft
 
 			list &operator=(const list& x)
 			{
-				// clear();
-				// assign(x.begin(), x.end());
+				clear();
+				assign(x.begin(), x.end());
 				return *this;
 			}
 
@@ -91,7 +94,7 @@ namespace ft
 
 			const_iterator begin() const
 			{
-				return const_iterator(reinterpret_cast<list_node *>(head));
+				return const_iterator(head);
 			}
 
 			iterator end()
@@ -101,7 +104,7 @@ namespace ft
 
 			const_iterator end() const
 			{
-				return const_iterator(reinterpret_cast<list_node *>(tail));
+				return const_iterator(tail);
 			}
 
 			reverse_iterator rbegin()
@@ -162,13 +165,13 @@ namespace ft
 			template<class InputIterator>
 			void assign(InputIterator first, InputIterator last)
 			{
-				// clear();
+				clear();
 				insert(begin(), first, last);
 			}
 
 			void assign(size_type n, const value_type &val)
 			{
-				// clear();
+				clear();
 				insert(begin(), n, val);
 			}
 
@@ -321,12 +324,36 @@ namespace ft
 				if (_node1)
 					_node1->next = _node2;
 				else
-					x.head = node2;
+					x.head = _node2;
 				_node2->prev = _node1;
 				len += splice_length;
 				x.len -= splice_length;
 			}
 
+			void clear()
+			{
+				erase(begin(), end());
+			}
+
+			void resize(size_type n, value_type val = value_type())
+			{
+				if (n < len)
+				{
+					iterator ite = begin();
+					for (size_type i = 0; i < n; i++)
+						++ite;
+					erase(ite, end());
+				}
+				else
+					insert(end(), n - len, val);
+			}
+
+			void swap (list& x)
+			{
+				std::swap(head, x.head);
+				std::swap(tail, x.tail);
+				std::swap(len, x.len);
+			}
 	};
 
 	template <class T>
@@ -410,6 +437,93 @@ namespace ft
 			}
 
 			friend bool operator!=(const list_iterator &lhs, const list_iterator &rhs)
+			{
+				return !(lhs.node == rhs.node);
+			}
+	};
+
+	template <class T>
+	class const_list_iterator
+	{
+		public:
+			typedef bidirectional_iterator_tag iterator_category;
+			typedef const T value_type;
+			typedef std::ptrdiff_t difference_type;
+			typedef const T* pointer;
+			typedef const T& reference;
+			typedef const list_node<T> list_node;
+			typedef list_iterator<T> iterator;
+                                                                                                                         
+		private:
+			list_node *node;
+		
+		public:
+			const_list_iterator():node(NULL) {}
+			const_list_iterator(const list_node *node):node(node) {}
+			const_list_iterator(const const_list_iterator &other):node(other.node) {}
+
+			~const_list_iterator() {}
+
+			list_node *get_node()
+			{
+				return node;
+			}
+
+			const_list_iterator<T> &operator=(const const_list_iterator<T> &other)
+			{
+				node = other.node;
+				return *this;
+			}
+
+			const_list_iterator<T> &operator++()
+			{
+				node = node->next;
+				return *this;
+			}
+
+			const_list_iterator<T> operator++(int)
+			{
+				const_list_iterator<T> ret = *this;
+				++*this;
+				return ret;
+			}
+
+			const_list_iterator<T> &operator--()
+			{
+				node = node->prev;
+				return *this;
+			}
+
+			const_list_iterator<T> operator--(int)
+			{
+				const_list_iterator<T> ret = *this;
+				--*this;
+				return ret;
+			}
+
+			reference operator*() const
+			{
+				return node->value;
+			}
+
+			pointer operator->() const
+			{
+				return &node->value;
+			}
+
+			friend void swap(const const_list_iterator &a, const const_list_iterator &b)
+			{
+				const_list_iterator tmp(a);
+				a = b;
+				b = tmp;
+			}
+
+			friend bool operator==(const const_list_iterator &lhs, const const_list_iterator &rhs)
+			{
+				return lhs.node == rhs.node;
+			}
+
+			friend bool operator!=(const const_list_iterator &lhs, const const_list_iterator &rhs)
 			{
 				return !(lhs.node == rhs.node);
 			}

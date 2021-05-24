@@ -56,9 +56,9 @@ namespace ft
 			}
 			reference operator*() const
 			{
-				Iter ite(ite);
-				--ite;
-				return *ite;
+				Iter it(ite);
+				--it;
+				return *it;
 			}
 			reverse__iterator operator+(difference_type n) const
 			{
@@ -104,11 +104,63 @@ namespace ft
 			}
 			pointer operator->() const
 			{
-				Iter ite(ite);
-				--ite;
-				return ite.operator->();
+				Iter it(ite);
+				--it;
+				return it.operator->();
 			}
 	};
+
+	template<class Iter1, class Iter2>
+	bool operator==(const reverse__iterator<Iter1>& x,
+					const reverse__iterator<Iter2> &y)
+	{
+		return (x.base() - y.base());
+	}
+
+	template<class Iter1, class Iter2>
+	bool operator!=(const reverse__iterator<Iter1>& x,
+					const reverse__iterator<Iter2> &y)
+	{
+		return !(y.base() == x.base());
+	}
+
+	template<class Iter1, class Iter2>
+	bool operator<(const reverse__iterator<Iter1>& x,
+					const reverse__iterator<Iter2> &y)
+	{
+		return (y.base() < x.base());
+	}
+
+	template<class Iter1, class Iter2>
+	bool operator>=(const reverse__iterator<Iter1>& x,
+					const reverse__iterator<Iter2> &y)
+	{
+		return !(y.base() < x.base());
+	}
+
+	template<class Iter1, class Iter2>
+	bool operator>(const reverse__iterator<Iter1>& x,
+					const reverse__iterator<Iter2> &y)
+	{
+		return (y.base() > x.base());
+	}
+
+	template<class Iter1, class Iter2>
+	bool operator<=(const reverse__iterator<Iter1>& x,
+					const reverse__iterator<Iter2> &y)
+	{
+		return !(y.base() > x.base());
+	}
+
+	template<class Iter1, class Iter2>
+	typename reverse__iterator<Iter1>::difference_type
+	operator-(const reverse__iterator<Iter1>& x, const reverse__iterator<Iter2>& y)
+	{
+		return x.base() - y.base();
+	}
+
+
+
 
 	template <bool is_integral, class T>
 	struct is_integral_res
