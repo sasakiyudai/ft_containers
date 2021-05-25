@@ -354,6 +354,190 @@ namespace ft
 				std::swap(tail, x.tail);
 				std::swap(len, x.len);
 			}
+
+			void remove (const value_type& val)
+			{
+				iterator ite = begin();
+
+				while (ite != end())
+				{
+					if (*ite == val)
+						erase(ite);
+					++ite;
+				}
+			}
+
+			template <class Predicate>
+  			void remove_if (Predicate pred)
+			{
+				iterator ite = begin();
+
+				while (ite != end())
+				{
+					if (pred(*ite))
+						erase(ite);
+					++ite;
+				}
+			}
+
+			void unique()
+			{
+				if (begin() == end())
+					return;
+				iterator left = begin();
+				iterator right = left;
+				++right;
+
+				while (right != end())
+				{
+					if (*left == *right)
+						right = erase(right);
+					else
+						left = right++;
+				}
+			}
+
+			template <class BinaryPredicate>
+  			void unique (BinaryPredicate binary_pred)
+			{
+				if (begin() == end())
+					return;
+				iterator left = begin();
+				iterator right = left;
+				++right;
+
+				while (right != end())
+				{
+					if (binary_pred(*left, *right))
+						right = erase(right);
+					else
+						left = right++;
+				}
+			}
+
+			void sort()
+			{
+				if (begin() == end())
+					return;
+				for (size_type i = 0; i < len; i++)
+				{
+					iterator left = begin();
+					iterator right = left;
+					++right;
+					while (right != end())
+					{
+						if (*left > *right)
+						{
+							splice(left, *this, right);
+							right = left;
+						}
+						else
+							left = right;
+						right++;
+					}
+				}
+			}
+
+			template <class Compare>
+  			void sort (Compare comp)
+			{
+				if (begin() == end())
+					return;
+				for (size_type i = 0; i < len; i++)
+				{
+					iterator left = begin();
+					iterator right = left;
+					++right;
+					while (right != end())
+					{
+						if (!comp(*left, *right))
+						{
+							splice(left, *this, right);
+							right = left;
+						}
+						else
+							left = right;
+						right++;
+					}
+				}
+			}
+
+			void merge (list& x)
+			{
+				iterator ite1 = begin();
+				iterator ite2 = x.begin();
+
+				while (ite2 != x.end())
+				{
+					while (ite1 != end() && *ite1 <= *ite2)
+						++ite1;
+					list_node *node1 = ite1.get_node();
+					list_node *node2 = ite2.get_node();
+					++ite2;
+
+					if (node1->prev)
+						node1->prev->next = node2;
+					else     
+						head = node2;
+					node2->prev = node1->prev;
+					node1->prev = node2;
+					node2->next = node1;
+				}
+				len += x.len;
+				x.len = 0;
+				x.head = x.tail;
+				x.tail->prev = NULL;
+			}
+
+			template <class Compare>
+  			void merge (list& x, Compare comp)
+			{
+				iterator ite1 = begin();
+				iterator ite2 = x.begin();
+
+				while (ite2 != x.end())
+				{
+					while (ite1 != end() && !comp(*ite2, *ite1))
+						++ite1;
+					list_node *node1 = ite1.get_node();
+					list_node *node2 = ite2.get_node();
+					++ite2;
+
+					if (node1->prev)
+						node1->prev->next = node2;
+					else
+						head = node2;
+					node2->prev = node1->prev;
+					node1->prev = node2;
+					node2->next = node1;
+				}
+				len += x.len;
+				x.len = 0;
+				x.head = x.tail;
+				x.tail->prev = NULL;
+			}
+
+			void reverse()
+			{
+				iterator it = begin();
+				iterator begin = it;
+				while (1)
+				{
+					iterator tmp = it;
+					it++;
+					if (tmp.get_node()->next != tail)
+						std::swap(tmp.get_node()->prev, tmp.get_node()->next);
+					else
+					{
+						tmp.get_node()->next = tmp.get_node()->prev;
+						tmp.get_node()->prev = NULL;
+						head = tmp.get_node();
+						tail->prev = begin.get_node();
+						begin.get_node()->next = tail;
+						break;
+					}
+				}
+			}
 	};
 
 	template <class T>

@@ -1,9 +1,44 @@
 #include "list.hpp"
+#include <cmath>
 #include <list>
 #include <vector>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+
+// a predicate implemented as a function:
+bool single_digit (const int& value) { return (value<10); }
+
+// a predicate implemented as a class:
+struct is_odd {
+bool operator() (const int& value) { return (value%2)==1; }
+};
+
+// a binary predicate implemented as a function:
+bool same_integral_part (double first, double second)
+{ return ( int(first)==int(second) ); }
+
+// a binary predicate implemented as a class:
+struct is_near {
+  bool operator() (double first, double second)
+  { return (fabs(first-second)<5.0); }
+};
+
+// compare only integral part:
+bool mycomparison (double first, double second)
+{ return ( int(first)<int(second) ); }
+
+bool compare_nocase (const std::string& first, const std::string& second)
+{
+  unsigned int i=0;
+  while ( (i<first.length()) && (i<second.length()) )
+  {
+    if (tolower(first[i])<tolower(second[i])) return true;
+    else if (tolower(first[i])>tolower(second[i])) return false;
+    ++i;
+  }
+  return ( first.length() < second.length() );
+}
 
 void judge()
 {
@@ -246,7 +281,7 @@ int main()
 		myints.insert (myints.begin(),10,100);
 		fs1 << "2. size: " << myints.size() << '\n';
 		myints.pop_back();
-		fs1 << "3. size: " << myints.size() << '\n' << std::endl << std::flush;
+		fs1 << "3. size: " << myints.size() << '\n' << std::flush;
 
 
 		ft::list<int> myints_;
@@ -256,7 +291,7 @@ int main()
 		myints_.insert (myints_.begin(),10,100);
 		fs2 << "2. size: " << myints_.size() << '\n';
 		myints_.pop_back();
-		fs2 << "3. size: " << myints_.size() << '\n' << std::endl << std::flush;
+		fs2 << "3. size: " << myints_.size() << '\n'<< std::flush;
 	}
 
 	judge();
@@ -808,8 +843,242 @@ int main()
 	judge();
 
 	{
+		int myints[]= {17,89,7,14};
+		std::list<int> mylist (myints,myints+4);
 
+		mylist.remove(89);
+
+		fs1 << "mylist contains:";
+		for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
+
+
+		int myints_[]= {17,89,7,14};
+		ft::list<int> mylist_ (myints_,myints_+4);
+
+		mylist_.remove(89);
+
+		fs2 << "mylist contains:";
+		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
+			fs2 << ' ' << *it;
+		fs2 << '\n' << std::flush;
 	}
+
+	judge();
+
+	{
+		int myints[]= {15,36,7,17,20,39,4,1};
+		std::list<int> mylist (myints,myints+8);   // 15 36 7 17 20 39 4 1
+
+		mylist.remove_if (single_digit);           // 15 36 17 20 39
+
+		mylist.remove_if (is_odd());               // 36 20
+
+		fs1 << "mylist contains:";
+		for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
+
+
+		int myints_[]= {15,36,7,17,20,39,4,1};
+		ft::list<int> mylist_ (myints_,myints_+8);   // 15 36 7 17 20 39 4 1
+
+		mylist_.remove_if (single_digit);           // 15 36 17 20 39
+
+		mylist_.remove_if (is_odd());               // 36 20
+
+		fs2 << "mylist contains:";
+		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
+			fs2 << ' ' << *it;
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+
+		double mydoubles[]={ 12.15,  2.72, 73.0,  12.77,  3.14,
+							12.77, 73.35, 72.25, 15.3,  72.25 };
+		std::list<double> mylist (mydoubles,mydoubles+10);
+		
+		mylist.sort();             //  2.72,  3.14, 12.15, 12.77, 12.77,
+									// 15.3,  72.25, 72.25, 73.0,  73.35
+
+		mylist.unique();           //  2.72,  3.14, 12.15, 12.77
+									// 15.3,  72.25, 73.0,  73.35
+
+		mylist.unique (same_integral_part);  //  2.72,  3.14, 12.15
+											// 15.3,  72.25, 73.0
+
+		mylist.unique (is_near());           //  2.72, 12.15, 72.25
+
+		fs1 << "mylist contains:";
+		for (std::list<double>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
+
+
+
+		double mydoubles_[]={ 12.15,  2.72, 73.0,  12.77,  3.14,
+							12.77, 73.35, 72.25, 15.3,  72.25 };
+		ft::list<double> mylist_ (mydoubles_,mydoubles_+10);
+		
+		mylist_.sort();             //  2.72,  3.14, 12.15, 12.77, 12.77,
+									// 15.3,  72.25, 72.25, 73.0,  73.35
+
+		mylist_.unique();           //  2.72,  3.14, 12.15, 12.77
+									// 15.3,  72.25, 73.0,  73.35
+
+		mylist_.unique (same_integral_part);  //  2.72,  3.14, 12.15
+											// 15.3,  72.25, 73.0
+
+		mylist_.unique (is_near());           //  2.72, 12.15, 72.25
+
+		fs2 << "mylist contains:";
+		for (ft::list<double>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
+			fs2 << ' ' << *it;
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::list<double> first, second;
+
+		first.push_back (3.1);
+		first.push_back (2.2);
+		first.push_back (2.9);
+
+		second.push_back (3.7);
+		second.push_back (7.1);
+		second.push_back (1.4);
+
+		first.sort();
+		second.sort();
+
+		first.merge(second);
+
+		// (second is now empty)
+
+		second.push_back (2.1);
+
+		first.merge(second,mycomparison);
+
+		fs1 << "first contains:";
+		for (std::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
+
+
+
+		ft::list<double> first_, second_;
+
+		first_.push_back (3.1);
+		first_.push_back (2.2);
+		first_.push_back (2.9);
+
+		second_.push_back (3.7);
+		second_.push_back (7.1);
+		second_.push_back (1.4);
+
+		first_.sort();
+		second_.sort();
+
+		first_.merge(second_);
+
+		// (second_ is now empty)
+
+		second_.push_back (2.1);
+
+		first_.merge(second_,mycomparison);
+
+		fs2 << "first contains:";
+		for (ft::list<double>::iterator it=first_.begin(); it!=first_.end(); ++it)
+			fs2 << ' ' << *it;
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::list<std::string> mylist;
+		std::list<std::string>::iterator it;
+		mylist.push_back ("one");
+		mylist.push_back ("two");
+		mylist.push_back ("Three");
+
+		mylist.sort();
+
+		fs1 << "mylist contains:";
+		for (it=mylist.begin(); it!=mylist.end(); ++it)
+			fs1 << ' ' << *it;
+		fs1 << '\n';
+
+		mylist.sort(compare_nocase);
+
+		fs1 << "mylist contains:";
+		for (it=mylist.begin(); it!=mylist.end(); ++it)
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
+
+
+		ft::list<std::string> mylist_;
+		ft::list<std::string>::iterator it_;
+		mylist_.push_back ("one");
+		mylist_.push_back ("two");
+		mylist_.push_back ("Three");
+
+		mylist_.sort();
+
+		fs2 << "mylist contains:";
+		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
+			fs2 << ' ' << *it_;
+		fs2 << '\n';
+
+		mylist_.sort(compare_nocase);
+
+		fs2 << "mylist contains:";
+		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
+			fs2 << ' ' << *it_;
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::list<int> mylist;
+
+		for (int i=1; i<10; ++i) mylist.push_back(i);
+
+		mylist.reverse();
+
+		fs1 << "mylist contains:";
+		for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
+			fs1 << ' ' << *it;
+
+		fs1 << '\n' << std::flush;
+
+
+		ft::list<int> mylist_;
+
+		for (int i=1; i<10; ++i) mylist_.push_back(i);
+
+		mylist_.reverse();
+
+		fs2 << "mylist contains:";
+		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
+			fs2 << ' ' << *it;
+
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+
+
+
+
 
 
 	std::cout << std::endl;
