@@ -675,7 +675,7 @@ namespace ft
 	{
 		public:
 			typedef bidirectional_iterator_tag iterator_category;
-			typedef const T value_type;
+			typedef T value_type;
 			typedef std::ptrdiff_t difference_type;
 			typedef const T* pointer;
 			typedef const T& reference;

@@ -1,6 +1,6 @@
 NAME = a.out
 CXX = clang++
-CXXFLAGS = -g -std=gnu++98# -Wall -Werror -Wextra -I ./
+CXXFLAGS = -Wall -Werror -Wextra
 SRCS = main.cpp
 OBJS = $(SRCS:.cpp=.o)
 
