@@ -1075,11 +1075,73 @@ int main()
 
 	judge();
 
+	{
+		int _a[] = {10, 20, 30};
+		int _b[] = {10, 20, 30};
+		int _c[] = {30, 20, 10};
+		std::list<int> a(_a, _a+3);
+		std::list<int> b(_b, _b+3);
+		std::list<int> c(_c, _c+3);
+
+		if (a==b) fs1 << "a and b are equal\n";
+		if (b!=c) fs1 << "b and c are not equal\n";
+		if (b<c) fs1 << "b is less than c\n";
+		if (c>b) fs1 << "c is greater than b\n";
+		if (a<=b) fs1 << "a is less than or equal to b\n";
+		if (a>=b) fs1 << "a is greater than or equal to b\n" << std::flush;
 
 
+		int _a_[] = {10, 20, 30};
+		int _b_[] = {10, 20, 30};
+		int _c_[] = {30, 20, 10};
+		ft::list<int> a_(_a_, _a_+3);
+		ft::list<int> b_(_b_, _b_+3);
+		ft::list<int> c_(_c_, _c_+3);
+
+		if (a_==b_) fs2 << "a and b are equal\n";
+		if (b_!=c_) fs2 << "b and c are not equal\n";
+		if (b_<c_) fs2 << "b is less than c\n";
+		if (c_>b_) fs2 << "c is greater than b\n";
+		if (a_<=b_) fs2 << "a is less than or equal to b\n";
+		if (a_>=b_) fs2 << "a is greater than or equal to b\n" << std::flush;
+	}
+
+	judge();
+
+	{
+		std::list<int> foo (3,100);   // three ints with a value of 100
+		std::list<int> bar (5,200);   // five ints with a value of 200
+
+		std::swap(foo,bar);
+
+		fs1 << "foo contains:";
+		for (std::list<int>::iterator it = foo.begin(); it!=foo.end(); ++it)
+			fs1 << ' ' << *it;
+		fs1 << '\n';
+
+		fs1 << "bar contains:";
+		for (std::list<int>::iterator it = bar.begin(); it!=bar.end(); ++it)
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
 
 
+		ft::list<int> foo_ (3,100);   // three ints with a value of 100
+		ft::list<int> bar_ (5,200);   // five ints with a value of 200
 
+		ft::swap(foo_,bar_);
+
+		fs2 << "foo contains:";
+		for (ft::list<int>::iterator it = foo_.begin(); it!=foo_.end(); ++it)
+			fs2 << ' ' << *it;
+		fs2 << '\n';
+
+		fs2 << "bar contains:";
+		for (ft::list<int>::iterator it = bar_.begin(); it!=bar_.end(); ++it)
+			fs2 << ' ' << *it;
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
 
 	std::cout << std::endl;
 	fs1.close();
