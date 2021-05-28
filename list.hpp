@@ -353,6 +353,7 @@ namespace ft
 				std::swap(head, x.head);
 				std::swap(tail, x.tail);
 				std::swap(len, x.len);
+				std::swap(allocator, x.allocator);
 			}
 
 			void remove (const value_type& val)
