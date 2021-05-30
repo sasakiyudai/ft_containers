@@ -188,9 +188,6 @@ namespace ft
 		return x.base() - y.base();
 	}
 
-
-
-
 	template <bool is_integral, class T>
 	struct is_integral_res
 	{
@@ -223,6 +220,21 @@ namespace ft
 
 	template<bool Condition, class T = void> struct enable_if {};
 	template<class T> struct enable_if<true, T> {typedef T type;};
+
+
+	template<class InputIterator>
+	typename ft::enable_if<!ft::is_integral<InputIterator>::value, size_t>::type
+	distance(InputIterator first, InputIterator last)
+	{
+		size_t ret = 0;
+
+		while (first != last)
+		{
+			++first;
+			++ret;
+		}
+		return ret;
+	}
 }
 
 #endif

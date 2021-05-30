@@ -48,7 +48,7 @@ namespace ft
 				head = NULL;
 				len = cap = 0;
 				allocator = alloc;
-				// insert(begin(), n, val);
+				insert(begin(), n, val);
 			}
 
 			template <class InputIterator>
@@ -58,7 +58,7 @@ namespace ft
 				head = NULL;
 				len = cap = 0;
 				allocator = alloc;
-				// insert(begin(), first, last);
+				insert(begin(), first, last);
 			}
 
 			vector (const vector& x)
@@ -66,7 +66,7 @@ namespace ft
 				head = NULL;
 				len = cap = 0;
 				allocator = x.allocator;
-				// insert(begin(), x.begin(), x.end());
+				insert(begin(), x.begin(), x.end());
 			}
 
 			~vector()
@@ -78,8 +78,8 @@ namespace ft
 
 			vector &operator=(const vector& x)
 			{
-				// clear();
-				// assign(x.begin(), x.end());
+				clear();
+				assign(x.begin(), x.end());
 				return *this;
 			}
 
@@ -213,13 +213,13 @@ namespace ft
 			template <class InputIterator>
   			void assign (InputIterator first, InputIterator last)
 			{
-				// clear();
+				clear();
 				insert(begin(), first, last);
 			}
 
 			void assign (size_type n, const value_type& val)
 			{
-				// clear();
+				clear();
 				insert(begin(), n, val);
 			}
 
@@ -243,7 +243,7 @@ namespace ft
 			{
 				if (n == 0)
 					return ;
-				difference_type end_at = position.elem - head;
+				difference_type end_at = position.get_elem() - head;
 				reserve(len + n);
 				for (difference_type i = len - 1; i >= end_at; i--)
 				{
@@ -256,13 +256,14 @@ namespace ft
 			}
 
 			template <class InputIterator>
-    		void insert (iterator position, InputIterator first, InputIterator last)
+			typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type
+    		insert (iterator position, InputIterator first, InputIterator last)
 			{
+				difference_type end_at = position.get_elem() - head;
+				InputIterator ite = first;
+				size_type n = distance(first, last);
 				if (n == 0)
 					return ;
-				difference_type end_at = position.elem - head;
-				InputIterator ite = first;
-				size_type n = std::distance(first, last);
 				reserve(len + n);
 				for (difference_type i = len - 1; i >= end_at; i--)
 				{
@@ -284,7 +285,7 @@ namespace ft
 				size_type n = first - last;
 				if (n <= 0)
 					return ;
-				size_type first_id = first.elem - head;
+				size_type first_id = first.get_elem() - head;
 				for (size_type i = 0; i < n; i++)
 					allocator.destroy(&head[first_id + i]);
 				for (size_type i = first_id + n; i < len; i++)
@@ -348,7 +349,7 @@ namespace ft
 				return *this;
 			}
 
-			vector_iterator<T> &operator++(int)
+			vector_iterator<T> operator++(int)
 			{
 				vector_iterator<T> ret = *this;
 				++*this;
@@ -474,7 +475,7 @@ namespace ft
 		
 		public:
 			const_vector_iterator():elem(NULL) {}
-			const_vector_iterator(pointer *elem):elem(elem) {}
+			const_vector_iterator(pointer elem):elem(elem) {}
 			const_vector_iterator(const const_vector_iterator &other):elem(other.elem) {}
 
 			~const_vector_iterator() {}
@@ -496,7 +497,7 @@ namespace ft
 				return *this;
 			}
 
-			const_vector_iterator<T> &operator++(int)
+			const_vector_iterator<T> operator++(int)
 			{
 				const_vector_iterator<T> ret = *this;
 				++*this;

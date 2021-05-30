@@ -57,6 +57,8 @@ int main()
 	fs2.open("2");
 
 	std::cout << "=== LIST ===" << std::endl;
+	fs1 << "=== LIST ===" << std::endl;
+	fs2 << "=== LIST ===" << std::endl;
 	{
 		std::list<int> ls;
 
@@ -1145,7 +1147,9 @@ int main()
 	judge();
 
 	std::cout << "\n=== VECTOR ===" << std::endl;
-	/* {
+	fs1 << "\n=== VECTOR ===" << std::endl;
+	fs2 << "\n=== VECTOR ===" << std::endl;
+	{
 		// constructors used in the same order as described above:
 		std::vector<int> first;                                // empty vector of ints
 		std::vector<int> second (4,100);                       // four ints with value 100
@@ -1156,10 +1160,10 @@ int main()
 		int myints[] = {16,2,77,29};
 		std::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
 
-		std::cout << "The contents of fifth are:";
+		fs1 << "The contents of fifth are:";
 		for (std::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
-			std::cout << ' ' << *it;
-		std::cout << '\n';
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::endl;
 
 
 		// constructors used in the same order as described above:
@@ -1169,14 +1173,14 @@ int main()
 		ft::vector<int> fourth_ (third_);                       // a copy of third
 
 		// the iterator constructor can also be used to construct from arrays:
-		int myints[] = {16,2,77,29};
-		std::vector<int> fifth_ (myints, myints + sizeof(myints) / sizeof(int) );
+		int myints_[] = {16,2,77,29};
+		ft::vector<int> fifth_ (myints_, myints_ + sizeof(myints_) / sizeof(int) );
 
-		std::cout << "The contents of fifth are:";
-		for (std::vector<int>::iterator it = fifth_.begin(); it != fifth_.end(); ++it)
-			std::cout << ' ' << *it;
-		std::cout << '\n';
-	} */
+		fs2 << "The contents of fifth are:";
+		for (ft::vector<int>::iterator it = fifth_.begin(); it != fifth_.end(); ++it)
+			fs2 << ' ' << *it;
+		fs2 << '\n' << std::endl;
+	}
 
 	judge();
 
@@ -1620,7 +1624,7 @@ int main()
 	judge();
 
 	{
-		
+
 	}
 
 
