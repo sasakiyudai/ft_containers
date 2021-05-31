@@ -139,7 +139,8 @@ namespace ft
 
 			size_type max_size() const
 			{
-				return std::numeric_limits<difference_type>::max() / sizeof(T);
+				// return std::numeric_limits<difference_type>::max() / sizeof(T);
+				return allocator.max_size();
 			}
 
 			reference front()

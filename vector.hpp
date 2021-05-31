@@ -130,7 +130,8 @@ namespace ft
 
 			size_type max_size() const
 			{
-				std::numeric_limits<difference_type>::max() / sizeof(T);
+				// return std::numeric_limits<difference_type>::max() / sizeof(T);
+				return allocator.max_size();
 			}
 
 			void resize (size_type n, value_type val = value_type())
@@ -225,6 +226,15 @@ namespace ft
 
 			void push_back (const value_type& val)
 			{
+				if (size() + 1 > capacity())
+				{
+					size_type _cap = capacity();
+					if (_cap == 0)
+						_cap = 1;
+					else
+						_cap *= 2;
+					reserve(_cap);
+				}
 				insert(end(), val);
 			}
 
@@ -282,9 +292,9 @@ namespace ft
 
 			iterator erase (iterator first, iterator last)
 			{
-				size_type n = first - last;
+				size_type n = last - first;
 				if (n <= 0)
-					return ;
+					return last;
 				size_type first_id = first.get_elem() - head;
 				for (size_type i = 0; i < n; i++)
 					allocator.destroy(&head[first_id + i]);

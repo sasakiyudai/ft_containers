@@ -1184,72 +1184,72 @@ int main()
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector;
 		for (int i=1; i<=5; i++) myvector.push_back(i);
 
-		std::cout << "myvector contains:";
+		fs1 << "myvector contains:";
 		for (std::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
-			std::cout << ' ' << *it;
-		std::cout << '\n';
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
 
 
 		ft::vector<int> myvector_;
 		for (int i=1; i<=5; i++) myvector_.push_back(i);
 
-		std::cout << "myvector contains:";
+		fs2 << "myvector contains:";
 		for (ft::vector<int>::iterator it = myvector_.begin() ; it != myvector_.end(); ++it)
-			std::cout << ' ' << *it;
-		std::cout << '\n';
-	} */
+			fs2 << ' ' << *it;
+		fs2 << '\n' << std::flush;
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> foo (3,0);
 		std::vector<int> bar (5,0);
 
 		bar = foo;
 		foo = std::vector<int>();
 
-		std::cout << "Size of foo: " << int(foo.size()) << '\n';
-		std::cout << "Size of bar: " << int(bar.size()) << '\n';
+		fs1 << "Size of foo: " << int(foo.size()) << '\n';
+		fs1 << "Size of bar: " << int(bar.size()) << '\n' << std::flush;
 
 
 		ft::vector<int> foo_ (3,0);
 		ft::vector<int> bar_ (5,0);
 
 		bar_ = foo_;
-		foo_ = std::vector<int>();
+		foo_ = ft::vector<int>();
 
-		std::cout << "Size of foo: " << int(foo_.size()) << '\n';
-		std::cout << "Size of bar: " << int(bar_.size()) << '\n';
-	} */
+		fs2 << "Size of foo: " << int(foo_.size()) << '\n';
+		fs2 << "Size of bar: " << int(bar_.size()) << '\n' << std::flush;
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector;
 		for (int i=1; i<=5; i++) myvector.push_back(i);
 
-		std::cout << "myvector contains:";
+		fs1 << "myvector contains:";
 		for (std::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
-			std::cout << ' ' << *it;
-		std::cout << '\n';
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
 
 
 		ft::vector<int> myvector_;
 		for (int i=1; i<=5; i++) myvector_.push_back(i);
 
-		std::cout << "myvector_ contains:";
+		fs2 << "myvector contains:";
 		for (ft::vector<int>::iterator it = myvector_.begin() ; it != myvector_.end(); ++it)
-			std::cout << ' ' << *it;
-		std::cout << '\n';
-	} */
+			fs2 << ' ' << *it;
+		fs2 << '\n' << std::flush;
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector (5);  // 5 default-constructed ints
 
 		int i=0;
@@ -1258,10 +1258,10 @@ int main()
 		for (; rit!= myvector.rend(); ++rit)
 			*rit = ++i;
 
-		std::cout << "myvector contains:";
+		fs1 << "myvector contains:";
 		for (std::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
-			std::cout << ' ' << *it;
-		std::cout << '\n';
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
 
 
 		ft::vector<int> myvector_ (5);  // 5 default-constructed ints
@@ -1272,67 +1272,67 @@ int main()
 		for (; rit_!= myvector_.rend(); ++rit_)
 			*rit_ = ++i_;
 
-		std::cout << "myvector_ contains:";
+		fs2 << "myvector contains:";
 		for (ft::vector<int>::iterator it = myvector_.begin(); it != myvector_.end(); ++it)
-			std::cout << ' ' << *it;
-		std::cout << '\n';
-	} */
+			fs2 << ' ' << *it;
+		fs2 << '\n' << std::flush;
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myints;
-		std::cout << "0. size: " << myints.size() << '\n';
+		fs1 << "0. size: " << myints.size() << '\n';
 
 		for (int i=0; i<10; i++) myints.push_back(i);
-		std::cout << "1. size: " << myints.size() << '\n';
+		fs1 << "1. size: " << myints.size() << '\n';
 
 		myints.insert (myints.end(),10,100);
-		std::cout << "2. size: " << myints.size() << '\n';
+		fs1 << "2. size: " << myints.size() << '\n';
 
 		myints.pop_back();
-		std::cout << "3. size: " << myints.size() << '\n';
+		fs1 << "3. size: " << myints.size() << '\n' << std::flush;
 
 
-		ft::vector<int> myints;
-		std::cout << "0. size: " << myints.size() << '\n';
+		ft::vector<int> myints_;
+		fs2 << "0. size: " << myints_.size() << '\n';
 
-		for (int i=0; i<10; i++) myints.push_back(i);
-		std::cout << "1. size: " << myints.size() << '\n';
+		for (int i=0; i<10; i++) myints_.push_back(i);
+		fs2 << "1. size: " << myints_.size() << '\n';
 
-		myints.insert (myints.end(),10,100);
-		std::cout << "2. size: " << myints.size() << '\n';
+		myints_.insert (myints_.end(),10,100);
+		fs2 << "2. size: " << myints_.size() << '\n';
 
-		myints.pop_back();
-		std::cout << "3. size: " << myints.size() << '\n';
-	} */
+		myints_.pop_back();
+		fs2 << "3. size: " << myints_.size() << '\n' << std::flush;
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector;
 
 		// set some content in the vector:
 		for (int i=0; i<100; i++) myvector.push_back(i);
 
-		std::cout << "size: " << myvector.size() << "\n";
-		std::cout << "capacity: " << myvector.capacity() << "\n";
-		std::cout << "max_size: " << myvector.max_size() << "\n";
+		fs1 << "size: " << myvector.size() << "\n";
+		fs1 << "capacity: " << myvector.capacity() << "\n";
+		fs1 << "max_size: " << myvector.max_size() << "\n" << std::flush;
 
 
-		ft::vector<int> myvector;
+		ft::vector<int> myvector_;
 
 		// set some content in the vector:
-		for (int i=0; i<100; i++) myvector.push_back(i);
+		for (int i=0; i<100; i++) myvector_.push_back(i);
 
-		std::cout << "size: " << myvector.size() << "\n";
-		std::cout << "capacity: " << myvector.capacity() << "\n";
-		std::cout << "max_size: " << myvector.max_size() << "\n";
-	} */
+		fs2 << "size: " << myvector_.size() << "\n";
+		fs2 << "capacity: " << myvector_.capacity() << "\n";
+		fs2 << "max_size: " << myvector_.max_size() << "\n" << std::flush;
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector;
 
 		// set some initial content:
@@ -1342,10 +1342,10 @@ int main()
 		myvector.resize(8,100);
 		myvector.resize(12);
 
-		std::cout << "myvector contains:";
+		fs1 << "myvector contains:";
 		for (int i=0;i<myvector.size();i++)
-			std::cout << ' ' << myvector[i];
-		std::cout << '\n';
+			fs1 << ' ' << myvector[i];
+		fs1 << '\n' << std::flush;
 
 
 		ft::vector<int> myvector_;
@@ -1357,38 +1357,38 @@ int main()
 		myvector_.resize(8,100);
 		myvector_.resize(12);
 
-		std::cout << "myvector contains:";
+		fs2 << "myvector contains:";
 		for (int i=0;i<myvector_.size();i++)
-			std::cout << ' ' << myvector_[i];
-		std::cout << '\n';
-	} */
+			fs2 << ' ' << myvector_[i];
+		fs2 << '\n' << std::flush;
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector;
 
 		// set some content in the vector:
 		for (int i=0; i<100; i++) myvector.push_back(i);
 
-		std::cout << "size: " << (int) myvector.size() << '\n';
-		std::cout << "capacity: " << (int) myvector.capacity() << '\n';
-		std::cout << "max_size: " << (int) myvector.max_size() << '\n';
+		fs1 << "size: " << (int) myvector.size() << '\n';
+		fs1 << "capacity: " << (int) myvector.capacity() << '\n';
+		fs1 << "max_size: " << (int) myvector.max_size() << '\n' << std::flush;
 
 
-		ft::vector<int> myvector;
+		ft::vector<int> myvector_;
 
 		// set some content in the vector:
-		for (int i=0; i<100; i++) myvector.push_back(i);
+		for (int i=0; i<100; i++) myvector_.push_back(i);
 
-		std::cout << "size: " << (int) myvector.size() << '\n';
-		std::cout << "capacity: " << (int) myvector.capacity() << '\n';
-		std::cout << "max_size: " << (int) myvector.max_size() << '\n';
-	} */
+		fs2 << "size: " << (int) myvector_.size() << '\n';
+		fs2 << "capacity: " << (int) myvector_.capacity() << '\n';
+		fs2 << "max_size: " << (int) myvector_.max_size() << '\n' << std::flush;
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector;
 		int sum (0);
 
@@ -1400,81 +1400,81 @@ int main()
 			myvector.pop_back();
 		}
 
-		std::cout << "total: " << sum << '\n';
+		fs1 << "total: " << sum << '\n' << std::flush;
 
 
-		ft::vector<int> myvector;
-		int sum (0);
+		ft::vector<int> myvector_;
+		int sum_ (0);
 
-		for (int i=1;i<=10;i++) myvector.push_back(i);
+		for (int i=1;i<=10;i++) myvector_.push_back(i);
 
-		while (!myvector.empty())
+		while (!myvector_.empty())
 		{
-			sum += myvector.back();
-			myvector.pop_back();
+			sum_ += myvector_.back();
+			myvector_.pop_back();
 		}
 
-		std::cout << "total: " << sum << '\n';
-	} */
+		fs2 << "total: " << sum_ << '\n' << std::flush;
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int>::size_type sz;
 
 		std::vector<int> foo;
 		sz = foo.capacity();
-		std::cout << "making foo grow:\n";
+		fs1 << "making foo grow:\n";
 		for (int i=0; i<100; ++i) {
 			foo.push_back(i);
 			if (sz!=foo.capacity()) {
 			sz = foo.capacity();
-			std::cout << "capacity changed: " << sz << '\n';
+			fs1 << "capacity changed: " << sz << '\n';
 			}
 		}
 
 		std::vector<int> bar;
 		sz = bar.capacity();
 		bar.reserve(100);   // this is the only difference with foo above
-		std::cout << "making bar grow:\n";
+		fs1 << "making bar grow:\n";
 		for (int i=0; i<100; ++i) {
 			bar.push_back(i);
 			if (sz!=bar.capacity()) {
 			sz = bar.capacity();
-			std::cout << "capacity changed: " << sz << '\n';
+			fs1 << "capacity changed: " << sz << '\n' << std::flush;
 			}
 		}
 
 
-		ft::vector<int>::size_type sz;
+		ft::vector<int>::size_type sz_;
 
-		ft::vector<int> foo;
-		sz = foo.capacity();
-		std::cout << "making foo grow:\n";
+		ft::vector<int> foo_;
+		sz_ = foo_.capacity();
+		fs2 << "making foo grow:\n";
 		for (int i=0; i<100; ++i) {
-			foo.push_back(i);
-			if (sz!=foo.capacity()) {
-			sz = foo.capacity();
-			std::cout << "capacity changed: " << sz << '\n';
+			foo_.push_back(i);
+			if (sz_!=foo_.capacity()) {
+			sz_ = foo_.capacity();
+			fs2 << "capacity changed: " << sz_ << '\n';
 			}
 		}
 
-		ft::vector<int> bar;
-		sz = bar.capacity();
-		bar.reserve(100);   // this is the only difference with foo above
-		std::cout << "making bar grow:\n";
+		ft::vector<int> bar_;
+		sz_ = bar_.capacity();
+		bar_.reserve(100);   // this is the only difference with foo above
+		fs2 << "making bar grow:\n";
 		for (int i=0; i<100; ++i) {
-			bar.push_back(i);
-			if (sz!=bar.capacity()) {
-			sz = bar.capacity();
-			std::cout << "capacity changed: " << sz << '\n';
+			bar_.push_back(i);
+			if (sz_!=bar_.capacity()) {
+			sz_ = bar_.capacity();
+			fs2 << "capacity changed: " << sz_ << '\n' << std::flush;
 			}
 		}
-	} */
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector (10);   // 10 zero-initialized elements
 
 		std::vector<int>::size_type sz = myvector.size();
@@ -1517,11 +1517,11 @@ int main()
 		for (unsigned i=0; i<sz_; i++)
 			fs2 << ' ' << myvector_[i];
 		fs2 << '\n' << std::flush;
-	} */
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector (10);   // 10 zero-initialized ints
 
 		// assign some values:
@@ -1530,40 +1530,40 @@ int main()
 		
 		try
 		{
-			std::cout << "myvector contains:";
+			fs1 << "myvector contains:";
 			for (unsigned i=0; i<12; i++)
-				std::cout << ' ' << myvector.at(i);
-			std::cout << '\n';
+				fs1 << ' ' << myvector.at(i);
+			fs1 << '\n';
 		}
 		catch(const std::out_of_range& e)
 		{
-			std::cerr << e.what() << '\n';
+			fs1 << e.what() << '\n' << std::flush;
 		}
 
 
-		ft::vector<int> myvector (10);   // 10 zero-initialized ints
+		ft::vector<int> myvector_ (10);   // 10 zero-initialized ints
 
 		// assign some values:
-		for (unsigned i=0; i<myvector.size(); i++)
-			myvector.at(i)=i;
+		for (unsigned i=0; i<myvector_.size(); i++)
+			myvector_.at(i)=i;
 		
 		try
 		{
-			std::cout << "myvector contains:";
+			fs2 << "myvector contains:";
 			for (unsigned i=0; i<12; i++)
-				std::cout << ' ' << myvector.at(i);
-			std::cout << '\n';
+				fs2 << ' ' << myvector_.at(i);
+			fs2 << '\n';
 		}
 		catch(const std::out_of_range& e)
 		{
-			std::cerr << e.what() << '\n';
+			fs2 << e.what() << '\n' << std::flush;
 		}
 		
-	} */
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector;
 
 		myvector.push_back(78);
@@ -1573,24 +1573,24 @@ int main()
 
 		myvector.front() -= myvector.back();
 
-		std::cout << "myvector.front() is now " << myvector.front() << '\n';
+		fs1 << "myvector.front() is now " << myvector.front() << '\n' << std::flush;
 
 
-		ft::vector<int> myvector;
+		ft::vector<int> myvector_;
 
-		myvector.push_back(78);
-		myvector.push_back(16);
+		myvector_.push_back(78);
+		myvector_.push_back(16);
 
 		// now front equals 78, and back 16
 
-		myvector.front() -= myvector.back();
+		myvector_.front() -= myvector_.back();
 
-		std::cout << "myvector.front() is now " << myvector.front() << '\n';
-	} */
+		fs2 << "myvector.front() is now " << myvector_.front() << '\n' << std::flush;
+	}
 
 	judge();
 
-	/* {
+	{
 		std::vector<int> myvector;
 
 		myvector.push_back(10);
@@ -1600,26 +1600,26 @@ int main()
 			myvector.push_back ( myvector.back() -1 );
 		}
 
-		std::cout << "myvector contains:";
+		fs1 << "myvector contains:";
 		for (unsigned i=0; i<myvector.size() ; i++)
-			std::cout << ' ' << myvector[i];
-		std::cout << '\n';
+			fs1 << ' ' << myvector[i];
+		fs1 << '\n' << std::flush;
 
 
-		ft::vector<int> myvector;
+		ft::vector<int> myvector_;
 
-		myvector.push_back(10);
+		myvector_.push_back(10);
 
-		while (myvector.back() != 0)
+		while (myvector_.back() != 0)
 		{
-			myvector.push_back ( myvector.back() -1 );
+			myvector_.push_back ( myvector_.back() -1 );
 		}
 
-		std::cout << "myvector contains:";
-		for (unsigned i=0; i<myvector.size() ; i++)
-			std::cout << ' ' << myvector[i];
-		std::cout << '\n';
-	} */
+		fs2 << "myvector contains:";
+		for (unsigned i=0; i<myvector_.size() ; i++)
+			fs2 << ' ' << myvector_[i];
+		fs2 << '\n' << std::flush;
+	} 
 
 	judge();
 
