@@ -1336,14 +1336,14 @@ int main()
 		std::vector<int> myvector;
 
 		// set some initial content:
-		for (int i=1;i<10;i++) myvector.push_back(i);
+		for (unsigned long i=1;i<10;i++) myvector.push_back(i);
 
 		myvector.resize(5);
 		myvector.resize(8,100);
 		myvector.resize(12);
 
 		fs1 << "myvector contains:";
-		for (int i=0;i<myvector.size();i++)
+		for (unsigned long i=0;i<myvector.size();i++)
 			fs1 << ' ' << myvector[i];
 		fs1 << '\n' << std::flush;
 
@@ -1351,14 +1351,14 @@ int main()
 		ft::vector<int> myvector_;
 
 		// set some initial content:
-		for (int i=1;i<10;i++) myvector_.push_back(i);
+		for (unsigned long i=1;i<10;i++) myvector_.push_back(i);
 
 		myvector_.resize(5);
 		myvector_.resize(8,100);
 		myvector_.resize(12);
 
 		fs2 << "myvector contains:";
-		for (int i=0;i<myvector_.size();i++)
+		for (unsigned long i=0;i<myvector_.size();i++)
 			fs2 << ' ' << myvector_[i];
 		fs2 << '\n' << std::flush;
 	}
@@ -1624,13 +1624,328 @@ int main()
 	judge();
 
 	{
+		std::vector<int> first;
+		std::vector<int> second;
+		std::vector<int> third;
 
+		first.assign (7,100);             // 7 ints with a value of 100
+
+		std::vector<int>::iterator it;
+		it=first.begin()+1;
+
+		second.assign (it,first.end()-1); // the 5 central values of first
+
+		int myints[] = {1776,7,4};
+		third.assign (myints,myints+3);   // assigning from array.
+
+		fs1 << "Size of first: " << int (first.size()) << '\n';
+		fs1 << "Size of second: " << int (second.size()) << '\n';
+		fs1 << "Size of third: " << int (third.size()) << '\n' << std::flush;
+
+
+
+		ft::vector<int> first_;
+		ft::vector<int> second_;
+		ft::vector<int> third_;
+
+		first_.assign (7,100);             // 7 ints with a value of 100
+
+		ft::vector<int>::iterator it_;
+		it_=first_.begin()+1;
+
+		second_.assign (it_,first_.end()-1); // the 5 central values of first_
+
+		int myints_[] = {1776,7,4};
+		third_.assign (myints_,myints_+3);   // assigning from array.
+
+		fs2 << "Size of first: " << int (first_.size()) << '\n';
+		fs2 << "Size of second: " << int (second_.size()) << '\n';
+		fs2 << "Size of third: " << int (third_.size()) << '\n' << std::flush;
 	}
 
+	judge();
+
+	{
+		std::vector<int> myvector;
+
+		fs1 << "Please enter some integers (enter 0 to end):\n";
+
+		for (int i = 0; i < 42; i++)
+			myvector.push_back (i);
+
+		fs1 << "myvector stores " << int(myvector.size()) << " numbers.\n" << std::flush;
 
 
+		ft::vector<int> myvector_;
+
+		fs2 << "Please enter some integers (enter 0 to end):\n";
+
+		for (int i = 0; i < 42; i++)
+			myvector_.push_back (i);
+
+		fs2 << "myvector stores " << int(myvector_.size()) << " numbers.\n" << std::flush;
+	}
+
+	judge();
+
+	{
+		std::vector<int> myvector;
+		int sum (0);
+		myvector.push_back (100);
+		myvector.push_back (200);
+		myvector.push_back (300);
+
+		while (!myvector.empty())
+		{
+			sum+=myvector.back();
+			myvector.pop_back();
+		}
+
+		fs1 << "The elements of myvector add up to " << sum << '\n' << std::flush;
 
 
+		ft::vector<int> myvector_;
+		int sum_ (0);
+		myvector_.push_back (100);
+		myvector_.push_back (200);
+		myvector_.push_back (300);
+
+		while (!myvector_.empty())
+		{
+			sum_+=myvector_.back();
+			myvector_.pop_back();
+		}
+
+		fs2 << "The elements of myvector add up to " << sum_ << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::vector<int> myvector (3,100);
+		std::vector<int>::iterator it;
+		std::vector<int>::iterator it_tmp;
+
+		it_tmp = it = myvector.begin();
+		it = myvector.insert ( it , 200 );
+
+		myvector.insert (it,2,300);
+
+		// "it" no longer valid, get a new one:
+		it = myvector.begin();
+
+		std::vector<int> anothervector (2,400);
+		myvector.insert (it+2,anothervector.begin(),anothervector.end());
+
+		int myarray [] = { 501,502,503 };
+		myvector.insert (myvector.begin(), myarray, myarray+3);
+
+		fs1 << "myvector contains:";
+		for (it=myvector.begin(); it<myvector.end(); it++)
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
+
+
+		ft::vector<int> myvector_ (3,100);
+		ft::vector<int>::iterator it_;
+		ft::vector<int>::iterator it__tmp;
+
+		it__tmp = it_ = myvector_.begin();
+		it_ = myvector_.insert ( it_ , 200 );
+
+		myvector_.insert (it_,2,300);
+
+		// "it_" no longer valid, get a new one:
+		it_ = myvector_.begin();
+
+		ft::vector<int> anothervector_ (2,400);
+		myvector_.insert (it_+2,anothervector_.begin(),anothervector_.end());
+
+		int myarray_ [] = { 501,502,503 };
+		myvector_.insert (myvector_.begin(), myarray_, myarray_+3);
+
+		fs2 << "myvector contains:";
+		for (it_=myvector_.begin(); it_<myvector_.end(); it_++)
+			fs2 << ' ' << *it_;
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::vector<int> myvector;
+
+		// set some values (from 1 to 10)
+		for (int i=1; i<=10; i++) myvector.push_back(i);
+
+		// erase the 6th element
+		myvector.erase (myvector.begin()+5);
+
+		// erase the first 3 elements:
+		myvector.erase (myvector.begin(),myvector.begin()+3);
+
+		fs1 << "myvector contains:";
+		for (unsigned i=0; i<myvector.size(); ++i)
+			fs1 << ' ' << myvector[i];
+		fs1 << '\n' << std::flush;
+
+
+		ft::vector<int> myvector_;
+
+		// set some values (from 1 to 10)
+		for (int i=1; i<=10; i++) myvector_.push_back(i);
+
+		// erase the 6th element
+		myvector_.erase (myvector_.begin()+5);
+
+		// erase the first 3 elements:
+		myvector_.erase (myvector_.begin(),myvector_.begin()+3);
+
+		fs2 << "myvector contains:";
+		for (unsigned i=0; i<myvector_.size(); ++i)
+			fs2 << ' ' << myvector_[i];
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::vector<int> foo (3,100);   // three ints with a value of 100
+		std::vector<int> bar (5,200);   // five ints with a value of 200
+
+		foo.swap(bar);
+
+		fs1 << "foo contains:";
+		for (unsigned i=0; i<foo.size(); i++)
+			fs1 << ' ' << foo[i];
+		fs1 << '\n';
+
+		fs1 << "bar contains:";
+		for (unsigned i=0; i<bar.size(); i++)
+			fs1 << ' ' << bar[i];
+		fs1 << '\n' << std::flush;
+
+
+		ft::vector<int> foo_ (3,100);   // three ints with a value of 100
+		ft::vector<int> bar_ (5,200);   // five ints with a value of 200
+
+		foo_.swap(bar_);
+
+		fs2 << "foo contains:";
+		for (unsigned i=0; i<foo_.size(); i++)
+			fs2 << ' ' << foo_[i];
+		fs2 << '\n';
+
+		fs2 << "bar contains:";
+		for (unsigned i=0; i<bar_.size(); i++)
+			fs2 << ' ' << bar_[i];
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::vector<int> myvector;
+		myvector.push_back (100);
+		myvector.push_back (200);
+		myvector.push_back (300);
+
+		fs1 << "myvector contains:";
+		for (unsigned i=0; i<myvector.size(); i++)
+			fs1 << ' ' << myvector[i];
+		fs1 << '\n';
+
+		myvector.clear();
+		myvector.push_back (1101);
+		myvector.push_back (2202);
+
+		fs1 << "myvector contains:";
+		for (unsigned i=0; i<myvector.size(); i++)
+			fs1 << ' ' << myvector[i];
+		fs1 << '\n' << std::flush;
+
+
+		ft::vector<int> myvector_;
+		myvector_.push_back (100);
+		myvector_.push_back (200);
+		myvector_.push_back (300);
+
+		fs2 << "myvector contains:";
+		for (unsigned i=0; i<myvector_.size(); i++)
+			fs2 << ' ' << myvector_[i];
+		fs2 << '\n';
+
+		myvector_.clear();
+		myvector_.push_back (1101);
+		myvector_.push_back (2202);
+
+		fs2 << "myvector contains:";
+		for (unsigned i=0; i<myvector_.size(); i++)
+			fs2 << ' ' << myvector_[i];
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::vector<int> foo (3,100);   // three ints with a value of 100
+		std::vector<int> bar (2,200);   // two ints with a value of 200
+
+		if (foo==bar) fs1 << "foo and bar are equal\n";
+		if (foo!=bar) fs1 << "foo and bar are not equal\n";
+		if (foo< bar) fs1 << "foo is less than bar\n";
+		if (foo> bar) fs1 << "foo is greater than bar\n";
+		if (foo<=bar) fs1 << "foo is less than or equal to bar\n";
+		if (foo>=bar) fs1 << "foo is greater than or equal to bar\n" << std::flush;
+
+
+		ft::vector<int> foo_ (3,100);   // three ints with a value of 100
+		ft::vector<int> bar_ (2,200);   // two ints with a value of 200
+
+		if (foo_==bar_) fs2 << "foo and bar are equal\n";
+		if (foo_!=bar_) fs2 << "foo and bar are not equal\n";
+		if (foo_< bar_) fs2 << "foo is less than bar\n";
+		if (foo_> bar_) fs2 << "foo is greater than bar\n";
+		if (foo_<=bar_) fs2 << "foo is less than or equal to bar\n";
+		if (foo_>=bar_) fs2 << "foo is greater than or equal to bar\n" << std::flush;
+	}
+
+	judge();
+
+	{
+		std::vector<int> foo (3,100);   // three ints with a value of 100
+		std::vector<int> bar (5,200);   // five ints with a value of 200
+
+		foo.swap(bar);
+
+		fs1 << "foo contains:";
+		for (std::vector<int>::iterator it = foo.begin(); it!=foo.end(); ++it)
+			fs1 << ' ' << *it;
+		fs1 << '\n';
+
+		fs1 << "bar contains:";
+		for (std::vector<int>::iterator it = bar.begin(); it!=bar.end(); ++it)
+			fs1 << ' ' << *it;
+		fs1 << '\n' << std::flush;
+
+
+		ft::vector<int> foo_ (3,100);   // three ints with a value of 100
+		ft::vector<int> bar_ (5,200);   // five ints with a value of 200
+
+		foo_.swap(bar_);
+
+		fs2 << "foo contains:";
+		for (ft::vector<int>::iterator it = foo_.begin(); it!=foo_.end(); ++it)
+			fs2 << ' ' << *it;
+		fs2 << '\n';
+
+		fs2 << "bar contains:";
+		for (ft::vector<int>::iterator it = bar_.begin(); it!=bar_.end(); ++it)
+			fs2 << ' ' << *it;
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
 
 
 
