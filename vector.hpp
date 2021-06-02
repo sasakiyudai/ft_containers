@@ -1,3 +1,6 @@
+#ifndef VECTOR_HPP
+#define VECTOR_HPP
+
 #include <memory> // allocator
 #include <iostream> // debug
 #include <limits> // max
@@ -640,3 +643,5 @@ namespace ft
 			}
 	};
 }
+
+#endif

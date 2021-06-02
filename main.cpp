@@ -1947,7 +1947,32 @@ int main()
 
 	judge();
 
+	std::cout << "\n=== MAP ===" << std::endl;
+	fs1 << "\n=== MAP ===" << std::endl;
+	fs2 << "\n=== MAP ===" << std::endl;
+	{
 
+	}
+
+	judge();
+
+	std::cout << "\n=== STACK ===" << std::endl;
+	fs1 << "\n=== STACK ===" << std::endl;
+	fs2 << "\n=== STACK ===" << std::endl;
+	{
+		
+	}
+
+	judge();
+
+	std::cout << "\n=== QUEUE ===" << std::endl;
+	fs1 << "\n=== QUEUE ===" << std::endl;
+	fs2 << "\n=== QUEUE ===" << std::endl;
+	{
+		
+	}
+
+	judge();
 
 
 

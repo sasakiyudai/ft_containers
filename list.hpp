@@ -1,3 +1,6 @@
+#ifndef LIST_HPP
+#define LIST_HPP
+
 #include <memory> // allocator
 #include <iostream> // debug
 #include <limits> // max
@@ -759,3 +762,5 @@ namespace ft
 			}
 	};
 }
+
+#endif
