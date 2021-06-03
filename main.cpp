@@ -1,8 +1,12 @@
 #include "list.hpp"
 #include "vector.hpp"
+#include "stack.hpp"
+#include "queue.hpp"
 #include <cmath>
 #include <list>
 #include <vector>
+#include <stack>
+#include <queue>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -1951,7 +1955,7 @@ int main()
 	fs1 << "\n=== MAP ===" << std::endl;
 	fs2 << "\n=== MAP ===" << std::endl;
 	{
-
+		
 	}
 
 	judge();
@@ -1960,30 +1964,395 @@ int main()
 	fs1 << "\n=== STACK ===" << std::endl;
 	fs2 << "\n=== STACK ===" << std::endl;
 	{
-		
+		std::deque<int> mydeque (3,100);          // deque with 3 elements
+		std::vector<int> myvector (2,200);        // vector with 2 elements
+
+		std::stack<int> first;                    // empty stack
+		std::stack<int> second (mydeque);         // stack initialized to copy of deque
+
+		std::stack<int,std::vector<int> > third;  // empty stack using vector
+		std::stack<int,std::vector<int> > fourth (myvector);
+
+		fs1 << "size of first: " << first.size() << '\n';
+		fs1 << "size of second: " << second.size() << '\n';
+		fs1 << "size of third: " << third.size() << '\n';
+		fs1 << "size of fourth: " << fourth.size() << '\n' << std::flush;
+
+
+		ft::vector<int> mydeque_ (3,100);          // deque with 3 elements
+		std::vector<int> myvector_ (2,200);        // vector with 2 elements
+
+		ft::stack<int> first_;                    // empty stack
+		ft::stack<int> second_ (mydeque_);         // stack initialized to copy of deque
+
+		ft::stack<int,std::vector<int> > third_;  // empty stack using vector
+		ft::stack<int,std::vector<int> > fourth_ (myvector_);
+
+		fs2 << "size of first: " << first_.size() << '\n';
+		fs2 << "size of second: " << second_.size() << '\n';
+		fs2 << "size of third: " << third_.size() << '\n';
+		fs2 << "size of fourth: " << fourth_.size() << '\n' << std::flush;
 	}
 
 	judge();
+
+	{
+		std::stack<int> mystack;
+		int sum (0);
+
+		for (int i=1;i<=10;i++) mystack.push(i);
+
+		while (!mystack.empty())
+		{
+			sum += mystack.top();
+			mystack.pop();
+		}
+
+		fs1 << "total: " << sum << '\n' << std::flush;
+
+
+		ft::stack<int> mystack_;
+		int sum_ (0);
+
+		for (int i=1;i<=10;i++) mystack_.push(i);
+
+		while (!mystack_.empty())
+		{
+			sum_ += mystack_.top();
+			mystack_.pop();
+		}
+
+		fs2 << "total: " << sum_ << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::stack<int> myints;
+		fs1 << "0. size: " << myints.size() << '\n';
+
+		for (int i=0; i<5; i++) myints.push(i);
+		fs1 << "1. size: " << myints.size() << '\n';
+
+		myints.pop();
+		fs1 << "2. size: " << myints.size() << '\n' << std::flush;
+
+
+		ft::stack<int> myints_;
+		fs2 << "0. size: " << myints_.size() << '\n';
+
+		for (int i=0; i<5; i++) myints_.push(i);
+		fs2 << "1. size: " << myints_.size() << '\n';
+
+		myints_.pop();
+		fs2 << "2. size: " << myints_.size() << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::stack<int> mystack;
+
+		mystack.push(10);
+		mystack.push(20);
+
+		mystack.top() -= 5;
+
+		fs1 << "mystack.top() is now " << mystack.top() << '\n' << std::flush;
+
+
+		ft::stack<int> mystack_;
+
+		mystack_.push(10);
+		mystack_.push(20);
+
+		mystack_.top() -= 5;
+
+		fs2 << "mystack.top() is now " << mystack_.top() << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::stack<int> mystack;
+
+		for (int i=0; i<5; ++i) mystack.push(i);
+
+		fs1 << "Popping out elements...";
+		while (!mystack.empty())
+		{
+			fs1 << ' ' << mystack.top();
+			mystack.pop();
+		}
+		fs1 << '\n' << std::flush;
+
+
+		ft::stack<int> mystack_;
+
+		for (int i=0; i<5; ++i) mystack_.push(i);
+
+		fs2 << "Popping out elements...";
+		while (!mystack_.empty())
+		{
+			fs2 << ' ' << mystack_.top();
+			mystack_.pop();
+		}
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::stack<int> mystack;
+
+		for (int i=0; i<5; ++i) mystack.push(i);
+
+		fs1 << "Popping out elements...";
+		while (!mystack.empty())
+		{
+			fs1 << ' ' << mystack.top();
+			mystack.pop();
+		}
+		fs1 << '\n' << std::flush;
+
+
+		ft::stack<int> mystack_;
+
+		for (int i=0; i<5; ++i) mystack_.push(i);
+
+		fs2 << "Popping out elements...";
+		while (!mystack_.empty())
+		{
+			fs2 << ' ' << mystack_.top();
+			mystack_.pop();
+		}
+		fs2 << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::stack<int> foo;   // three ints with a value of 100
+		for (int i = 0; i < 3; i++)foo.push(100);
+		std::stack<int> bar;   // two ints with a value of 200
+		for (int i = 0; i < 2; i++)bar.push(200);
+		if (foo==bar) fs1 << "foo and bar are equal\n";
+		if (foo!=bar) fs1 << "foo and bar are not equal\n";
+		if (foo< bar) fs1 << "foo is less than bar\n";
+		if (foo> bar) fs1 << "foo is greater than bar\n";
+		if (foo<=bar) fs1 << "foo is less than or equal to bar\n";
+		if (foo>=bar) fs1 << "foo is greater than or equal to bar\n" << std::flush;
+
+
+		ft::stack<int> foo_;   // three ints with a value of 100
+		for (int i = 0; i < 3; i++)foo_.push(100);
+		ft::stack<int> bar_;   // two ints with a value of 200
+		for (int i = 0; i < 2; i++)bar_.push(200);
+		if (foo_==bar_) fs2 << "foo and bar are equal\n";
+		if (foo_!=bar_) fs2 << "foo and bar are not equal\n";
+		if (foo_< bar_) fs2 << "foo is less than bar\n";
+		if (foo_> bar_) fs2 << "foo is greater than bar\n";
+		if (foo_<=bar_) fs2 << "foo is less than or equal to bar\n";
+		if (foo_>=bar_) fs2 << "foo is greater than or equal to bar\n" << std::flush;
+	}
 
 	std::cout << "\n=== QUEUE ===" << std::endl;
 	fs1 << "\n=== QUEUE ===" << std::endl;
 	fs2 << "\n=== QUEUE ===" << std::endl;
 	{
-		
+		std::deque<int> mydeque (3,100);          // deque with 3 elements
+		std::vector<int> myvector (2,200);        // vector with 2 elements
+
+		std::queue<int> first;                    // empty queue
+		std::queue<int> second (mydeque);         // queue initialized to copy of deque
+
+		std::queue<int,std::vector<int> > third;  // empty queue using vector
+		std::queue<int,std::vector<int> > fourth (myvector);
+
+		fs1 << "size of first: " << first.size() << '\n';
+		fs1 << "size of second: " << second.size() << '\n';
+		fs1 << "size of third: " << third.size() << '\n';
+		fs1 << "size of fourth: " << fourth.size() << '\n' << std::flush;
+
+
+		ft::list<int> mydeque_ (3,100);          // deque with 3 elements
+		std::vector<int> myvector_ (2,200);        // vector with 2 elements
+
+		ft::queue<int> first_;                    // empty queue
+		ft::queue<int> second_ (mydeque_);         // queue initialized to copy of deque
+
+		ft::queue<int,std::vector<int> > third_;  // empty queue using vector
+		ft::queue<int,std::vector<int> > fourth_ (myvector_);
+
+		fs2 << "size of first: " << first_.size() << '\n';
+		fs2 << "size of second: " << second_.size() << '\n';
+		fs2 << "size of third: " << third_.size() << '\n';
+		fs2 << "size of fourth: " << fourth_.size() << '\n' << std::flush;
 	}
 
 	judge();
 
+	{
+		std::queue<int> myqueue;
+		int sum (0);
+
+		for (int i=1;i<=10;i++) myqueue.push(i);
+
+		while (!myqueue.empty())
+		{
+			sum += myqueue.front();
+			myqueue.pop();
+		}
+
+		fs1 << "total: " << sum << '\n' << std::flush;
 
 
+		ft::queue<int> myqueue_;
+		int sum_ (0);
+
+		for (int i=1;i<=10;i++) myqueue_.push(i);
+
+		while (!myqueue_.empty())
+		{
+			sum_ += myqueue_.front();
+			myqueue_.pop();
+		}
+
+		fs2 << "total: " << sum_ << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::queue<int> myints;
+		fs1 << "0. size: " << myints.size() << '\n';
+
+		for (int i=0; i<5; i++) myints.push(i);
+		fs1 << "1. size: " << myints.size() << '\n';
+
+		myints.pop();
+		fs1 << "2. size: " << myints.size() << '\n' << std::flush;
 
 
+		ft::queue<int> myints_;
+		fs2 << "0. size: " << myints_.size() << '\n';
+
+		for (int i=0; i<5; i++) myints_.push(i);
+		fs2 << "1. size: " << myints_.size() << '\n';
+
+		myints_.pop();
+		fs2 << "2. size: " << myints_.size() << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::queue<int> myqueue;
+
+		myqueue.push(77);
+		myqueue.push(16);
+
+		myqueue.front() -= myqueue.back();    // 77-16=61
+
+		fs1 << "myqueue.front() is now " << myqueue.front() << '\n' << std::flush;
 
 
+		ft::queue<int> myqueue_;
+
+		myqueue_.push(77);
+		myqueue_.push(16);
+
+		myqueue_.front() -= myqueue_.back();    // 77-16=61
+
+		fs2<< "myqueue.front() is now " << myqueue_.front() << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::queue<int> myqueue;
+
+		myqueue.push(12);
+		myqueue.push(75);   // this is now the back
+
+		myqueue.back() -= myqueue.front();
+
+		fs1 << "myqueue.back() is now " << myqueue.back() << '\n' << std::flush;
 
 
+		ft::queue<int> myqueue_;
+
+		myqueue_.push(12);
+		myqueue_.push(75);   // this is now the back
+
+		myqueue_.back() -= myqueue_.front();
+
+		fs2 << "myqueue.back() is now " << myqueue_.back() << '\n' << std::flush;
+	}
+
+	judge();
+
+	{
+		std::queue<int> myqueue;
+
+		fs1 << "Please enter some integers (enter 0 to end):\n";
+
+		for (int i = 0; i < 42; i++)
+			myqueue.push(i);
+
+		fs1 << "myqueue contains: ";
+		while (!myqueue.empty())
+		{
+			fs1 << ' ' << myqueue.front();
+			myqueue.pop();
+		}
+		fs1 << '\n' << std::flush;
 
 
+		ft::queue<int> myqueue_;
+
+		fs2 << "Please enter some integers (enter 0 to end):\n";
+
+		for (int i = 0; i < 42; i++)
+			myqueue_.push(i);
+
+		fs2 << "myqueue contains: ";
+		while (!myqueue_.empty())
+		{
+			fs2 << ' ' << myqueue_.front();
+			myqueue_.pop();
+		}
+		fs2 << '\n' << std::flush;
+	}
+	
+	judge();
+
+	{
+		std::queue<int> foo;   // three ints with a value of 100
+		for (int i = 0; i < 3; i++)foo.push(100);
+		std::queue<int> bar;   // two ints with a value of 200
+		for (int i = 0; i < 2; i++)bar.push(200);
+		if (foo==bar) fs1 << "foo and bar are equal\n";
+		if (foo!=bar) fs1 << "foo and bar are not equal\n";
+		if (foo< bar) fs1 << "foo is less than bar\n";
+		if (foo> bar) fs1 << "foo is greater than bar\n";
+		if (foo<=bar) fs1 << "foo is less than or equal to bar\n";
+		if (foo>=bar) fs1 << "foo is greater than or equal to bar\n" << std::flush;
+
+
+		ft::queue<int> foo_;   // three ints with a value of 100
+		for (int i = 0; i < 3; i++)foo_.push(100);
+		ft::queue<int> bar_;   // two ints with a value of 200
+		for (int i = 0; i < 2; i++)bar_.push(200);
+		if (foo_==bar_) fs2 << "foo and bar are equal\n";
+		if (foo_!=bar_) fs2 << "foo and bar are not equal\n";
+		if (foo_< bar_) fs2 << "foo is less than bar\n";
+		if (foo_> bar_) fs2 << "foo is greater than bar\n";
+		if (foo_<=bar_) fs2 << "foo is less than or equal to bar\n";
+		if (foo_>=bar_) fs2 << "foo is greater than or equal to bar\n" << std::flush;
+	}
+
+	judge();
 
 	std::cout << std::endl;
 	fs1.close();
