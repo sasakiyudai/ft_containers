@@ -684,11 +684,11 @@ namespace ft
 			typedef std::ptrdiff_t difference_type;
 			typedef const T* pointer;
 			typedef const T& reference;
-			typedef const list_node<T> list_node;
+			typedef list_node<T> list_node;
 			typedef list_iterator<T> iterator;
                                                                                                                          
 		private:
-			list_node *node;
+			const list_node *node;
 		
 		public:
 			const_list_iterator():node(NULL) {}

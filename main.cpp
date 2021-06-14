@@ -2,14 +2,23 @@
 #include "vector.hpp"
 #include "stack.hpp"
 #include "queue.hpp"
+#include "map.hpp"
 #include <cmath>
 #include <list>
 #include <vector>
 #include <stack>
 #include <queue>
+#include <map>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+
+bool fncomp (char lhs, char rhs) {return lhs<rhs;}
+
+struct classcomp {
+  bool operator() (const char& lhs, const char& rhs) const
+  {return lhs<rhs;}
+};
 
 // a predicate implemented as a function:
 bool single_digit (const int& value) { return (value<10); }
@@ -51,6 +60,16 @@ void judge()
 		std::cout << "\033[32m[OK] \033[m";
 	else
 		std::cout << "\033[31m[KO] \033[m";
+	std::cout << std::flush;
+}
+
+void leak_check()
+{
+	if (system("leaks a.out > /dev/null") == 0)
+		std::cout << "\033[32m[OK] \033[m";
+	else
+		std::cout << "\033[31m[KO] \033[m";
+	std::cout << std::flush;
 }
 
 int main()
@@ -75,6 +94,8 @@ int main()
 		fs2 << *li.begin() << std::endl << std::flush;
 		li.insert(li.begin(), 42);
 		fs2 << *li.begin() << std::endl << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -91,6 +112,8 @@ int main()
 		fs2 << *li.end() << std::endl << std::flush;
 		li.insert(li.end(), 42);
 		fs2 << *li.begin() << std::endl << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -125,6 +148,8 @@ int main()
 		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
 			fs2 << ' ' << *it_ << std::flush;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -151,6 +176,8 @@ int main()
 			mylist_.pop_front();
 		}
 		fs2 << "total: " << sum_ << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -208,6 +235,8 @@ int main()
 		fs2 << "The contents of fifth are\n" << std::flush;
 		for (ft::list<int>::iterator it = fifth_.begin(); it != fifth_.end(); it++)
 			fs2 << *it << ' ' << std::flush;
+
+			leak_check();
 	}
 
 	judge();
@@ -230,6 +259,8 @@ int main()
 
 		fs2 << "Size of first: " << int (first_.size()) << '\n';
 		fs2 << "Size of second: " << int (second_.size()) << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -253,6 +284,8 @@ int main()
 			fs2 << ' ' << *it;
 
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -276,6 +309,8 @@ int main()
 			fs2 << ' ' << *rit;
 
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -299,6 +334,8 @@ int main()
 		fs2 << "2. size: " << myints_.size() << '\n';
 		myints_.pop_back();
 		fs2 << "3. size: " << myints_.size() << '\n'<< std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -324,6 +361,8 @@ int main()
 		else fs2 << "That size exceeds the limit.\n" << std::flush;
 
 		fs2 << mylist_.size() << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -351,6 +390,8 @@ int main()
 		mylist_.front() -= mylist_.back();
 
 		fs2 << "mylist.front() is now " << mylist_.front() << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -380,6 +421,8 @@ int main()
 		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end() ; ++it)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -411,6 +454,8 @@ int main()
 
 		fs2 << "Size of first: " << int (first_.size()) << '\n';
 		fs2 << "Size of second: " << int (second_.size()) << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -436,6 +481,8 @@ int main()
 			fs2 << ' ' << *it_;
 
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -469,6 +516,8 @@ int main()
 		}
 
 		fs2<< "\nFinal size of mylist is " << mylist_.size() << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -494,6 +543,8 @@ int main()
 			mylist_.push_back (myint_[i]);
 
 		fs2 << "mylist stores " << mylist_.size() << " numbers.\n" << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -527,6 +578,8 @@ int main()
 		}
 
 		fs2 << "The elements of mylist summed " << sum_ << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -555,7 +608,7 @@ int main()
 		fs1 << "mylist contains:";
 		for (it=mylist.begin(); it!=mylist.end(); ++it)
 			fs1 << ' ' << *it;
-		fs1 << '\n';
+		fs1 << '\n' << std::flush;
 
 
 		ft::list<int> mylist_;
@@ -581,7 +634,9 @@ int main()
 		fs2<< "mylist contains:";
 		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
 			fs2<< ' ' << *it_;
-		fs2<< '\n';
+		fs2<< '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -645,6 +700,8 @@ int main()
 		for (it1_=mylist_.begin(); it1_!=mylist_.end(); ++it1_)
 			fs2 << ' ' << *it1_;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -680,6 +737,8 @@ int main()
 		for (ft::list<int>::iterator it=second_.begin(); it!=second_.end(); it++)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -715,6 +774,8 @@ int main()
 			fs2 << ' ' << *it;
 
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -762,6 +823,8 @@ int main()
 		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
 			fs2 << ' ' << *it_;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -845,6 +908,8 @@ int main()
 		for (it_=mylist2_.begin(); it_!=mylist2_.end(); ++it_)
 			fs2 << ' ' << *it_;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -870,6 +935,8 @@ int main()
 		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -899,6 +966,8 @@ int main()
 		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -946,6 +1015,8 @@ int main()
 		for (ft::list<double>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -1004,6 +1075,8 @@ int main()
 		for (ft::list<double>::iterator it=first_.begin(); it!=first_.end(); ++it)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -1049,6 +1122,8 @@ int main()
 		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
 			fs2 << ' ' << *it_;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -1078,6 +1153,8 @@ int main()
 			fs2 << ' ' << *it;
 
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -1111,6 +1188,8 @@ int main()
 		if (c_>b_) fs2 << "c is greater than b\n";
 		if (a_<=b_) fs2 << "a is less than or equal to b\n";
 		if (a_>=b_) fs2 << "a is greater than or equal to b\n" << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -1146,6 +1225,8 @@ int main()
 		for (ft::list<int>::iterator it = bar_.begin(); it!=bar_.end(); ++it)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+
+		leak_check();
 	}
 
 	judge();
@@ -1167,7 +1248,7 @@ int main()
 		fs1 << "The contents of fifth are:";
 		for (std::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
 			fs1 << ' ' << *it;
-		fs1 << '\n' << std::endl;
+		fs1 << '\n' << std::flush;
 
 
 		// constructors used in the same order as described above:
@@ -1183,7 +1264,9 @@ int main()
 		fs2 << "The contents of fifth are:";
 		for (ft::vector<int>::iterator it = fifth_.begin(); it != fifth_.end(); ++it)
 			fs2 << ' ' << *it;
-		fs2 << '\n' << std::endl;
+		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1205,6 +1288,8 @@ int main()
 		for (ft::vector<int>::iterator it = myvector_.begin() ; it != myvector_.end(); ++it)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1228,6 +1313,8 @@ int main()
 
 		fs2 << "Size of foo: " << int(foo_.size()) << '\n';
 		fs2 << "Size of bar: " << int(bar_.size()) << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1249,6 +1336,8 @@ int main()
 		for (ft::vector<int>::iterator it = myvector_.begin() ; it != myvector_.end(); ++it)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1280,6 +1369,8 @@ int main()
 		for (ft::vector<int>::iterator it = myvector_.begin(); it != myvector_.end(); ++it)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1309,6 +1400,8 @@ int main()
 
 		myints_.pop_back();
 		fs2 << "3. size: " << myints_.size() << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1332,6 +1425,8 @@ int main()
 		fs2 << "size: " << myvector_.size() << "\n";
 		fs2 << "capacity: " << myvector_.capacity() << "\n";
 		fs2 << "max_size: " << myvector_.max_size() << "\n" << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1365,6 +1460,8 @@ int main()
 		for (unsigned long i=0;i<myvector_.size();i++)
 			fs2 << ' ' << myvector_[i];
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1388,6 +1485,8 @@ int main()
 		fs2 << "size: " << (int) myvector_.size() << '\n';
 		fs2 << "capacity: " << (int) myvector_.capacity() << '\n';
 		fs2 << "max_size: " << (int) myvector_.max_size() << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1419,6 +1518,8 @@ int main()
 		}
 
 		fs2 << "total: " << sum_ << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1474,6 +1575,8 @@ int main()
 			fs2 << "capacity changed: " << sz_ << '\n' << std::flush;
 			}
 		}
+	
+		leak_check();
 	}
 
 	judge();
@@ -1521,6 +1624,8 @@ int main()
 		for (unsigned i=0; i<sz_; i++)
 			fs2 << ' ' << myvector_[i];
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1563,6 +1668,8 @@ int main()
 			fs2 << e.what() << '\n' << std::flush;
 		}
 		
+	
+		leak_check();
 	}
 
 	judge();
@@ -1590,6 +1697,8 @@ int main()
 		myvector_.front() -= myvector_.back();
 
 		fs2 << "myvector.front() is now " << myvector_.front() << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1623,6 +1732,8 @@ int main()
 		for (unsigned i=0; i<myvector_.size() ; i++)
 			fs2 << ' ' << myvector_[i];
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	} 
 
 	judge();
@@ -1665,6 +1776,8 @@ int main()
 		fs2 << "Size of first: " << int (first_.size()) << '\n';
 		fs2 << "Size of second: " << int (second_.size()) << '\n';
 		fs2 << "Size of third: " << int (third_.size()) << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1688,6 +1801,8 @@ int main()
 			myvector_.push_back (i);
 
 		fs2 << "myvector stores " << int(myvector_.size()) << " numbers.\n" << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1721,6 +1836,8 @@ int main()
 		}
 
 		fs2 << "The elements of myvector add up to " << sum_ << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1772,6 +1889,8 @@ int main()
 		for (it_=myvector_.begin(); it_<myvector_.end(); it_++)
 			fs2 << ' ' << *it_;
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1809,6 +1928,8 @@ int main()
 		for (unsigned i=0; i<myvector_.size(); ++i)
 			fs2 << ' ' << myvector_[i];
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1844,6 +1965,8 @@ int main()
 		for (unsigned i=0; i<bar_.size(); i++)
 			fs2 << ' ' << bar_[i];
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1887,6 +2010,8 @@ int main()
 		for (unsigned i=0; i<myvector_.size(); i++)
 			fs2 << ' ' << myvector_[i];
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1912,6 +2037,8 @@ int main()
 		if (foo_> bar_) fs2 << "foo is greater than bar\n";
 		if (foo_<=bar_) fs2 << "foo is less than or equal to bar\n";
 		if (foo_>=bar_) fs2 << "foo is greater than or equal to bar\n" << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1947,6 +2074,8 @@ int main()
 		for (ft::vector<int>::iterator it = bar_.begin(); it!=bar_.end(); ++it)
 			fs2 << ' ' << *it;
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1955,7 +2084,800 @@ int main()
 	fs1 << "\n=== MAP ===" << std::endl;
 	fs2 << "\n=== MAP ===" << std::endl;
 	{
+		std::map<char,int> first;
+
+		first['a']=10;
+		first['b']=30;
+		first['c']=50;
+		first['d']=70;
+
+		std::map<char,int> second (first.begin(),first.end());
+
+		std::map<char,int> third (second);
+
+		std::map<char,int,classcomp> fourth;                 // class as Compare
+
+		bool(*fn_pt)(char,char) = fncomp;
+		std::map<char,int,bool(*)(char,char)> fifth (fn_pt); // function pointer as Compare
+
+		for (std::map<char,int>::iterator it = first.begin(); it != first.end(); ++it)
+			fs1 << ' ' << it->first;
+		fs1 << '\n';
+		for (std::map<char,int>::iterator it = second.begin(); it != second.end(); ++it)
+			fs1 << ' ' << it->first;
+		fs1 << '\n';
+		for (std::map<char,int>::iterator it = third.begin(); it != third.end(); ++it)
+			fs1 << ' ' << it->first;
+		fs1 << '\n';
+		for (std::map<char,int,classcomp>::iterator it = fourth.begin(); it != fourth.end(); ++it)
+			fs1 << ' ' << it->first;
+		fs1 << '\n';
+		for (std::map<char,int,bool(*)(char,char)>::iterator it = fifth.begin(); it != fifth.end(); ++it)
+			fs1 << ' ' << it->first;
+		fs1 << '\n' << std::flush;
+
+
+		ft::map<char,int> first_;
+
+		first_['a']=10;
+		first_['b']=30;
+		first_['c']=50;
+		first_['d']=70;
+
+		ft::map<char,int> second_ (first_.begin(),first_.end());
+
+		ft::map<char,int> third_ (second_);
+
+		ft::map<char,int,classcomp> fourth_;                 // class as Compare
+
+		bool(*fn_pt_)(char,char) = fncomp;
+		ft::map<char,int,bool(*)(char,char)> fifth_ (fn_pt_); // function pointer as Compare
+
+		for (ft::map<char,int>::iterator it = first_.begin(); it != first_.end(); ++it)
+			fs2 << ' ' << it->first;
+		fs2 << '\n';
+		for (ft::map<char,int>::iterator it = second_.begin(); it != second_.end(); ++it)
+			fs2 << ' ' << it->first;
+		fs2 << '\n';
+		for (ft::map<char,int>::iterator it = third_.begin(); it != third_.end(); ++it)
+			fs2 << ' ' << it->first;
+		fs2 << '\n';
+		for (ft::map<char,int,classcomp>::iterator it = fourth_.begin(); it != fourth_.end(); ++it)
+			fs2 << ' ' << it->first;
+		fs2 << '\n';
+		for (ft::map<char,int,bool(*)(char,char)>::iterator it = fifth_.begin(); it != fifth_.end(); ++it)
+			fs2 << ' ' << it->first;
+		fs2 << '\n' << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> first;
+		std::map<char,int> second;
+
+		first['x']=8;
+		first['y']=16;
+		first['z']=32;
+
+		second=first;                // second now contains 3 ints
+		first=std::map<char,int>();  // and first is now empty
+
+		fs1 << "Size of first: " << first.size() << '\n';
+		fs1 << "Size of second: " << second.size() << '\n' << std::flush;
+
+
+		ft::map<char,int> first_;
+		ft::map<char,int> second_;
+
+		first_['x']=8;
+		first_['y']=16;
+		first_['z']=32;
+
+		second_=first_;                // second_ now contains 3 ints
+		first_=ft::map<char,int>();  // and first_ is now empty
+
+		fs2 << "Size of first: " << first_.size() << '\n';
+		fs2 << "Size of second: " << second_.size() << '\n' <<std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+
+		mymap['b'] = 100;
+		mymap['a'] = 200;
+		mymap['c'] = 300;
+
+		// show content:
+		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+			fs1 << it->first << " => " << it->second << '\n';
+		fs1 << std::flush;
+
+
+		ft::map<char,int> mymap_;
+
+		mymap_['b'] = 100;
+		mymap_['a'] = 200;
+		mymap_['c'] = 300;
+
+		// show content:
+		for (ft::map<char,int>::iterator it=mymap_.begin(); it!=mymap_.end(); ++it)
+			fs2 << it->first << " => " << it->second << '\n';
+		fs2 << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+
+		mymap['b'] = 100;
+		mymap['a'] = 200;
+		mymap['c'] = 300;
+
+		// show content:
+		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+			fs1 << it->first << " => " << it->second << '\n';
+		fs1 << std::flush;
 		
+		ft::map<char,int> mymap_;
+
+		mymap_['b'] = 100;
+		mymap_['a'] = 200;
+		mymap_['c'] = 300;
+
+		// show content:
+		for (ft::map<char,int>::iterator it=mymap_.begin(); it!=mymap_.end(); ++it)
+			fs2 << it->first << " => " << it->second << '\n';
+		fs2 << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+
+		mymap['x'] = 100;
+		mymap['y'] = 200;
+		mymap['z'] = 300;
+
+		// show content:
+		std::map<char,int>::reverse_iterator rit;
+		for (rit=mymap.rbegin(); rit!=mymap.rend(); ++rit)
+			fs1 << rit->first << " => " << rit->second << '\n';
+		fs1 << std::flush;
+
+
+		ft::map<char,int> mymap_;
+
+		mymap_['x'] = 100;
+		mymap_['y'] = 200;
+		mymap_['z'] = 300;
+
+		// show content:
+		ft::map<char,int>::reverse_iterator rit_;
+		for (rit_=mymap_.rbegin(); rit_!=mymap_.rend(); ++rit_)
+			fs2 << rit_->first << " => " << rit_->second << '\n';
+		fs2 << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+
+		mymap['x'] = 100;
+		mymap['y'] = 200;
+		mymap['z'] = 300;
+
+		// show content:
+		std::map<char,int>::reverse_iterator rit;
+		for (rit=mymap.rbegin(); rit!=mymap.rend(); ++rit)
+			fs1 << rit->first << " => " << rit->second << '\n';
+		fs1 << std::flush;
+
+
+		ft::map<char,int> mymap_;
+
+		mymap_['x'] = 100;
+		mymap_['y'] = 200;
+		mymap_['z'] = 300;
+
+		// show content:
+		ft::map<char,int>::reverse_iterator rit_;
+		for (rit_=mymap_.rbegin(); rit_!=mymap_.rend(); ++rit_)
+			fs2 << rit_->first << " => " << rit_->second << '\n';
+		fs2 << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+
+		mymap['a']=10;
+		mymap['b']=20;
+		mymap['c']=30;
+
+		while (!mymap.empty())
+		{
+			fs1 << mymap.begin()->first << " => " << mymap.begin()->second << '\n';
+			mymap.erase(mymap.begin());
+		}
+		fs1 << std::flush;
+
+
+		ft::map<char,int> mymap_;
+
+		mymap_['a']=10;
+		mymap_['b']=20;
+		mymap_['c']=30;
+
+		while (!mymap_.empty())
+		{
+			fs2 << mymap_.begin()->first << " => " << mymap_.begin()->second << '\n';
+			mymap_.erase(mymap_.begin());
+		}
+		fs2 << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+		mymap['a']=101;
+		mymap['b']=202;
+		mymap['c']=302;
+
+		fs1 << "mymap.size() is " << mymap.size() << '\n';
+
+
+		ft::map<char,int> mymap_;
+		mymap_['a']=101;
+		mymap_['b']=202;
+		mymap_['c']=302;
+
+		fs2 << "mymap.size() is " << mymap_.size() << '\n';
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		int i;
+		std::map<int,int> mymap;
+
+		if (mymap.max_size()>1000)
+		{
+			for (i=0; i<1000; i++) mymap[i]=0;
+			fs1 << "The map contains 1000 elements.\n";
+		}
+		else fs1 << "The map could not hold 1000 elements.\n";
+		fs1 << std::flush;
+
+		int i_;
+		ft::map<int,int> mymap_;
+
+		if (mymap_.max_size()>1000)
+		{
+			for (i_=0; i_<1000; i_++) mymap_[i_]=0;
+			fs2 << "The map contains 1000 elements.\n";
+		}
+		else fs2 << "The map could not hold 1000 elements.\n";
+		fs2 << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,std::string> mymap;
+
+		mymap['a']="an element";
+		mymap['b']="another element";
+		mymap['c']=mymap['b'];
+
+		fs1 << "mymap['a'] is " << mymap['a'] << '\n';
+		fs1 << "mymap['b'] is " << mymap['b'] << '\n';
+		fs1 << "mymap['c'] is " << mymap['c'] << '\n';
+		fs1 << "mymap['d'] is " << mymap['d'] << '\n';
+
+		fs1 << "mymap now contains " << mymap.size() << " elements.\n" << std::flush;
+
+
+		ft::map<char,std::string> mymap_;
+
+		mymap_['a']="an element";
+		mymap_['b']="another element";
+		mymap_['c']=mymap_['b'];
+
+		fs2 << "mymap['a'] is " << mymap_['a'] << '\n';
+		fs2 << "mymap['b'] is " << mymap_['b'] << '\n';
+		fs2 << "mymap['c'] is " << mymap_['c'] << '\n';
+		fs2 << "mymap['d'] is " << mymap_['d'] << '\n';
+
+		fs2 << "mymap now contains " << mymap_.size() << " elements.\n" << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+
+		// first insert function version (single parameter):
+		mymap.insert ( std::pair<char,int>('a',100) );
+		mymap.insert ( std::pair<char,int>('z',200) );
+
+		std::pair<std::map<char,int>::iterator,bool> ret;
+		ret = mymap.insert ( std::pair<char,int>('z',500) );
+		if (ret.second==false) {
+			fs1 << "element 'z' already existed";
+			fs1 << " with a value of " << ret.first->second << '\n';
+		}
+
+		// second insert function version (with hint position):
+		std::map<char,int>::iterator it = mymap.begin();
+		mymap.insert (it, std::pair<char,int>('b',300));  // max efficiency inserting
+		mymap.insert (it, std::pair<char,int>('c',400));  // no max efficiency inserting
+
+		// third insert function version (range insertion):
+		std::map<char,int> anothermap;
+		anothermap.insert(mymap.begin(),mymap.find('c'));
+
+		// showing contents:
+		fs1 << "mymap contains:\n";
+		for (it=mymap.begin(); it!=mymap.end(); ++it)
+			fs1 << it->first << " => " << it->second << '\n';
+
+		fs1 << "anothermap contains:\n";
+		for (it=anothermap.begin(); it!=anothermap.end(); ++it)
+			fs1 << it->first << " => " << it->second << '\n';
+		fs1 << std::flush;
+
+		
+		ft::map<char,int> mymap_;
+
+		// first insert function version (single parameter):
+		mymap_.insert ( std::pair<char,int>('a',100) );
+		mymap_.insert ( std::pair<char,int>('z',200) );
+
+		std::pair<ft::map<char,int>::iterator,bool> ret_;
+		ret_ = mymap_.insert ( std::pair<char,int>('z',500) );
+		if (ret_.second==false) {
+			fs2 << "element 'z' already existed";
+			fs2 << " with a value of " << ret.first->second << '\n';
+		}
+
+		// second insert function version (with hint position):
+		ft::map<char,int>::iterator it_ = mymap_.begin();
+		mymap_.insert (it_, std::pair<char,int>('b',300));  // max efficiency inserting
+		mymap_.insert (it_, std::pair<char,int>('c',400));  // no max efficiency inserting
+
+		// third insert function version (range insertion):
+		ft::map<char,int> anothermap_;
+		anothermap_.insert(mymap_.begin(),mymap_.find('c'));
+
+		// showing contents:
+		fs2 << "mymap contains:\n";
+		for (it_=mymap_.begin(); it_!=mymap_.end(); ++it_)
+			fs2 << it_->first << " => " << it_->second << '\n';
+
+		fs2 << "anothermap contains:\n";
+		for (it_=anothermap_.begin(); it_!=anothermap_.end(); ++it_)
+			fs2 << it_->first << " => " << it_->second << '\n';
+		fs2 << std::flush;
+	
+		leak_check();
+	}
+	
+	judge();
+
+	{
+		std::map<char,int> mymap;
+		std::map<char,int>::iterator it;
+
+		// insert some values:
+		mymap['a']=10;
+		mymap['b']=20;
+		mymap['c']=30;
+		mymap['d']=40;
+		mymap['e']=50;
+		mymap['f']=60;
+
+		it=mymap.find('b');
+		mymap.erase (it);                   // erasing by iterator
+
+		mymap.erase ('c');                  // erasing by key
+
+		it=mymap.find ('e');
+		mymap.erase ( it, mymap.end() );    // erasing by range
+
+		// show content:
+		for (it=mymap.begin(); it!=mymap.end(); ++it)
+			fs1 << it->first << " => " << it->second << '\n';
+		fs1 << std::flush;
+
+		ft::map<char,int> mymap_;
+		ft::map<char,int>::iterator it_;
+
+		// insert some values:
+		mymap_['a']=10;
+		mymap_['b']=20;
+		mymap_['c']=30;
+		mymap_['d']=40;
+		mymap_['e']=50;
+		mymap_['f']=60;
+
+		it_=mymap_.find('b');
+		mymap_.erase (it_);                   // erasing by it_erator
+
+		mymap_.erase ('c');                  // erasing by key
+		
+		it_=mymap_.find ('e');
+		mymap_.erase ( it_, mymap_.end());    // erasing by range
+
+		// show content:
+		for (it_=mymap_.begin(); it_!=mymap_.end(); ++it_)
+			fs2 << it_->first << " => " << it_->second << '\n';
+		fs2 << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> foo,bar;
+
+		foo['x']=100;
+		foo['y']=200;
+
+		bar['a']=11;
+		bar['b']=22;
+		bar['c']=33;
+
+		foo.swap(bar);
+
+		fs1 << "foo contains:\n";
+		for (std::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
+			fs1 << it->first << " => " << it->second << '\n';
+
+		fs1 << "bar contains:\n";
+		for (std::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
+			fs1 << it->first << " => " << it->second << '\n' << std::flush;
+		
+
+		ft::map<char,int> foo_,bar_;
+
+		foo_['x']=100;
+		foo_['y']=200;
+
+		bar_['a']=11;
+		bar_['b']=22;
+		bar_['c']=33;
+
+		foo_.swap(bar_);
+
+		fs2 << "foo contains:\n";
+		for (ft::map<char,int>::iterator it=foo_.begin(); it!=foo_.end(); ++it)
+			fs2 << it->first << " => " << it->second << '\n';
+
+		fs2 << "bar contains:\n";
+		for (ft::map<char,int>::iterator it=bar_.begin(); it!=bar_.end(); ++it)
+			fs2 << it->first << " => " << it->second << '\n' << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+
+		mymap['x']=100;
+		mymap['y']=200;
+		mymap['z']=300;
+
+		fs1 << "mymap contains:\n";
+		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+			fs1 << it->first << " => " << it->second << '\n';
+
+		mymap.clear();
+		mymap['a']=1101;
+		mymap['b']=2202;
+
+		fs1 << "mymap contains:\n";
+		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+			fs1 << it->first << " => " << it->second << '\n' << std::flush;
+		
+
+		ft::map<char,int> mymap_;
+
+		mymap_['x']=100;
+		mymap_['y']=200;
+		mymap_['z']=300;
+
+		fs2 << "mymap contains:\n";
+		for (ft::map<char,int>::iterator it=mymap_.begin(); it!=mymap_.end(); ++it)
+			fs2 << it->first << " => " << it->second << '\n';
+
+		mymap_.clear();
+		mymap_['a']=1101;
+		mymap_['b']=2202;
+
+		fs2 << "mymap contains:\n";
+		for (ft::map<char,int>::iterator it=mymap_.begin(); it!=mymap_.end(); ++it)
+			fs2 << it->first << " => " << it->second << '\n' << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+
+		std::map<char,int>::key_compare mycomp = mymap.key_comp();
+
+		mymap['a']=100;
+		mymap['b']=200;
+		mymap['c']=300;
+
+		fs1 << "mymap contains:\n";
+
+		char highest = mymap.rbegin()->first;     // key value of last element
+
+		std::map<char,int>::iterator it = mymap.begin();
+		do {
+			fs1 << it->first << " => " << it->second << '\n';
+		} while ( mycomp((*it++).first, highest) );
+
+		fs1 << '\n' << std::flush;
+
+
+		ft::map<char,int> mymap_;
+
+		ft::map<char,int>::key_compare mycomp_ = mymap_.key_comp();
+
+		mymap_['a']=100;
+		mymap_['b']=200;
+		mymap_['c']=300;
+
+		fs2 << "mymap contains:\n";
+
+		char highest_ = mymap_.rbegin()->first;     // key value of last element
+
+		ft::map<char,int>::iterator it_ = mymap_.begin();
+		do {
+			fs2 << it_->first << " => " << it_->second << '\n';
+		} while ( mycomp_((*it_++).first, highest_) );
+
+		fs2 << '\n' << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+
+		mymap['x']=1001;
+		mymap['y']=2002;
+		mymap['z']=3003;
+
+		fs1 << "mymap contains:\n";
+
+		std::pair<char,int> highest = *mymap.rbegin();          // last element
+
+		std::map<char,int>::iterator it = mymap.begin();
+		do {
+			fs1 << it->first << " => " << it->second << '\n';
+		} while ( mymap.value_comp()(*it++, highest) );
+		fs1 << std::flush;
+
+
+		ft::map<char,int> mymap_;
+
+		mymap_['x']=1001;
+		mymap_['y']=2002;
+		mymap_['z']=3003;
+
+		fs2 << "mymap contains:\n";
+
+		std::pair<char,int> highest_ = *mymap_.rbegin();          // last element
+
+		ft::map<char,int>::iterator it_ = mymap_.begin();
+		do {
+			fs2 << it_->first << " => " << it_->second << '\n';
+		} while ( mymap_.value_comp()(*it_++, highest_) );
+		fs2 << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+		std::map<char,int>::iterator it;
+
+		mymap['a']=50;
+		mymap['b']=100;
+		mymap['c']=150;
+		mymap['d']=200;
+
+		it = mymap.find('b');
+		if (it != mymap.end())
+			mymap.erase (it);
+
+		// print content:
+		fs1 << "elements in mymap:" << '\n';
+		fs1 << "a => " << mymap.find('a')->second << '\n';
+		fs1 << "c => " << mymap.find('c')->second << '\n';
+		fs1 << "d => " << mymap.find('d')->second << '\n' << std::flush;
+
+
+		ft::map<char,int> mymap_;
+		ft::map<char,int>::iterator it_;
+
+		mymap_['a']=50;
+		mymap_['b']=100;
+		mymap_['c']=150;
+		mymap_['d']=200;
+
+		it_ = mymap_.find('b');
+		if (it_ != mymap_.end())
+			mymap_.erase (it_);
+
+		// print content:
+		fs2 << "elements in mymap:" << '\n';
+		fs2 << "a => " << mymap_.find('a')->second << '\n';
+		fs2 << "c => " << mymap_.find('c')->second << '\n';
+		fs2 << "d => " << mymap_.find('d')->second << '\n' << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+		char c;
+
+		mymap ['a']=101;
+		mymap ['c']=202;
+		mymap ['f']=303;
+
+		for (c='a'; c<'h'; c++)
+		{
+			fs1 << c;
+			if (mymap.count(c)>0)
+			fs1 << " is an element of mymap.\n";
+			else 
+			fs1 << " is not an element of mymap.\n";
+		}
+		fs1 << std::flush;
+
+
+		ft::map<char,int> mymap_;
+		char c_;
+
+		mymap_ ['a']=101;
+		mymap_ ['c']=202;
+		mymap_ ['f']=303;
+
+		for (c_='a'; c_<'h'; c_++)
+		{
+			fs2 << c_;
+			if (mymap_.count(c_)>0)
+			fs2 << " is an element of mymap.\n";
+			else 
+			fs2 << " is not an element of mymap.\n";
+		}
+		fs2 << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+		std::map<char,int>::iterator itlow,itup;
+
+		mymap['a']=20;
+		mymap['b']=40;
+		mymap['c']=60;
+		mymap['d']=80;
+		mymap['e']=100;
+
+		itlow=mymap.lower_bound ('b');  // itlow points to b
+		itup=mymap.upper_bound ('d');   // itup points to e (not d!)
+
+		mymap.erase(itlow,itup);        // erases [itlow,itup)
+
+		// print content:
+		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+			fs1 << it->first << " => " << it->second << '\n' << std::flush;
+		
+
+		ft::map<char,int> mymap_;
+		ft::map<char,int>::iterator itlow_,itup_;
+
+		mymap_['a']=20;
+		mymap_['b']=40;
+		mymap_['c']=60;
+		mymap_['d']=80;
+		mymap_['e']=100;
+
+		itlow_=mymap_.lower_bound ('b');  // itlow_ points to b
+		itup_=mymap_.upper_bound ('d');   // itup_ points to e (not d!)
+
+		mymap_.erase(itlow_,itup_);        // erases [itlow,itup_)
+
+		// print content:
+		for (ft::map<char,int>::iterator it=mymap_.begin(); it!=mymap_.end(); ++it)
+			fs2 << it->first << " => " << it->second << '\n' << std::flush;
+	
+		leak_check();
+	}
+
+	judge();
+
+	{
+		std::map<char,int> mymap;
+
+		mymap['a']=10;
+		mymap['b']=20;
+		mymap['c']=30;
+
+		std::pair<std::map<char,int>::iterator,std::map<char,int>::iterator> ret;
+		ret = mymap.equal_range('b');
+
+		fs1 << "lower bound points to: ";
+		fs1 << ret.first->first << " => " << ret.first->second << '\n';
+
+		fs1 << "upper bound points to: ";
+		fs1 << ret.second->first << " => " << ret.second->second << '\n' << std::flush;
+
+
+		ft::map<char,int> mymap_;
+
+		mymap_['a']=10;
+		mymap_['b']=20;
+		mymap_['c']=30;
+
+		std::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> ret_;
+		ret_ = mymap_.equal_range('b');
+
+		fs2 << "lower bound points to: ";
+		fs2 << ret_.first->first << " => " << ret_.first->second << '\n';
+
+		fs2 << "upper bound points to: ";
+		fs2 << ret_.second->first << " => " << ret_.second->second << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -1992,6 +2914,8 @@ int main()
 		fs2 << "size of second: " << second_.size() << '\n';
 		fs2 << "size of third: " << third_.size() << '\n';
 		fs2 << "size of fourth: " << fourth_.size() << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2023,6 +2947,8 @@ int main()
 		}
 
 		fs2 << "total: " << sum_ << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2046,6 +2972,8 @@ int main()
 
 		myints_.pop();
 		fs2 << "2. size: " << myints_.size() << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2069,6 +2997,8 @@ int main()
 		mystack_.top() -= 5;
 
 		fs2 << "mystack.top() is now " << mystack_.top() << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2098,6 +3028,8 @@ int main()
 			mystack_.pop();
 		}
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2127,6 +3059,8 @@ int main()
 			mystack_.pop();
 		}
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2154,7 +3088,11 @@ int main()
 		if (foo_> bar_) fs2 << "foo is greater than bar\n";
 		if (foo_<=bar_) fs2 << "foo is less than or equal to bar\n";
 		if (foo_>=bar_) fs2 << "foo is greater than or equal to bar\n" << std::flush;
+	
+		leak_check();
 	}
+
+	judge();
 
 	std::cout << "\n=== QUEUE ===" << std::endl;
 	fs1 << "\n=== QUEUE ===" << std::endl;
@@ -2188,6 +3126,8 @@ int main()
 		fs2 << "size of second: " << second_.size() << '\n';
 		fs2 << "size of third: " << third_.size() << '\n';
 		fs2 << "size of fourth: " << fourth_.size() << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2219,6 +3159,8 @@ int main()
 		}
 
 		fs2 << "total: " << sum_ << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2242,6 +3184,8 @@ int main()
 
 		myints_.pop();
 		fs2 << "2. size: " << myints_.size() << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2265,6 +3209,8 @@ int main()
 		myqueue_.front() -= myqueue_.back();    // 77-16=61
 
 		fs2<< "myqueue.front() is now " << myqueue_.front() << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2288,6 +3234,8 @@ int main()
 		myqueue_.back() -= myqueue_.front();
 
 		fs2 << "myqueue.back() is now " << myqueue_.back() << '\n' << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2323,6 +3271,8 @@ int main()
 			myqueue_.pop();
 		}
 		fs2 << '\n' << std::flush;
+	
+		leak_check();
 	}
 	
 	judge();
@@ -2350,6 +3300,8 @@ int main()
 		if (foo_> bar_) fs2 << "foo is greater than bar\n";
 		if (foo_<=bar_) fs2 << "foo is less than or equal to bar\n";
 		if (foo_>=bar_) fs2 << "foo is greater than or equal to bar\n" << std::flush;
+	
+		leak_check();
 	}
 
 	judge();
@@ -2357,11 +3309,7 @@ int main()
 	std::cout << std::endl;
 	fs1.close();
 	fs2.close();
-	// system("rm 1 2");
-	std::cout << "=== LEAK ===" << std::endl;
-	if (system("leaks a.out > /dev/null") == 0)
-		std::cout << "\033[32m[OK] \033[m\n";
-	else
-		std::cout << "\033[31m[KO] \033[m\n";
+	system("rm 1 2");
+	
     return(EXIT_SUCCESS);
 }

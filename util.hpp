@@ -60,8 +60,9 @@ namespace ft
 			typedef typename iterator_traits<Iter>::reference reference;
 		private:
 			Iter ite;
-			reverse__iterator() {};
 		public:
+			reverse__iterator() {};
+
 			reverse__iterator(Iter base):ite(base)
 			{
 
