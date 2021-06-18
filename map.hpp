@@ -430,7 +430,7 @@ namespace ft
 
 			std::pair<const_iterator,const_iterator> equal_range (const key_type& k) const
 			{
-				std::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
+				return std::pair<const_iterator, const_iterator>(lower_bound(k), upper_bound(k));
 			}
 			
 			std::pair<iterator,iterator>             equal_range (const key_type& k)
