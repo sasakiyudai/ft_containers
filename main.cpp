@@ -1,3315 +1,3028 @@
-#include "list.hpp"
-#include "vector.hpp"
-#include "stack.hpp"
-#include "queue.hpp"
-#include "map.hpp"
-#include <cmath>
-#include <list>
-#include <vector>
-#include <stack>
-#include <queue>
-#include <map>
-#include <iostream>
-#include <fstream>
 #include <stdlib.h>
 
-bool fncomp (char lhs, char rhs) {return lhs<rhs;}
+#include <cmath>
+#include <fstream>
+#include <iostream>
+#include <list>
+#include <map>
+#include <queue>
+#include <stack>
+#include <vector>
+
+#include "list.hpp"
+#include "map.hpp"
+#include "queue.hpp"
+#include "stack.hpp"
+#include "vector.hpp"
+
+bool fncomp(char lhs, char rhs) { return lhs < rhs; }
 
 struct classcomp {
-  bool operator() (const char& lhs, const char& rhs) const
-  {return lhs<rhs;}
+  bool operator()(const char& lhs, const char& rhs) const { return lhs < rhs; }
 };
 
 // a predicate implemented as a function:
-bool single_digit (const int& value) { return (value<10); }
+bool single_digit(const int& value) { return (value < 10); }
 
 // a predicate implemented as a class:
 struct is_odd {
-bool operator() (const int& value) { return (value%2)==1; }
+  bool operator()(const int& value) { return (value % 2) == 1; }
 };
 
 // a binary predicate implemented as a function:
-bool same_integral_part (double first, double second)
-{ return ( int(first)==int(second) ); }
+bool same_integral_part(double first, double second) {
+  return (int(first) == int(second));
+}
 
 // a binary predicate implemented as a class:
 struct is_near {
-  bool operator() (double first, double second)
-  { return (fabs(first-second)<5.0); }
+  bool operator()(double first, double second) {
+    return (fabs(first - second) < 5.0);
+  }
 };
 
 // compare only integral part:
-bool mycomparison (double first, double second)
-{ return ( int(first)<int(second) ); }
+bool mycomparison(double first, double second) {
+  return (int(first) < int(second));
+}
 
-bool compare_nocase (const std::string& first, const std::string& second)
-{
-  unsigned int i=0;
-  while ( (i<first.length()) && (i<second.length()) )
-  {
-    if (tolower(first[i])<tolower(second[i])) return true;
-    else if (tolower(first[i])>tolower(second[i])) return false;
+bool compare_nocase(const std::string& first, const std::string& second) {
+  unsigned int i = 0;
+  while ((i < first.length()) && (i < second.length())) {
+    if (tolower(first[i]) < tolower(second[i]))
+      return true;
+    else if (tolower(first[i]) > tolower(second[i]))
+      return false;
     ++i;
   }
-  return ( first.length() < second.length() );
+  return (first.length() < second.length());
 }
 
-void judge()
-{
-	if (system("diff 1 2") == 0)
-		std::cout << "\033[32m[OK] \033[m";
-	else
-		std::cout << "\033[31m[KO] \033[m";
-	std::cout << std::flush;
+void judge() {
+  if (system("diff 1 2") == 0)
+    std::cout << "\033[32m[OK] \033[m";
+  else
+    std::cout << "\033[31m[KO] \033[m";
+  std::cout << std::flush;
 }
 
-void leak_check()
-{
-	if (system("leaks a.out > /dev/null") == 0)
-		std::cout << "\033[32m[OK] \033[m";
-	else
-		std::cout << "\033[31m[KO] \033[m";
-	std::cout << std::flush;
-}
-
-int main()
-{
-	std::ofstream fs1;
-    std::ofstream fs2;
-	fs1.open("1");
-	fs2.open("2");
-
-	std::cout << "=== LIST ===" << std::endl;
-	fs1 << "=== LIST ===" << std::endl;
-	fs2 << "=== LIST ===" << std::endl;
-	{
-		std::list<int> ls;
-
-		fs1 << *ls.begin() << std::endl << std::flush;
-		ls.insert(ls.begin(), 42);
-		fs1 << *ls.begin() << std::endl << std::flush;
-
-		ft::list<int> li;
-
-		fs2 << *li.begin() << std::endl << std::flush;
-		li.insert(li.begin(), 42);
-		fs2 << *li.begin() << std::endl << std::flush;
-
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::list<int> ls;
-
-		fs1 << *ls.end() << std::endl << std::flush;
-		ls.insert(ls.end(), 42);
-		fs1 << *ls.begin() << std::endl << std::flush;
-
-		ft::list<int> li;
-
-		fs2 << *li.end() << std::endl << std::flush;
-		li.insert(li.end(), 42);
-		fs2 << *li.begin() << std::endl << std::flush;
-
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::list<int> mylist;
-  		std::list<int>::iterator it;
-
-  		for (int i=1; i<=5; ++i) mylist.push_back(i);
-  		it = mylist.begin();
-  		++it;
-		mylist.insert (it,10);
-		mylist.insert (it,2,20);
-		--it;
-		std::vector<int> myvector (2,30);
-		mylist.insert (it,myvector.begin(),myvector.end());
-		for (it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it << std::flush;
-		fs1 << '\n' << std::flush;
-
-		ft::list<int> mylist_;
-  		ft::list<int>::iterator it_;
-
-  		for (int i=1; i<=5; ++i) mylist_.push_back(i);
-  		it_ = mylist_.begin();
-  		++it_;
-		mylist_.insert (it_,10);
-		mylist_.insert (it_,2,20);
-		--it_;
-		std::vector<int> myvector_ (2,30);
-		mylist_.insert (it_,myvector_.begin(),myvector_.end());
-		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
-			fs2 << ' ' << *it_ << std::flush;
-		fs2 << '\n' << std::flush;
-
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::list<int> mylist;
-		int sum (0);
-
-		for (int i=1;i<=10;++i) mylist.push_back(i);
-		while (!mylist.empty())
-		{
-			sum += mylist.front();
-			mylist.pop_front();
-		}
-		fs1 << "total: " << sum << '\n' << std::flush;
-
-		ft::list<int> mylist_;
-		int sum_ (0);
-
-		for (int i=1;i<=10;++i) mylist_.push_back(i);
-		while (!mylist_.empty())
-		{
-			sum_ += mylist_.front();
-			mylist_.pop_front();
-		}
-		fs2 << "total: " << sum_ << '\n' << std::flush;
-
-		leak_check();
-	}
-
-	judge();
-
-	{
-		// constructors used in the same order as described above:
-		std::list<int> first;                                // empty list of ints
-		std::list<int> second (4,100);                       // four ints with value 100
-		std::list<int> third (second.begin(),second.end());  // iterating through second
-		std::list<int> fourth (third);                       // a copy of third
-
-		// the iterator constructor can also be used to construct from arrays:
-		int myints[] = {16,2,77,29};
-		std::list<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
-
-		fs1 << "The contents of first are\n" << std::flush;
-		for (std::list<int>::iterator it = first.begin(); it != first.end(); it++)
-			fs1 << *it << ' ' << std::flush;
-		fs1 << "The contents of second are\n" << std::flush;
-		for (std::list<int>::iterator it = second.begin(); it != second.end(); it++)
-			fs1 << *it << ' ' << std::flush;
-		fs1 << "The contents of third are\n" << std::flush;
-		for (std::list<int>::iterator it = third.begin(); it != third.end(); it++)
-			fs1 << *it << ' ' << std::flush;
-		fs1 << "The contents of fourth are\n" << std::flush;
-		for (std::list<int>::iterator it = fourth.begin(); it != fourth.end(); it++)
-			fs1 << *it << ' ' << std::flush;
-		fs1 << "The contents of fifth are\n" << std::flush;
-		for (std::list<int>::iterator it = fifth.begin(); it != fifth.end(); it++)
-			fs1 << *it << ' ' << std::flush;
-
-		
-		// constructors used in the same order as described above:
-		ft::list<int> first_;                                // empty list of ints
-		ft::list<int> second_ (4,100);                       // four ints with value 100
-		ft::list<int> third_ (second_.begin(),second_.end());  // iterating through second_
-		ft::list<int> fourth_ (third_);                       // a copy of third_
+int main() {
+  std::ofstream fs1;
+  std::ofstream fs2;
+  fs1.open("1");
+  fs2.open("2");
+
+  std::cout << "=== LIST ===" << std::endl;
+  fs1 << "=== LIST ===" << std::endl;
+  fs2 << "=== LIST ===" << std::endl;
+  {
+    std::list<int> ls;
+
+    fs1 << *ls.begin() << std::endl << std::flush;
+    ls.insert(ls.begin(), 42);
+    fs1 << *ls.begin() << std::endl << std::flush;
+
+    ft::list<int> li;
+
+    fs2 << *li.begin() << std::endl << std::flush;
+    li.insert(li.begin(), 42);
+    fs2 << *li.begin() << std::endl << std::flush;
+  }
+
+  judge();
+
+  {
+    std::list<int> ls;
+
+    fs1 << *ls.end() << std::endl << std::flush;
+    ls.insert(ls.end(), 42);
+    fs1 << *ls.begin() << std::endl << std::flush;
+
+    ft::list<int> li;
+
+    fs2 << *li.end() << std::endl << std::flush;
+    li.insert(li.end(), 42);
+    fs2 << *li.begin() << std::endl << std::flush;
+  }
+
+  judge();
+
+  {
+    std::list<int> mylist;
+    std::list<int>::iterator it;
+
+    for (int i = 1; i <= 5; ++i) mylist.push_back(i);
+    it = mylist.begin();
+    ++it;
+    mylist.insert(it, 10);
+    mylist.insert(it, 2, 20);
+    --it;
+    std::vector<int> myvector(2, 30);
+    mylist.insert(it, myvector.begin(), myvector.end());
+    for (it = mylist.begin(); it != mylist.end(); ++it)
+      fs1 << ' ' << *it << std::flush;
+    fs1 << '\n' << std::flush;
+
+    ft::list<int> mylist_;
+    ft::list<int>::iterator it_;
+
+    for (int i = 1; i <= 5; ++i) mylist_.push_back(i);
+    it_ = mylist_.begin();
+    ++it_;
+    mylist_.insert(it_, 10);
+    mylist_.insert(it_, 2, 20);
+    --it_;
+    std::vector<int> myvector_(2, 30);
+    mylist_.insert(it_, myvector_.begin(), myvector_.end());
+    for (it_ = mylist_.begin(); it_ != mylist_.end(); ++it_)
+      fs2 << ' ' << *it_ << std::flush;
+    fs2 << '\n' << std::flush;
+  }
+
+  judge();
+
+  {
+    std::list<int> mylist;
+    int sum(0);
+
+    for (int i = 1; i <= 10; ++i) mylist.push_back(i);
+    while (!mylist.empty()) {
+      sum += mylist.front();
+      mylist.pop_front();
+    }
+    fs1 << "total: " << sum << '\n' << std::flush;
+
+    ft::list<int> mylist_;
+    int sum_(0);
+
+    for (int i = 1; i <= 10; ++i) mylist_.push_back(i);
+    while (!mylist_.empty()) {
+      sum_ += mylist_.front();
+      mylist_.pop_front();
+    }
+    fs2 << "total: " << sum_ << '\n' << std::flush;
+  }
+
+  judge();
+
+  {
+    // constructors used in the same order as described above:
+    std::list<int> first;           // empty list of ints
+    std::list<int> second(4, 100);  // four ints with value 100
+    std::list<int> third(second.begin(),
+                         second.end());  // iterating through second
+    std::list<int> fourth(third);        // a copy of third
+
+    // the iterator constructor can also be used to construct from arrays:
+    int myints[] = {16, 2, 77, 29};
+    std::list<int> fifth(myints, myints + sizeof(myints) / sizeof(int));
+
+    fs1 << "The contents of first are\n" << std::flush;
+    for (std::list<int>::iterator it = first.begin(); it != first.end(); it++)
+      fs1 << *it << ' ' << std::flush;
+    fs1 << "The contents of second are\n" << std::flush;
+    for (std::list<int>::iterator it = second.begin(); it != second.end(); it++)
+      fs1 << *it << ' ' << std::flush;
+    fs1 << "The contents of third are\n" << std::flush;
+    for (std::list<int>::iterator it = third.begin(); it != third.end(); it++)
+      fs1 << *it << ' ' << std::flush;
+    fs1 << "The contents of fourth are\n" << std::flush;
+    for (std::list<int>::iterator it = fourth.begin(); it != fourth.end(); it++)
+      fs1 << *it << ' ' << std::flush;
+    fs1 << "The contents of fifth are\n" << std::flush;
+    for (std::list<int>::iterator it = fifth.begin(); it != fifth.end(); it++)
+      fs1 << *it << ' ' << std::flush;
+
+    // constructors used in the same order as described above:
+    ft::list<int> first_;           // empty list of ints
+    ft::list<int> second_(4, 100);  // four ints with value 100
+    ft::list<int> third_(second_.begin(),
+                         second_.end());  // iterating through second_
+    ft::list<int> fourth_(third_);        // a copy of third_
+
+    // the iterator constructor can also be used to construct from arrays:
+    int myints_[] = {16, 2, 77, 29};
+    ft::list<int> fifth_(myints_, myints_ + sizeof(myints_) / sizeof(int));
+
+    fs2 << "The contents of first are\n" << std::flush;
+    for (ft::list<int>::iterator it = first_.begin(); it != first_.end(); it++)
+      fs2 << *it << ' ' << std::flush;
+    fs2 << "The contents of second are\n" << std::flush;
+    for (ft::list<int>::iterator it = second_.begin(); it != second_.end();
+         it++)
+      fs2 << *it << ' ' << std::flush;
+    fs2 << "The contents of third are\n" << std::flush;
+    for (ft::list<int>::iterator it = third_.begin(); it != third_.end(); it++)
+      fs2 << *it << ' ' << std::flush;
+    fs2 << "The contents of fourth are\n" << std::flush;
+    for (ft::list<int>::iterator it = fourth_.begin(); it != fourth_.end();
+         it++)
+      fs2 << *it << ' ' << std::flush;
+    fs2 << "The contents of fifth are\n" << std::flush;
+    for (ft::list<int>::iterator it = fifth_.begin(); it != fifth_.end(); it++)
+      fs2 << *it << ' ' << std::flush;
+  }
+
+  judge();
+
+  {
+    std::list<int> first(3);   // list of 3 zero-initialized ints
+    std::list<int> second(5);  // list of 5 zero-initialized ints
+
+    second = first;
+    first = std::list<int>();
+
+    fs1 << "Size of first: " << int(first.size()) << '\n';
+    fs1 << "Size of second: " << int(second.size()) << '\n' << std::flush;
+
+    ft::list<int> first_(3);   // list of 3 zero-initialized ints
+    ft::list<int> second_(5);  // list of 5 zero-initialized ints
+
+    second_ = first_;
+    first_ = ft::list<int>();
+
+    fs2 << "Size of first: " << int(first_.size()) << '\n';
+    fs2 << "Size of second: " << int(second_.size()) << '\n' << std::flush;
+  }
+
+  judge();
+
+  {
+    int myints[] = {75, 23, 65, 42, 13};
+    std::list<int> mylist(myints, myints + 5);
+
+    fs1 << "mylist contains:";
+    for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+      fs1 << ' ' << *it;
+
+    fs1 << '\n' << std::flush;
+
+    int myints_[] = {75, 23, 65, 42, 13};
+    ft::list<int> mylist_(myints_, myints_ + 5);
+
+    fs2 << "mylist contains:";
+    for (ft::list<int>::iterator it = mylist_.begin(); it != mylist_.end();
+         ++it)
+      fs2 << ' ' << *it;
+
+    fs2 << '\n' << std::flush;
+  }
+
+  judge();
+
+  {
+    std::list<int> mylist;
+    for (int i = 1; i <= 5; ++i) mylist.push_back(i);
 
-		// the iterator constructor can also be used to construct from arrays:
-		int myints_[] = {16,2,77,29};
-		ft::list<int> fifth_ (myints_, myints_ + sizeof(myints_) / sizeof(int) );
+    fs1 << "mylist backwards:";
+    for (std::list<int>::reverse_iterator rit = mylist.rbegin();
+         rit != mylist.rend(); ++rit)
+      fs1 << ' ' << *rit;
+
+    fs1 << '\n' << std::flush;
+
+    ft::list<int> mylist_;
+    for (int i = 1; i <= 5; ++i) mylist_.push_back(i);
+
+    fs2 << "mylist backwards:";
+    for (ft::list<int>::reverse_iterator rit = mylist_.rbegin();
+         rit != mylist_.rend(); ++rit)
+      fs2 << ' ' << *rit;
+
+    fs2 << '\n' << std::flush;
+  }
+
+  judge();
+
+  {
+    std::list<int> myints;
+    fs1 << "0. size: " << myints.size() << '\n';
+    for (int i = 0; i < 10; i++) myints.push_back(i);
+    fs1 << "1. size: " << myints.size() << '\n';
+    myints.insert(myints.begin(), 10, 100);
+    fs1 << "2. size: " << myints.size() << '\n';
+    myints.pop_back();
+    fs1 << "3. size: " << myints.size() << '\n' << std::flush;
+
+    ft::list<int> myints_;
+    fs2 << "0. size: " << myints_.size() << '\n';
+    for (int i = 0; i < 10; i++) myints_.push_back(i);
+    fs2 << "1. size: " << myints_.size() << '\n';
+    myints_.insert(myints_.begin(), 10, 100);
+    fs2 << "2. size: " << myints_.size() << '\n';
+    myints_.pop_back();
+    fs2 << "3. size: " << myints_.size() << '\n' << std::flush;
+  }
+
+  judge();
+
+  {
+    const int i = 42;
+    std::list<int> mylist;
 
-		fs2 << "The contents of first are\n" << std::flush;
-		for (ft::list<int>::iterator it = first_.begin(); it != first_.end(); it++)
-			fs2 << *it << ' ' << std::flush;
-		fs2 << "The contents of second are\n" << std::flush;
-		for (ft::list<int>::iterator it = second_.begin(); it != second_.end(); it++)
-			fs2 << *it << ' ' << std::flush;
-		fs2 << "The contents of third are\n" << std::flush;
-		for (ft::list<int>::iterator it = third_.begin(); it != third_.end(); it++)
-			fs2 << *it << ' ' << std::flush;
-		fs2 << "The contents of fourth are\n" << std::flush;
-		for (ft::list<int>::iterator it = fourth_.begin(); it != fourth_.end(); it++)
-			fs2 << *it << ' ' << std::flush;
-		fs2 << "The contents of fifth are\n" << std::flush;
-		for (ft::list<int>::iterator it = fifth_.begin(); it != fifth_.end(); it++)
-			fs2 << *it << ' ' << std::flush;
-
-			leak_check();
-	}
-
-	judge();
-
-	{
-		std::list<int> first (3);      // list of 3 zero-initialized ints
-		std::list<int> second (5);     // list of 5 zero-initialized ints
-
-		second = first;
-		first = std::list<int>();
+    fs1 << "Enter number of elements: ";
 
-		fs1 << "Size of first: " << int (first.size()) << '\n';
-		fs1 << "Size of second: " << int (second.size()) << '\n' << std::flush;
+    if (i < mylist.max_size())
+      mylist.resize(i);
+    else
+      fs1 << "That size exceeds the limit.\n" << std::flush;
 
-		ft::list<int> first_ (3);      // list of 3 zero-initialized ints
-		ft::list<int> second_ (5);     // list of 5 zero-initialized ints
+    fs1 << mylist.size() << std::flush;
 
-		second_ = first_;
-		first_ = ft::list<int>();
+    const int i_ = 42;
+    ft::list<int> mylist_;
 
-		fs2 << "Size of first: " << int (first_.size()) << '\n';
-		fs2 << "Size of second: " << int (second_.size()) << '\n' << std::flush;
+    fs2 << "Enter number of elements: ";
 
-		leak_check();
-	}
+    if (i_ < mylist_.max_size())
+      mylist_.resize(i_);
+    else
+      fs2 << "That size exceeds the limit.\n" << std::flush;
 
-	judge();
+    fs2 << mylist_.size() << std::flush;
+  }
 
-	{
-		int myints[] = {75,23,65,42,13};
-		std::list<int> mylist (myints,myints+5);
+  judge();
 
-		fs1 << "mylist contains:";
-		for (std::list<int>::iterator it=mylist.begin(); it != mylist.end(); ++it)
-			fs1 << ' ' << *it;
+  {
+    std::list<int> mylist;
 
-		fs1 << '\n' << std::flush;
+    mylist.push_back(77);
+    mylist.push_back(22);
 
+    // now front equals 77, and back 22
 
-		int myints_[] = {75,23,65,42,13};
-		ft::list<int> mylist_ (myints_,myints_+5);
+    mylist.front() -= mylist.back();
 
-		fs2 << "mylist contains:";
-		for (ft::list<int>::iterator it=mylist_.begin(); it != mylist_.end(); ++it)
-			fs2 << ' ' << *it;
+    fs1 << "mylist.front() is now " << mylist.front() << '\n' << std::flush;
 
-		fs2 << '\n' << std::flush;
+    ft::list<int> mylist_;
 
-		leak_check();
-	}
+    mylist_.push_back(77);
+    mylist_.push_back(22);
 
-	judge();
+    // now front equals 77, and back 22
 
-	{
-		std::list<int> mylist;
-		for (int i=1; i<=5; ++i) mylist.push_back(i);
+    mylist_.front() -= mylist_.back();
 
-		fs1 << "mylist backwards:";
-		for (std::list<int>::reverse_iterator rit=mylist.rbegin(); rit!=mylist.rend(); ++rit)
-			fs1 << ' ' << *rit;
+    fs2 << "mylist.front() is now " << mylist_.front() << '\n' << std::flush;
+  }
 
-		fs1 << '\n' << std::flush;
+  judge();
 
+  {
+    std::list<int> mylist;
 
-		ft::list<int> mylist_;
-		for (int i=1; i<=5; ++i) mylist_.push_back(i);
+    mylist.push_back(10);
+    while (mylist.back() != 0) {
+      mylist.push_back(mylist.back() - 1);
+    }
+    fs1 << "mylist contains:";
+    for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		fs2 << "mylist backwards:";
-		for (ft::list<int>::reverse_iterator rit=mylist_.rbegin(); rit!=mylist_.rend(); ++rit)
-			fs2 << ' ' << *rit;
+    ft::list<int> mylist_;
 
-		fs2 << '\n' << std::flush;
+    mylist_.push_back(10);
+    while (mylist_.back() != 0) {
+      mylist_.push_back(mylist_.back() - 1);
+    }
+    fs2 << "mylist contains:";
+    for (ft::list<int>::iterator it = mylist_.begin(); it != mylist_.end();
+         ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		leak_check();
-	}
+  judge();
 
-	judge();
+  {
+    std::list<int> first;
+    std::list<int> second;
 
-	{
-		std::list<int> myints;
-		fs1 << "0. size: " << myints.size() << '\n';
-		for (int i=0; i<10; i++) myints.push_back(i);
-		fs1 << "1. size: " << myints.size() << '\n';
-		myints.insert (myints.begin(),10,100);
-		fs1 << "2. size: " << myints.size() << '\n';
-		myints.pop_back();
-		fs1 << "3. size: " << myints.size() << '\n' << std::flush;
+    first.assign(7, 100);  // 7 ints with value 100
 
+    second.assign(first.begin(), first.end());  // a copy of first
 
-		ft::list<int> myints_;
-		fs2 << "0. size: " << myints_.size() << '\n';
-		for (int i=0; i<10; i++) myints_.push_back(i);
-		fs2 << "1. size: " << myints_.size() << '\n';
-		myints_.insert (myints_.begin(),10,100);
-		fs2 << "2. size: " << myints_.size() << '\n';
-		myints_.pop_back();
-		fs2 << "3. size: " << myints_.size() << '\n'<< std::flush;
+    int myints[] = {1776, 7, 4};
+    first.assign(myints, myints + 3);  // assigning from array
 
-		leak_check();
-	}
+    fs1 << "Size of first: " << int(first.size()) << '\n';
+    fs1 << "Size of second: " << int(second.size()) << '\n' << std::flush;
 
-	judge();
+    ft::list<int> first_;
+    ft::list<int> second_;
 
-	{
-		const int i = 42;
-		std::list<int> mylist;
+    first_.assign(7, 100);  // 7 ints with value 100
 
-		fs1 << "Enter number of elements: ";
+    second_.assign(first_.begin(), first_.end());  // a copy of first_
 
-		if (i<mylist.max_size()) mylist.resize(i);
-		else fs1 << "That size exceeds the limit.\n" << std::flush;
+    int myints_[] = {1776, 7, 4};
+    first_.assign(myints_, myints_ + 3);  // assigning from array
 
-		fs1 << mylist.size() << std::flush;
+    fs2 << "Size of first: " << int(first_.size()) << '\n';
+    fs2 << "Size of second: " << int(second_.size()) << '\n' << std::flush;
+  }
 
+  judge();
 
-		const int i_ = 42;
-		ft::list<int> mylist_;
+  {
+    std::list<int> mylist(2, 100);  // two ints with a value of 100
+    mylist.push_front(200);
+    mylist.push_front(300);
 
-		fs2 << "Enter number of elements: ";
+    fs1 << "mylist contains:";
+    for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+      fs1 << ' ' << *it;
 
-		if (i_<mylist_.max_size()) mylist_.resize(i_);
-		else fs2 << "That size exceeds the limit.\n" << std::flush;
+    fs1 << '\n' << std::flush;
 
-		fs2 << mylist_.size() << std::flush;
+    ft::list<int> mylist_(2, 100);  // two ints with a value of 100
+    mylist_.push_front(200);
+    mylist_.push_front(300);
 
-		leak_check();
-	}
+    fs2 << "mylist contains:";
+    for (ft::list<int>::iterator it_ = mylist_.begin(); it_ != mylist_.end();
+         ++it_)
+      fs2 << ' ' << *it_;
 
-	judge();
+    fs2 << '\n' << std::flush;
+  }
 
-	{
-		std::list<int> mylist;
+  judge();
 
-		mylist.push_back(77);
-		mylist.push_back(22);
+  {
+    std::list<int> mylist;
+    mylist.push_back(100);
+    mylist.push_back(200);
+    mylist.push_back(300);
 
-		// now front equals 77, and back 22
+    fs1 << "Popping out the elements in mylist:";
+    while (!mylist.empty()) {
+      fs1 << ' ' << mylist.front();
+      mylist.pop_front();
+    }
 
-		mylist.front() -= mylist.back();
+    fs1 << "\nFinal size of mylist is " << mylist.size() << '\n' << std::flush;
 
-		fs1 << "mylist.front() is now " << mylist.front() << '\n' << std::flush;
+    ft::list<int> mylist_;
+    mylist_.push_back(100);
+    mylist_.push_back(200);
+    mylist_.push_back(300);
 
+    fs2 << "Popping out the elements in mylist:";
+    while (!mylist_.empty()) {
+      fs2 << ' ' << mylist_.front();
+      mylist_.pop_front();
+    }
 
-		ft::list<int> mylist_;
+    fs2 << "\nFinal size of mylist is " << mylist_.size() << '\n' << std::flush;
+  }
 
-		mylist_.push_back(77);
-		mylist_.push_back(22);
+  judge();
 
-		// now front equals 77, and back 22
+  {
+    std::list<int> mylist;
+    const int myint[8] = {1, 2, 3, 4, 5, 6, 7, 8};
 
-		mylist_.front() -= mylist_.back();
+    fs1 << "Please enter some integers (enter 0 to end):\n";
 
-		fs2 << "mylist.front() is now " << mylist_.front() << '\n' << std::flush;
+    for (int i = 0; i < 8; i++) mylist.push_back(myint[i]);
 
-		leak_check();
-	}
+    fs1 << "mylist stores " << mylist.size() << " numbers.\n" << std::flush;
 
-	judge();
+    ft::list<int> mylist_;
+    const int myint_[8] = {1, 2, 3, 4, 5, 6, 7, 8};
 
-	{
-		std::list<int> mylist;
+    fs2 << "Please enter some integers (enter 0 to end):\n";
 
-		mylist.push_back(10);
-		while (mylist.back() != 0)
-		{
-			mylist.push_back ( mylist.back() -1 );
-		}
-		fs1 << "mylist contains:";
-		for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end() ; ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    for (int i = 0; i < 8; i++) mylist_.push_back(myint_[i]);
 
+    fs2 << "mylist stores " << mylist_.size() << " numbers.\n" << std::flush;
+  }
 
-		ft::list<int> mylist_;
+  judge();
 
-		mylist_.push_back(10);
-		while (mylist_.back() != 0)
-		{
-			mylist_.push_back ( mylist_.back() -1 );
-		}
-		fs2 << "mylist contains:";
-		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end() ; ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
+  {
+    std::list<int> mylist;
+    int sum(0);
+    mylist.push_back(100);
+    mylist.push_back(200);
+    mylist.push_back(300);
 
-		leak_check();
-	}
+    while (!mylist.empty()) {
+      sum += mylist.back();
+      mylist.pop_back();
+    }
 
-	judge();
+    fs1 << "The elements of mylist summed " << sum << '\n' << std::flush;
 
-	{
-		std::list<int> first;
-		std::list<int> second;
+    ft::list<int> mylist_;
+    int sum_(0);
+    mylist_.push_back(100);
+    mylist_.push_back(200);
+    mylist_.push_back(300);
 
-		first.assign (7,100);                      // 7 ints with value 100
+    while (!mylist_.empty()) {
+      sum_ += mylist_.back();
+      mylist_.pop_back();
+    }
 
-		second.assign (first.begin(),first.end()); // a copy of first
+    fs2 << "The elements of mylist summed " << sum_ << '\n' << std::flush;
+  }
 
-		int myints[]={1776,7,4};
-		first.assign (myints,myints+3);            // assigning from array
+  judge();
 
-		fs1 << "Size of first: " << int (first.size()) << '\n';
-		fs1 << "Size of second: " << int (second.size()) << '\n' << std::flush;
+  {
+    std::list<int> mylist;
+    std::list<int>::iterator it;
 
+    // set some initial values:
+    for (int i = 1; i <= 5; ++i) mylist.push_back(i);  // 1 2 3 4 5
 
-		ft::list<int> first_;
-		ft::list<int> second_;
+    it = mylist.begin();
+    ++it;  // it points now to number 2           ^
 
-		first_.assign (7,100);                      // 7 ints with value 100
+    mylist.insert(it, 10);  // 1 10 2 3 4 5
 
-		second_.assign (first_.begin(),first_.end()); // a copy of first_
+    // "it" still points to number 2                      ^
+    mylist.insert(it, 2, 20);  // 1 10 20 20 2 3 4 5
 
-		int myints_[]={1776,7,4};
-		first_.assign (myints_,myints_+3);            // assigning from array
+    --it;  // it points now to the second 20            ^
 
-		fs2 << "Size of first: " << int (first_.size()) << '\n';
-		fs2 << "Size of second: " << int (second_.size()) << '\n' << std::flush;
+    std::vector<int> myvector(2, 30);
+    mylist.insert(it, myvector.begin(), myvector.end());
+    // 1 10 20 30 30 20 2 3 4 5
+    //               ^
+    fs1 << "mylist contains:";
+    for (it = mylist.begin(); it != mylist.end(); ++it) fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		leak_check();
-	}
+    ft::list<int> mylist_;
+    ft::list<int>::iterator it_;
 
-	judge();
+    // set some init_ial values:
+    for (int i = 1; i <= 5; ++i) mylist_.push_back(i);  // 1 2 3 4 5
 
-	{
-		std::list<int> mylist (2,100);         // two ints with a value of 100
-		mylist.push_front (200);
-		mylist.push_front (300);
+    it_ = mylist_.begin();
+    ++it_;  // it_ points now to number 2           ^
 
-		fs1 << "mylist contains:";
-		for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
+    mylist_.insert(it_, 10);  // 1 10 2 3 4 5
 
-		fs1 << '\n' << std::flush;
+    // "it_" still points to number 2                      ^
+    mylist_.insert(it_, 2, 20);  // 1 10 20 20 2 3 4 5
 
+    --it_;  // it_ points now to the second 20            ^
 
-		ft::list<int> mylist_ (2,100);         // two ints with a value of 100
-		mylist_.push_front (200);
-		mylist_.push_front (300);
+    std::vector<int> myvector_(2, 30);
+    mylist_.insert(it_, myvector_.begin(), myvector_.end());
+    // 1 10 20 30 30 20 2 3 4 5
+    //               ^
+    fs2 << "mylist contains:";
+    for (it_ = mylist_.begin(); it_ != mylist_.end(); ++it_) fs2 << ' ' << *it_;
+    fs2 << '\n' << std::flush;
+  }
 
-		fs2 << "mylist contains:";
-		for (ft::list<int>::iterator it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
-			fs2 << ' ' << *it_;
+  judge();
 
-		fs2 << '\n' << std::flush;
+  {
+    std::list<int> mylist;
+    std::list<int>::iterator it1, it2;
 
-		leak_check();
-	}
+    // set some values:
+    for (int i = 1; i < 10; ++i) mylist.push_back(i * 10);
 
-	judge();
+    // 10 20 30 40 50 60 70 80 90
+    it1 = it2 = mylist.begin();         // ^^
+    for (int i = 0; i < 6; i++) ++it2;  // ^                 ^
+    ++it1;                              //    ^              ^
 
-	{
-		std::list<int> mylist;
-		mylist.push_back (100);
-		mylist.push_back (200);
-		mylist.push_back (300);
+    it1 = mylist.erase(it1);  // 10 30 40 50 60 70 80 90
+                              //    ^           ^
 
-		fs1 << "Popping out the elements in mylist:";
-		while (!mylist.empty())
-		{
-			fs1 << ' ' << mylist.front();
-			mylist.pop_front();
-		}
+    it2 = mylist.erase(it2);  // 10 30 40 50 60 80 90
+                              //    ^           ^
 
-		fs1 << "\nFinal size of mylist is " << mylist.size() << '\n' << std::flush;
+    ++it1;  //       ^        ^
+    --it2;  //       ^     ^
 
+    mylist.erase(it1, it2);  // 10 30 60 80 90
+                             //        ^
 
-		ft::list<int> mylist_;
-		mylist_.push_back (100);
-		mylist_.push_back (200);
-		mylist_.push_back (300);
+    fs1 << "mylist contains:";
+    for (it1 = mylist.begin(); it1 != mylist.end(); ++it1) fs1 << ' ' << *it1;
+    fs1 << '\n' << std::flush;
 
-		fs2<< "Popping out the elements in mylist:";
-		while (!mylist_.empty())
-		{
-			fs2<< ' ' << mylist_.front();
-			mylist_.pop_front();
-		}
+    ft::list<int> mylist_;
+    ft::list<int>::iterator it1_, it2_;
 
-		fs2<< "\nFinal size of mylist is " << mylist_.size() << '\n' << std::flush;
+    // set some values:
+    for (int i = 1; i < 10; ++i) mylist_.push_back(i * 10);
 
-		leak_check();
-	}
+    // 10 20 30 40 50 60 70 80 90
+    it1_ = it2_ = mylist_.begin();       // ^^
+    for (int i = 0; i < 6; i++) ++it2_;  // ^                 ^
+    ++it1_;                              //    ^              ^
 
-	judge();
+    it1_ = mylist_.erase(it1_);  // 10 30 40 50 60 70 80 90
+                                 //    ^           ^
 
-	{
-		std::list<int> mylist;
-		const int myint[8] = {1,2,3,4,5,6,7,8};
+    it2_ = mylist_.erase(it2_);  // 10 30 40 50 60 80 90
+                                 //    ^           ^
 
-		fs1 << "Please enter some integers (enter 0 to end):\n";
+    ++it1_;  //       ^        ^
+    --it2_;  //       ^     ^
 
-		for (int i = 0; i < 8; i++)
-			mylist.push_back (myint[i]);
+    mylist_.erase(it1_, it2_);  // 10 30 60 80 90
+                                //        ^
 
-		fs1 << "mylist stores " << mylist.size() << " numbers.\n" << std::flush;
+    fs2 << "mylist contains:";
+    for (it1_ = mylist_.begin(); it1_ != mylist_.end(); ++it1_)
+      fs2 << ' ' << *it1_;
+    fs2 << '\n' << std::flush;
+  }
 
+  judge();
 
-		ft::list<int> mylist_;
-		const int myint_[8] = {1,2,3,4,5,6,7,8};
+  {
+    std::list<int> first(3, 100);   // three ints with a value of 100
+    std::list<int> second(5, 200);  // five ints with a value of 200
 
-		fs2 << "Please enter some integers (enter 0 to end):\n";
+    first.swap(second);
 
-		for (int i = 0; i < 8; i++)
-			mylist_.push_back (myint_[i]);
+    fs1 << "first contains:";
+    for (std::list<int>::iterator it = first.begin(); it != first.end(); it++)
+      fs1 << ' ' << *it;
+    fs1 << '\n';
 
-		fs2 << "mylist stores " << mylist_.size() << " numbers.\n" << std::flush;
+    fs1 << "second contains:";
+    for (std::list<int>::iterator it = second.begin(); it != second.end(); it++)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		leak_check();
-	}
+    ft::list<int> first_(3, 100);   // three ints with a value of 100
+    ft::list<int> second_(5, 200);  // five ints with a value of 200
 
-	judge();
+    first_.swap(second_);
 
-	{
-		std::list<int> mylist;
-		int sum (0);
-		mylist.push_back (100);
-		mylist.push_back (200);
-		mylist.push_back (300);
+    fs2 << "first contains:";
+    for (ft::list<int>::iterator it = first_.begin(); it != first_.end(); it++)
+      fs2 << ' ' << *it;
+    fs2 << '\n';
 
-		while (!mylist.empty())
-		{
-			sum+=mylist.back();
-			mylist.pop_back();
-		}
+    fs2 << "second contains:";
+    for (ft::list<int>::iterator it = second_.begin(); it != second_.end();
+         it++)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		fs1 << "The elements of mylist summed " << sum << '\n' << std::flush;
+  judge();
 
+  {
+    std::list<int> mylist;
 
-		ft::list<int> mylist_;
-		int sum_ (0);
-		mylist_.push_back (100);
-		mylist_.push_back (200);
-		mylist_.push_back (300);
+    // set some initial content:
+    for (int i = 1; i < 10; ++i) mylist.push_back(i);
 
-		while (!mylist_.empty())
-		{
-			sum_+=mylist_.back();
-			mylist_.pop_back();
-		}
+    mylist.resize(5);
+    mylist.resize(8, 100);
+    mylist.resize(12);
 
-		fs2 << "The elements of mylist summed " << sum_ << '\n' << std::flush;
+    fs1 << "mylist contains:";
+    for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+      fs1 << ' ' << *it;
 
-		leak_check();
-	}
+    fs1 << '\n' << std::flush;
 
-	judge();
+    ft::list<int> mylist_;
 
-	{
-		std::list<int> mylist;
-		std::list<int>::iterator it;
+    // set some initial content:
+    for (int i = 1; i < 10; ++i) mylist_.push_back(i);
 
-		// set some initial values:
-		for (int i=1; i<=5; ++i) mylist.push_back(i); // 1 2 3 4 5
+    mylist_.resize(5);
+    mylist_.resize(8, 100);
+    mylist_.resize(12);
 
-		it = mylist.begin();
-		++it;       // it points now to number 2           ^
+    fs2 << "mylist contains:";
+    for (ft::list<int>::iterator it = mylist_.begin(); it != mylist_.end();
+         ++it)
+      fs2 << ' ' << *it;
 
-		mylist.insert (it,10);                        // 1 10 2 3 4 5
+    fs2 << '\n' << std::flush;
+  }
 
-		// "it" still points to number 2                      ^
-		mylist.insert (it,2,20);                      // 1 10 20 20 2 3 4 5
+  judge();
 
-		--it;       // it points now to the second 20            ^
+  {
+    std::list<int> mylist;
+    std::list<int>::iterator it;
 
-		std::vector<int> myvector (2,30);
-		mylist.insert (it,myvector.begin(),myvector.end());
-														// 1 10 20 30 30 20 2 3 4 5
-														//               ^
-		fs1 << "mylist contains:";
-		for (it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    mylist.push_back(100);
+    mylist.push_back(200);
+    mylist.push_back(300);
 
+    fs1 << "mylist contains:";
+    for (it = mylist.begin(); it != mylist.end(); ++it) fs1 << ' ' << *it;
+    fs1 << '\n';
 
-		ft::list<int> mylist_;
-		ft::list<int>::iterator it_;
+    mylist.clear();
+    mylist.push_back(1101);
+    mylist.push_back(2202);
 
-		// set some init_ial values:
-		for (int i=1; i<=5; ++i) mylist_.push_back(i); // 1 2 3 4 5
+    fs1 << "mylist contains:";
+    for (it = mylist.begin(); it != mylist.end(); ++it) fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		it_ = mylist_.begin();
-		++it_;       // it_ points now to number 2           ^
+    ft::list<int> mylist_;
+    ft::list<int>::iterator it_;
 
-		mylist_.insert (it_,10);                        // 1 10 2 3 4 5
+    mylist_.push_back(100);
+    mylist_.push_back(200);
+    mylist_.push_back(300);
 
-		// "it_" still points to number 2                      ^
-		mylist_.insert (it_,2,20);                      // 1 10 20 20 2 3 4 5
+    fs2 << "mylist contains:";
+    for (it_ = mylist_.begin(); it_ != mylist_.end(); ++it_) fs2 << ' ' << *it_;
+    fs2 << '\n';
 
-		--it_;       // it_ points now to the second 20            ^
+    mylist_.clear();
+    mylist_.push_back(1101);
+    mylist_.push_back(2202);
 
-		std::vector<int> myvector_ (2,30);
-		mylist_.insert (it_,myvector_.begin(),myvector_.end());
-														// 1 10 20 30 30 20 2 3 4 5
-														//               ^
-		fs2<< "mylist contains:";
-		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
-			fs2<< ' ' << *it_;
-		fs2<< '\n' << std::flush;
+    fs2 << "mylist contains:";
+    for (it_ = mylist_.begin(); it_ != mylist_.end(); ++it_) fs2 << ' ' << *it_;
+    fs2 << '\n' << std::flush;
+  }
 
-		leak_check();
-	}
+  judge();
 
-	judge();
+  {
+    std::list<int> mylist1, mylist2;
+    std::list<int>::iterator it;
 
-	{
-		std::list<int> mylist;
-		std::list<int>::iterator it1,it2;
+    // set some initial values:
+    for (int i = 1; i <= 4; ++i) mylist1.push_back(i);  // mylist1: 1 2 3 4
 
-		// set some values:
-		for (int i=1; i<10; ++i) mylist.push_back(i*10);
+    for (int i = 1; i <= 3; ++i)
+      mylist2.push_back(i * 10);  // mylist2: 10 20 30
 
-									// 10 20 30 40 50 60 70 80 90
-		it1 = it2 = mylist.begin(); // ^^
-		for (int i = 0; i < 6; i++)
-			++it2;          // ^                 ^
-		++it1;                      //    ^              ^
+    it = mylist1.begin();
+    ++it;  // points to 2
 
-		it1 = mylist.erase (it1);   // 10 30 40 50 60 70 80 90
-									//    ^           ^
+    mylist1.splice(it, mylist2);  // mylist1: 1 10 20 30 2 3 4
+                                  // mylist2 (empty)
+                                  // "it" still points to 2 (the 5th element)
 
-		it2 = mylist.erase (it2);   // 10 30 40 50 60 80 90
-									//    ^           ^
+    mylist2.splice(mylist2.begin(), mylist1, it);
+    // mylist1: 1 10 20 30 3 4
+    // mylist2: 2
+    // "it" is now invalid.
+    it = mylist1.begin();
+    for (int i = 0; i < 3; i++) it++;  // "it" points now to 30
 
-		++it1;                      //       ^        ^
-		--it2;                      //       ^     ^
+    mylist1.splice(mylist1.begin(), mylist1, it, mylist1.end());
+    // mylist1: 30 3 4 1 10 20
 
-		mylist.erase (it1,it2);     // 10 30 60 80 90
-									//        ^
+    fs1 << "mylist1 contains:";
+    for (it = mylist1.begin(); it != mylist1.end(); ++it) fs1 << ' ' << *it;
+    fs1 << '\n';
 
-		fs1 << "mylist contains:";
-		for (it1=mylist.begin(); it1!=mylist.end(); ++it1)
-			fs1 << ' ' << *it1;
-		fs1 << '\n' << std::flush;
+    fs1 << "mylist2 contains:";
+    for (it = mylist2.begin(); it != mylist2.end(); ++it) fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
+    ft::list<int> mylist1_, mylist2_;
+    ft::list<int>::iterator it_;
 
-		ft::list<int> mylist_;
-		ft::list<int>::iterator it1_,it2_;
+    // set some init_ial values:
+    for (int i = 1; i <= 4; ++i) mylist1_.push_back(i);  // mylist1_: 1 2 3 4
 
-		// set some values:
-		for (int i=1; i<10; ++i) mylist_.push_back(i*10);
+    for (int i = 1; i <= 3; ++i)
+      mylist2_.push_back(i * 10);  // mylist2_: 10 20 30
 
-									// 10 20 30 40 50 60 70 80 90
-		it1_ = it2_ = mylist_.begin(); // ^^
-		for (int i = 0; i < 6; i++)
-			++it2_;          // ^                 ^
-		++it1_;                      //    ^              ^
+    it_ = mylist1_.begin();
+    ++it_;  // points to 2
 
-		it1_ = mylist_.erase (it1_);   // 10 30 40 50 60 70 80 90
-									//    ^           ^
+    mylist1_.splice(it_,
+                    mylist2_);  // mylist1_: 1 10 20 30 2 3 4
+                                // mylist2_ (empty)
+                                // "it_" still points to 2 (the 5th element)
 
-		it2_ = mylist_.erase (it2_);   // 10 30 40 50 60 80 90
-									//    ^           ^
+    mylist2_.splice(mylist2_.begin(), mylist1_, it_);
+    // mylist1_: 1 10 20 30 3 4
+    // mylist2_: 2
+    // "it_" is now invalid.
+    it_ = mylist1_.begin();
 
-		++it1_;                      //       ^        ^
-		--it2_;                      //       ^     ^
+    for (int i = 0; i < 3; i++) it_++;  // "it" points now to 30
 
-		mylist_.erase (it1_,it2_);     // 10 30 60 80 90
-									//        ^
+    mylist1_.splice(mylist1_.begin(), mylist1_, it_, mylist1_.end());
+    // mylist1_: 30 3 4 1 10 20
 
-		fs2 << "mylist contains:";
-		for (it1_=mylist_.begin(); it1_!=mylist_.end(); ++it1_)
-			fs2 << ' ' << *it1_;
-		fs2 << '\n' << std::flush;
+    fs2 << "mylist1 contains:";
+    for (it_ = mylist1_.begin(); it_ != mylist1_.end(); ++it_)
+      fs2 << ' ' << *it_;
+    fs2 << '\n';
 
-		leak_check();
-	}
+    fs2 << "mylist2 contains:";
+    for (it_ = mylist2_.begin(); it_ != mylist2_.end(); ++it_)
+      fs2 << ' ' << *it_;
+    fs2 << '\n' << std::flush;
+  }
 
-	judge();
+  judge();
 
-	{
-		std::list<int> first (3,100);   // three ints with a value of 100
-		std::list<int> second (5,200);  // five ints with a value of 200
+  {
+    int myints[] = {17, 89, 7, 14};
+    std::list<int> mylist(myints, myints + 4);
 
-		first.swap(second);
+    mylist.remove(89);
 
-		fs1 << "first contains:";
-		for (std::list<int>::iterator it=first.begin(); it!=first.end(); it++)
-			fs1 << ' ' << *it;
-		fs1 << '\n';
+    fs1 << "mylist contains:";
+    for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		fs1 << "second contains:";
-		for (std::list<int>::iterator it=second.begin(); it!=second.end(); it++)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    int myints_[] = {17, 89, 7, 14};
+    ft::list<int> mylist_(myints_, myints_ + 4);
 
+    mylist_.remove(89);
 
-		ft::list<int> first_ (3,100);   // three ints with a value of 100
-		ft::list<int> second_ (5,200);  // five ints with a value of 200
+    fs2 << "mylist contains:";
+    for (ft::list<int>::iterator it = mylist_.begin(); it != mylist_.end();
+         ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		first_.swap(second_);
+  judge();
 
-		fs2 << "first contains:";
-		for (ft::list<int>::iterator it=first_.begin(); it!=first_.end(); it++)
-			fs2 << ' ' << *it;
-		fs2 << '\n';
+  {
+    int myints[] = {15, 36, 7, 17, 20, 39, 4, 1};
+    std::list<int> mylist(myints, myints + 8);  // 15 36 7 17 20 39 4 1
 
-		fs2 << "second contains:";
-		for (ft::list<int>::iterator it=second_.begin(); it!=second_.end(); it++)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
+    mylist.remove_if(single_digit);  // 15 36 17 20 39
 
-		leak_check();
-	}
+    mylist.remove_if(is_odd());  // 36 20
 
-	judge();
+    fs1 << "mylist contains:";
+    for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-	{
-		std::list<int> mylist;
+    int myints_[] = {15, 36, 7, 17, 20, 39, 4, 1};
+    ft::list<int> mylist_(myints_, myints_ + 8);  // 15 36 7 17 20 39 4 1
 
-		// set some initial content:
-		for (int i=1; i<10; ++i) mylist.push_back(i);
+    mylist_.remove_if(single_digit);  // 15 36 17 20 39
 
-		mylist.resize(5);
-		mylist.resize(8,100);
-		mylist.resize(12);
+    mylist_.remove_if(is_odd());  // 36 20
 
-		fs1 << "mylist contains:";
-		for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
+    fs2 << "mylist contains:";
+    for (ft::list<int>::iterator it = mylist_.begin(); it != mylist_.end();
+         ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		fs1 << '\n' << std::flush;
+  judge();
 
+  {
+    double mydoubles[] = {12.15, 2.72,  73.0,  12.77, 3.14,
+                          12.77, 73.35, 72.25, 15.3,  72.25};
+    std::list<double> mylist(mydoubles, mydoubles + 10);
 
-		ft::list<int> mylist_;
+    mylist.sort();  //  2.72,  3.14, 12.15, 12.77, 12.77,
+                    // 15.3,  72.25, 72.25, 73.0,  73.35
 
-		// set some initial content:
-		for (int i=1; i<10; ++i) mylist_.push_back(i);
+    mylist.unique();  //  2.72,  3.14, 12.15, 12.77
+                      // 15.3,  72.25, 73.0,  73.35
 
-		mylist_.resize(5);
-		mylist_.resize(8,100);
-		mylist_.resize(12);
+    mylist.unique(same_integral_part);  //  2.72,  3.14, 12.15
+                                        // 15.3,  72.25, 73.0
 
-		fs2 << "mylist contains:";
-		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
-			fs2 << ' ' << *it;
+    mylist.unique(is_near());  //  2.72, 12.15, 72.25
 
-		fs2 << '\n' << std::flush;
+    fs1 << "mylist contains:";
+    for (std::list<double>::iterator it = mylist.begin(); it != mylist.end();
+         ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		leak_check();
-	}
+    double mydoubles_[] = {12.15, 2.72,  73.0,  12.77, 3.14,
+                           12.77, 73.35, 72.25, 15.3,  72.25};
+    ft::list<double> mylist_(mydoubles_, mydoubles_ + 10);
 
-	judge();
+    mylist_.sort();  //  2.72,  3.14, 12.15, 12.77, 12.77,
+                     // 15.3,  72.25, 72.25, 73.0,  73.35
 
-	{
-		std::list<int> mylist;
-		std::list<int>::iterator it;
+    mylist_.unique();  //  2.72,  3.14, 12.15, 12.77
+                       // 15.3,  72.25, 73.0,  73.35
 
-		mylist.push_back (100);
-		mylist.push_back (200);
-		mylist.push_back (300);
+    mylist_.unique(same_integral_part);  //  2.72,  3.14, 12.15
+                                         // 15.3,  72.25, 73.0
 
-		fs1 << "mylist contains:";
-		for (it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n';
+    mylist_.unique(is_near());  //  2.72, 12.15, 72.25
 
-		mylist.clear();
-		mylist.push_back (1101);
-		mylist.push_back (2202);
+    fs2 << "mylist contains:";
+    for (ft::list<double>::iterator it = mylist_.begin(); it != mylist_.end();
+         ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		fs1 << "mylist contains:";
-		for (it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+  judge();
 
+  {
+    std::list<double> first, second;
 
-		ft::list<int> mylist_;
-		ft::list<int>::iterator it_;
+    first.push_back(3.1);
+    first.push_back(2.2);
+    first.push_back(2.9);
 
-		mylist_.push_back (100);
-		mylist_.push_back (200);
-		mylist_.push_back (300);
+    second.push_back(3.7);
+    second.push_back(7.1);
+    second.push_back(1.4);
 
-		fs2 << "mylist contains:";
-		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
-			fs2 << ' ' << *it_;
-		fs2 << '\n';
+    first.sort();
+    second.sort();
 
-		mylist_.clear();
-		mylist_.push_back (1101);
-		mylist_.push_back (2202);
+    first.merge(second);
 
-		fs2 << "mylist contains:";
-		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
-			fs2 << ' ' << *it_;
-		fs2 << '\n' << std::flush;
+    // (second is now empty)
 
-		leak_check();
-	}
+    second.push_back(2.1);
 
-	judge();
+    first.merge(second, mycomparison);
 
-	{
-		std::list<int> mylist1, mylist2;
-		std::list<int>::iterator it;
+    fs1 << "first contains:";
+    for (std::list<double>::iterator it = first.begin(); it != first.end();
+         ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		// set some initial values:
-		for (int i=1; i<=4; ++i)
-			mylist1.push_back(i);      // mylist1: 1 2 3 4
+    ft::list<double> first_, second_;
 
-		for (int i=1; i<=3; ++i)
-			mylist2.push_back(i*10);   // mylist2: 10 20 30
+    first_.push_back(3.1);
+    first_.push_back(2.2);
+    first_.push_back(2.9);
 
-		it = mylist1.begin();
-		++it;                         // points to 2
+    second_.push_back(3.7);
+    second_.push_back(7.1);
+    second_.push_back(1.4);
 
-		mylist1.splice (it, mylist2); // mylist1: 1 10 20 30 2 3 4
-										// mylist2 (empty)
-										// "it" still points to 2 (the 5th element)
-												
-		mylist2.splice (mylist2.begin(),mylist1, it);
-										// mylist1: 1 10 20 30 3 4
-										// mylist2: 2
-										// "it" is now invalid.
-		it = mylist1.begin();
-		for (int i = 0; i < 3; i++)
-			it++;                       // "it" points now to 30
+    first_.sort();
+    second_.sort();
 
-		mylist1.splice ( mylist1.begin(), mylist1, it, mylist1.end());
-										// mylist1: 30 3 4 1 10 20
+    first_.merge(second_);
 
-		fs1 << "mylist1 contains:";
-		for (it=mylist1.begin(); it!=mylist1.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n';
+    // (second_ is now empty)
 
-		fs1 << "mylist2 contains:";
-		for (it=mylist2.begin(); it!=mylist2.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    second_.push_back(2.1);
 
+    first_.merge(second_, mycomparison);
 
-		ft::list<int> mylist1_, mylist2_;
-		ft::list<int>::iterator it_;
+    fs2 << "first contains:";
+    for (ft::list<double>::iterator it = first_.begin(); it != first_.end();
+         ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		// set some init_ial values:
-		for (int i=1; i<=4; ++i)
-			mylist1_.push_back(i);      // mylist1_: 1 2 3 4
+  judge();
 
-		for (int i=1; i<=3; ++i)
-			mylist2_.push_back(i*10);   // mylist2_: 10 20 30
+  {
+    std::list<std::string> mylist;
+    std::list<std::string>::iterator it;
+    mylist.push_back("one");
+    mylist.push_back("two");
+    mylist.push_back("Three");
 
-		it_ = mylist1_.begin();
-		++it_;                         // points to 2
-		
-		mylist1_.splice (it_, mylist2_); // mylist1_: 1 10 20 30 2 3 4
-										// mylist2_ (empty)
-										// "it_" still points to 2 (the 5th element)
-							
-		mylist2_.splice (mylist2_.begin(),mylist1_, it_);
-										// mylist1_: 1 10 20 30 3 4
-										// mylist2_: 2
-										// "it_" is now invalid.
-		it_ = mylist1_.begin();
-		
-		for (int i = 0; i < 3; i++)
-			it_++;                       // "it" points now to 30
+    mylist.sort();
 
-		mylist1_.splice ( mylist1_.begin(), mylist1_, it_, mylist1_.end());
-										// mylist1_: 30 3 4 1 10 20
-		
+    fs1 << "mylist contains:";
+    for (it = mylist.begin(); it != mylist.end(); ++it) fs1 << ' ' << *it;
+    fs1 << '\n';
 
-		fs2 << "mylist1 contains:";
-		for (it_=mylist1_.begin(); it_!=mylist1_.end(); ++it_)
-			fs2 << ' ' << *it_;
-		fs2 << '\n';
+    mylist.sort(compare_nocase);
 
-		fs2 << "mylist2 contains:";
-		for (it_=mylist2_.begin(); it_!=mylist2_.end(); ++it_)
-			fs2 << ' ' << *it_;
-		fs2 << '\n' << std::flush;
+    fs1 << "mylist contains:";
+    for (it = mylist.begin(); it != mylist.end(); ++it) fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		leak_check();
-	}
+    ft::list<std::string> mylist_;
+    ft::list<std::string>::iterator it_;
+    mylist_.push_back("one");
+    mylist_.push_back("two");
+    mylist_.push_back("Three");
 
-	judge();
+    mylist_.sort();
 
-	{
-		int myints[]= {17,89,7,14};
-		std::list<int> mylist (myints,myints+4);
+    fs2 << "mylist contains:";
+    for (it_ = mylist_.begin(); it_ != mylist_.end(); ++it_) fs2 << ' ' << *it_;
+    fs2 << '\n';
 
-		mylist.remove(89);
+    mylist_.sort(compare_nocase);
 
-		fs1 << "mylist contains:";
-		for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    fs2 << "mylist contains:";
+    for (it_ = mylist_.begin(); it_ != mylist_.end(); ++it_) fs2 << ' ' << *it_;
+    fs2 << '\n' << std::flush;
+  }
 
+  judge();
 
-		int myints_[]= {17,89,7,14};
-		ft::list<int> mylist_ (myints_,myints_+4);
+  {
+    std::list<int> mylist;
 
-		mylist_.remove(89);
+    for (int i = 1; i < 10; ++i) mylist.push_back(i);
 
-		fs2 << "mylist contains:";
-		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
+    mylist.reverse();
 
-		leak_check();
-	}
+    fs1 << "mylist contains:";
+    for (std::list<int>::iterator it = mylist.begin(); it != mylist.end(); ++it)
+      fs1 << ' ' << *it;
 
-	judge();
+    fs1 << '\n' << std::flush;
 
-	{
-		int myints[]= {15,36,7,17,20,39,4,1};
-		std::list<int> mylist (myints,myints+8);   // 15 36 7 17 20 39 4 1
+    ft::list<int> mylist_;
 
-		mylist.remove_if (single_digit);           // 15 36 17 20 39
+    for (int i = 1; i < 10; ++i) mylist_.push_back(i);
 
-		mylist.remove_if (is_odd());               // 36 20
+    mylist_.reverse();
 
-		fs1 << "mylist contains:";
-		for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    fs2 << "mylist contains:";
+    for (ft::list<int>::iterator it = mylist_.begin(); it != mylist_.end();
+         ++it)
+      fs2 << ' ' << *it;
 
+    fs2 << '\n' << std::flush;
+  }
 
-		int myints_[]= {15,36,7,17,20,39,4,1};
-		ft::list<int> mylist_ (myints_,myints_+8);   // 15 36 7 17 20 39 4 1
+  judge();
 
-		mylist_.remove_if (single_digit);           // 15 36 17 20 39
+  {
+    int _a[] = {10, 20, 30};
+    int _b[] = {10, 20, 30};
+    int _c[] = {30, 20, 10};
+    std::list<int> a(_a, _a + 3);
+    std::list<int> b(_b, _b + 3);
+    std::list<int> c(_c, _c + 3);
 
-		mylist_.remove_if (is_odd());               // 36 20
+    if (a == b) fs1 << "a and b are equal\n";
+    if (b != c) fs1 << "b and c are not equal\n";
+    if (b < c) fs1 << "b is less than c\n";
+    if (c > b) fs1 << "c is greater than b\n";
+    if (a <= b) fs1 << "a is less than or equal to b\n";
+    if (a >= b) fs1 << "a is greater than or equal to b\n" << std::flush;
 
-		fs2 << "mylist contains:";
-		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
+    int _a_[] = {10, 20, 30};
+    int _b_[] = {10, 20, 30};
+    int _c_[] = {30, 20, 10};
+    ft::list<int> a_(_a_, _a_ + 3);
+    ft::list<int> b_(_b_, _b_ + 3);
+    ft::list<int> c_(_c_, _c_ + 3);
 
-		leak_check();
-	}
+    if (a_ == b_) fs2 << "a and b are equal\n";
+    if (b_ != c_) fs2 << "b and c are not equal\n";
+    if (b_ < c_) fs2 << "b is less than c\n";
+    if (c_ > b_) fs2 << "c is greater than b\n";
+    if (a_ <= b_) fs2 << "a is less than or equal to b\n";
+    if (a_ >= b_) fs2 << "a is greater than or equal to b\n" << std::flush;
+  }
 
-	judge();
+  judge();
 
-	{
+  {
+    std::list<int> foo(3, 100);  // three ints with a value of 100
+    std::list<int> bar(5, 200);  // five ints with a value of 200
 
-		double mydoubles[]={ 12.15,  2.72, 73.0,  12.77,  3.14,
-							12.77, 73.35, 72.25, 15.3,  72.25 };
-		std::list<double> mylist (mydoubles,mydoubles+10);
-		
-		mylist.sort();             //  2.72,  3.14, 12.15, 12.77, 12.77,
-									// 15.3,  72.25, 72.25, 73.0,  73.35
+    std::swap(foo, bar);
 
-		mylist.unique();           //  2.72,  3.14, 12.15, 12.77
-									// 15.3,  72.25, 73.0,  73.35
+    fs1 << "foo contains:";
+    for (std::list<int>::iterator it = foo.begin(); it != foo.end(); ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n';
 
-		mylist.unique (same_integral_part);  //  2.72,  3.14, 12.15
-											// 15.3,  72.25, 73.0
+    fs1 << "bar contains:";
+    for (std::list<int>::iterator it = bar.begin(); it != bar.end(); ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		mylist.unique (is_near());           //  2.72, 12.15, 72.25
+    ft::list<int> foo_(3, 100);  // three ints with a value of 100
+    ft::list<int> bar_(5, 200);  // five ints with a value of 200
 
-		fs1 << "mylist contains:";
-		for (std::list<double>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    ft::swap(foo_, bar_);
 
+    fs2 << "foo contains:";
+    for (ft::list<int>::iterator it = foo_.begin(); it != foo_.end(); ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n';
 
+    fs2 << "bar contains:";
+    for (ft::list<int>::iterator it = bar_.begin(); it != bar_.end(); ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		double mydoubles_[]={ 12.15,  2.72, 73.0,  12.77,  3.14,
-							12.77, 73.35, 72.25, 15.3,  72.25 };
-		ft::list<double> mylist_ (mydoubles_,mydoubles_+10);
-		
-		mylist_.sort();             //  2.72,  3.14, 12.15, 12.77, 12.77,
-									// 15.3,  72.25, 72.25, 73.0,  73.35
+  judge();
 
-		mylist_.unique();           //  2.72,  3.14, 12.15, 12.77
-									// 15.3,  72.25, 73.0,  73.35
+  std::cout << "\n=== VECTOR ===" << std::endl;
+  fs1 << "\n=== VECTOR ===" << std::endl;
+  fs2 << "\n=== VECTOR ===" << std::endl;
+  {
+    // constructors used in the same order as described above:
+    std::vector<int> first;           // empty vector of ints
+    std::vector<int> second(4, 100);  // four ints with value 100
+    std::vector<int> third(second.begin(),
+                           second.end());  // iterating through second
+    std::vector<int> fourth(third);        // a copy of third
 
-		mylist_.unique (same_integral_part);  //  2.72,  3.14, 12.15
-											// 15.3,  72.25, 73.0
+    // the iterator constructor can also be used to construct from arrays:
+    int myints[] = {16, 2, 77, 29};
+    std::vector<int> fifth(myints, myints + sizeof(myints) / sizeof(int));
 
-		mylist_.unique (is_near());           //  2.72, 12.15, 72.25
+    fs1 << "The contents of fifth are:";
+    for (std::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		fs2 << "mylist contains:";
-		for (ft::list<double>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
+    // constructors used in the same order as described above:
+    ft::vector<int> first_;           // empty vector of ints
+    ft::vector<int> second_(4, 100);  // four ints with value 100
+    ft::vector<int> third_(second_.begin(),
+                           second_.end());  // iterating through second
+    ft::vector<int> fourth_(third_);        // a copy of third
 
-		leak_check();
-	}
+    // the iterator constructor can also be used to construct from arrays:
+    int myints_[] = {16, 2, 77, 29};
+    ft::vector<int> fifth_(myints_, myints_ + sizeof(myints_) / sizeof(int));
 
-	judge();
+    fs2 << "The contents of fifth are:";
+    for (ft::vector<int>::iterator it = fifth_.begin(); it != fifth_.end();
+         ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-	{
-		std::list<double> first, second;
+  judge();
 
-		first.push_back (3.1);
-		first.push_back (2.2);
-		first.push_back (2.9);
+  {
+    std::vector<int> myvector;
+    for (int i = 1; i <= 5; i++) myvector.push_back(i);
 
-		second.push_back (3.7);
-		second.push_back (7.1);
-		second.push_back (1.4);
+    fs1 << "myvector contains:";
+    for (std::vector<int>::iterator it = myvector.begin(); it != myvector.end();
+         ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		first.sort();
-		second.sort();
+    ft::vector<int> myvector_;
+    for (int i = 1; i <= 5; i++) myvector_.push_back(i);
 
-		first.merge(second);
+    fs2 << "myvector contains:";
+    for (ft::vector<int>::iterator it = myvector_.begin();
+         it != myvector_.end(); ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		// (second is now empty)
+  judge();
 
-		second.push_back (2.1);
+  {
+    std::vector<int> foo(3, 0);
+    std::vector<int> bar(5, 0);
 
-		first.merge(second,mycomparison);
+    bar = foo;
+    foo = std::vector<int>();
 
-		fs1 << "first contains:";
-		for (std::list<double>::iterator it=first.begin(); it!=first.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    fs1 << "Size of foo: " << int(foo.size()) << '\n';
+    fs1 << "Size of bar: " << int(bar.size()) << '\n' << std::flush;
 
+    ft::vector<int> foo_(3, 0);
+    ft::vector<int> bar_(5, 0);
 
+    bar_ = foo_;
+    foo_ = ft::vector<int>();
 
-		ft::list<double> first_, second_;
+    fs2 << "Size of foo: " << int(foo_.size()) << '\n';
+    fs2 << "Size of bar: " << int(bar_.size()) << '\n' << std::flush;
+  }
 
-		first_.push_back (3.1);
-		first_.push_back (2.2);
-		first_.push_back (2.9);
+  judge();
 
-		second_.push_back (3.7);
-		second_.push_back (7.1);
-		second_.push_back (1.4);
+  {
+    std::vector<int> myvector;
+    for (int i = 1; i <= 5; i++) myvector.push_back(i);
 
-		first_.sort();
-		second_.sort();
+    fs1 << "myvector contains:";
+    for (std::vector<int>::iterator it = myvector.begin(); it != myvector.end();
+         ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		first_.merge(second_);
+    ft::vector<int> myvector_;
+    for (int i = 1; i <= 5; i++) myvector_.push_back(i);
 
-		// (second_ is now empty)
+    fs2 << "myvector contains:";
+    for (ft::vector<int>::iterator it = myvector_.begin();
+         it != myvector_.end(); ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		second_.push_back (2.1);
+  judge();
 
-		first_.merge(second_,mycomparison);
+  {
+    std::vector<int> myvector(5);  // 5 default-constructed ints
 
-		fs2 << "first contains:";
-		for (ft::list<double>::iterator it=first_.begin(); it!=first_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
+    int i = 0;
 
-		leak_check();
-	}
+    std::vector<int>::reverse_iterator rit = myvector.rbegin();
+    for (; rit != myvector.rend(); ++rit) *rit = ++i;
 
-	judge();
+    fs1 << "myvector contains:";
+    for (std::vector<int>::iterator it = myvector.begin(); it != myvector.end();
+         ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-	{
-		std::list<std::string> mylist;
-		std::list<std::string>::iterator it;
-		mylist.push_back ("one");
-		mylist.push_back ("two");
-		mylist.push_back ("Three");
+    ft::vector<int> myvector_(5);  // 5 default-constructed ints
 
-		mylist.sort();
+    int i_ = 0;
 
-		fs1 << "mylist contains:";
-		for (it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n';
+    ft::vector<int>::reverse_iterator rit_ = myvector_.rbegin();
+    for (; rit_ != myvector_.rend(); ++rit_) *rit_ = ++i_;
 
-		mylist.sort(compare_nocase);
+    fs2 << "myvector contains:";
+    for (ft::vector<int>::iterator it = myvector_.begin();
+         it != myvector_.end(); ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		fs1 << "mylist contains:";
-		for (it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+  judge();
 
+  {
+    std::vector<int> myints;
+    fs1 << "0. size: " << myints.size() << '\n';
 
-		ft::list<std::string> mylist_;
-		ft::list<std::string>::iterator it_;
-		mylist_.push_back ("one");
-		mylist_.push_back ("two");
-		mylist_.push_back ("Three");
+    for (int i = 0; i < 10; i++) myints.push_back(i);
+    fs1 << "1. size: " << myints.size() << '\n';
 
-		mylist_.sort();
+    myints.insert(myints.end(), 10, 100);
+    fs1 << "2. size: " << myints.size() << '\n';
 
-		fs2 << "mylist contains:";
-		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
-			fs2 << ' ' << *it_;
-		fs2 << '\n';
+    myints.pop_back();
+    fs1 << "3. size: " << myints.size() << '\n' << std::flush;
 
-		mylist_.sort(compare_nocase);
+    ft::vector<int> myints_;
+    fs2 << "0. size: " << myints_.size() << '\n';
 
-		fs2 << "mylist contains:";
-		for (it_=mylist_.begin(); it_!=mylist_.end(); ++it_)
-			fs2 << ' ' << *it_;
-		fs2 << '\n' << std::flush;
+    for (int i = 0; i < 10; i++) myints_.push_back(i);
+    fs2 << "1. size: " << myints_.size() << '\n';
 
-		leak_check();
-	}
+    myints_.insert(myints_.end(), 10, 100);
+    fs2 << "2. size: " << myints_.size() << '\n';
 
-	judge();
+    myints_.pop_back();
+    fs2 << "3. size: " << myints_.size() << '\n' << std::flush;
+  }
 
-	{
-		std::list<int> mylist;
+  judge();
 
-		for (int i=1; i<10; ++i) mylist.push_back(i);
+  {
+    std::vector<int> myvector;
 
-		mylist.reverse();
+    // set some content in the vector:
+    for (int i = 0; i < 100; i++) myvector.push_back(i);
 
-		fs1 << "mylist contains:";
-		for (std::list<int>::iterator it=mylist.begin(); it!=mylist.end(); ++it)
-			fs1 << ' ' << *it;
+    fs1 << "size: " << myvector.size() << "\n";
+    fs1 << "capacity: " << myvector.capacity() << "\n";
+    fs1 << "max_size: " << myvector.max_size() << "\n" << std::flush;
 
-		fs1 << '\n' << std::flush;
+    ft::vector<int> myvector_;
 
+    // set some content in the vector:
+    for (int i = 0; i < 100; i++) myvector_.push_back(i);
 
-		ft::list<int> mylist_;
+    fs2 << "size: " << myvector_.size() << "\n";
+    fs2 << "capacity: " << myvector_.capacity() << "\n";
+    fs2 << "max_size: " << myvector_.max_size() << "\n" << std::flush;
+  }
 
-		for (int i=1; i<10; ++i) mylist_.push_back(i);
+  judge();
 
-		mylist_.reverse();
+  {
+    std::vector<int> myvector;
 
-		fs2 << "mylist contains:";
-		for (ft::list<int>::iterator it=mylist_.begin(); it!=mylist_.end(); ++it)
-			fs2 << ' ' << *it;
+    // set some initial content:
+    for (unsigned long i = 1; i < 10; i++) myvector.push_back(i);
 
-		fs2 << '\n' << std::flush;
+    myvector.resize(5);
+    myvector.resize(8, 100);
+    myvector.resize(12);
 
-		leak_check();
-	}
+    fs1 << "myvector contains:";
+    for (unsigned long i = 0; i < myvector.size(); i++)
+      fs1 << ' ' << myvector[i];
+    fs1 << '\n' << std::flush;
 
-	judge();
+    ft::vector<int> myvector_;
 
-	{
-		int _a[] = {10, 20, 30};
-		int _b[] = {10, 20, 30};
-		int _c[] = {30, 20, 10};
-		std::list<int> a(_a, _a+3);
-		std::list<int> b(_b, _b+3);
-		std::list<int> c(_c, _c+3);
+    // set some initial content:
+    for (unsigned long i = 1; i < 10; i++) myvector_.push_back(i);
 
-		if (a==b) fs1 << "a and b are equal\n";
-		if (b!=c) fs1 << "b and c are not equal\n";
-		if (b<c) fs1 << "b is less than c\n";
-		if (c>b) fs1 << "c is greater than b\n";
-		if (a<=b) fs1 << "a is less than or equal to b\n";
-		if (a>=b) fs1 << "a is greater than or equal to b\n" << std::flush;
+    myvector_.resize(5);
+    myvector_.resize(8, 100);
+    myvector_.resize(12);
 
+    fs2 << "myvector contains:";
+    for (unsigned long i = 0; i < myvector_.size(); i++)
+      fs2 << ' ' << myvector_[i];
+    fs2 << '\n' << std::flush;
+  }
 
-		int _a_[] = {10, 20, 30};
-		int _b_[] = {10, 20, 30};
-		int _c_[] = {30, 20, 10};
-		ft::list<int> a_(_a_, _a_+3);
-		ft::list<int> b_(_b_, _b_+3);
-		ft::list<int> c_(_c_, _c_+3);
+  judge();
 
-		if (a_==b_) fs2 << "a and b are equal\n";
-		if (b_!=c_) fs2 << "b and c are not equal\n";
-		if (b_<c_) fs2 << "b is less than c\n";
-		if (c_>b_) fs2 << "c is greater than b\n";
-		if (a_<=b_) fs2 << "a is less than or equal to b\n";
-		if (a_>=b_) fs2 << "a is greater than or equal to b\n" << std::flush;
+  {
+    std::vector<int> myvector;
 
-		leak_check();
-	}
+    // set some content in the vector:
+    for (int i = 0; i < 100; i++) myvector.push_back(i);
 
-	judge();
+    fs1 << "size: " << (int)myvector.size() << '\n';
+    fs1 << "capacity: " << (int)myvector.capacity() << '\n';
+    fs1 << "max_size: " << (int)myvector.max_size() << '\n' << std::flush;
 
-	{
-		std::list<int> foo (3,100);   // three ints with a value of 100
-		std::list<int> bar (5,200);   // five ints with a value of 200
+    ft::vector<int> myvector_;
 
-		std::swap(foo,bar);
+    // set some content in the vector:
+    for (int i = 0; i < 100; i++) myvector_.push_back(i);
 
-		fs1 << "foo contains:";
-		for (std::list<int>::iterator it = foo.begin(); it!=foo.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n';
+    fs2 << "size: " << (int)myvector_.size() << '\n';
+    fs2 << "capacity: " << (int)myvector_.capacity() << '\n';
+    fs2 << "max_size: " << (int)myvector_.max_size() << '\n' << std::flush;
+  }
 
-		fs1 << "bar contains:";
-		for (std::list<int>::iterator it = bar.begin(); it!=bar.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+  judge();
 
+  {
+    std::vector<int> myvector;
+    int sum(0);
 
-		ft::list<int> foo_ (3,100);   // three ints with a value of 100
-		ft::list<int> bar_ (5,200);   // five ints with a value of 200
+    for (int i = 1; i <= 10; i++) myvector.push_back(i);
 
-		ft::swap(foo_,bar_);
+    while (!myvector.empty()) {
+      sum += myvector.back();
+      myvector.pop_back();
+    }
 
-		fs2 << "foo contains:";
-		for (ft::list<int>::iterator it = foo_.begin(); it!=foo_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n';
+    fs1 << "total: " << sum << '\n' << std::flush;
 
-		fs2 << "bar contains:";
-		for (ft::list<int>::iterator it = bar_.begin(); it!=bar_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
+    ft::vector<int> myvector_;
+    int sum_(0);
 
-		leak_check();
-	}
+    for (int i = 1; i <= 10; i++) myvector_.push_back(i);
 
-	judge();
+    while (!myvector_.empty()) {
+      sum_ += myvector_.back();
+      myvector_.pop_back();
+    }
 
-	std::cout << "\n=== VECTOR ===" << std::endl;
-	fs1 << "\n=== VECTOR ===" << std::endl;
-	fs2 << "\n=== VECTOR ===" << std::endl;
-	{
-		// constructors used in the same order as described above:
-		std::vector<int> first;                                // empty vector of ints
-		std::vector<int> second (4,100);                       // four ints with value 100
-		std::vector<int> third (second.begin(),second.end());  // iterating through second
-		std::vector<int> fourth (third);                       // a copy of third
+    fs2 << "total: " << sum_ << '\n' << std::flush;
+  }
 
-		// the iterator constructor can also be used to construct from arrays:
-		int myints[] = {16,2,77,29};
-		std::vector<int> fifth (myints, myints + sizeof(myints) / sizeof(int) );
+  judge();
 
-		fs1 << "The contents of fifth are:";
-		for (std::vector<int>::iterator it = fifth.begin(); it != fifth.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+  {
+    std::vector<int>::size_type sz;
 
+    std::vector<int> foo;
+    sz = foo.capacity();
+    fs1 << "making foo grow:\n";
+    for (int i = 0; i < 100; ++i) {
+      foo.push_back(i);
+      if (sz != foo.capacity()) {
+        sz = foo.capacity();
+        fs1 << "capacity changed: " << sz << '\n';
+      }
+    }
 
-		// constructors used in the same order as described above:
-		ft::vector<int> first_;                                // empty vector of ints
-		ft::vector<int> second_ (4,100);                       // four ints with value 100
-		ft::vector<int> third_ (second_.begin(),second_.end());  // iterating through second
-		ft::vector<int> fourth_ (third_);                       // a copy of third
+    std::vector<int> bar;
+    sz = bar.capacity();
+    bar.reserve(100);  // this is the only difference with foo above
+    fs1 << "making bar grow:\n";
+    for (int i = 0; i < 100; ++i) {
+      bar.push_back(i);
+      if (sz != bar.capacity()) {
+        sz = bar.capacity();
+        fs1 << "capacity changed: " << sz << '\n' << std::flush;
+      }
+    }
 
-		// the iterator constructor can also be used to construct from arrays:
-		int myints_[] = {16,2,77,29};
-		ft::vector<int> fifth_ (myints_, myints_ + sizeof(myints_) / sizeof(int) );
+    ft::vector<int>::size_type sz_;
 
-		fs2 << "The contents of fifth are:";
-		for (ft::vector<int>::iterator it = fifth_.begin(); it != fifth_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+    ft::vector<int> foo_;
+    sz_ = foo_.capacity();
+    fs2 << "making foo grow:\n";
+    for (int i = 0; i < 100; ++i) {
+      foo_.push_back(i);
+      if (sz_ != foo_.capacity()) {
+        sz_ = foo_.capacity();
+        fs2 << "capacity changed: " << sz_ << '\n';
+      }
+    }
 
-	judge();
+    ft::vector<int> bar_;
+    sz_ = bar_.capacity();
+    bar_.reserve(100);  // this is the only difference with foo above
+    fs2 << "making bar grow:\n";
+    for (int i = 0; i < 100; ++i) {
+      bar_.push_back(i);
+      if (sz_ != bar_.capacity()) {
+        sz_ = bar_.capacity();
+        fs2 << "capacity changed: " << sz_ << '\n' << std::flush;
+      }
+    }
+  }
 
-	{
-		std::vector<int> myvector;
-		for (int i=1; i<=5; i++) myvector.push_back(i);
+  judge();
 
-		fs1 << "myvector contains:";
-		for (std::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+  {
+    std::vector<int> myvector(10);  // 10 zero-initialized elements
 
+    std::vector<int>::size_type sz = myvector.size();
 
-		ft::vector<int> myvector_;
-		for (int i=1; i<=5; i++) myvector_.push_back(i);
+    // assign some values:
+    for (unsigned i = 0; i < sz; i++) myvector[i] = i;
 
-		fs2 << "myvector contains:";
-		for (ft::vector<int>::iterator it = myvector_.begin() ; it != myvector_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+    // reverse vector using operator[]:
+    for (unsigned i = 0; i < sz / 2; i++) {
+      int temp;
+      temp = myvector[sz - 1 - i];
+      myvector[sz - 1 - i] = myvector[i];
+      myvector[i] = temp;
+    }
 
-	judge();
+    fs1 << "myvector contains:";
+    for (unsigned i = 0; i < sz; i++) fs1 << ' ' << myvector[i];
+    fs1 << '\n' << std::flush;
 
-	{
-		std::vector<int> foo (3,0);
-		std::vector<int> bar (5,0);
+    ft::vector<int> myvector_(10);  // 10 zero-initialized elements
 
-		bar = foo;
-		foo = std::vector<int>();
+    ft::vector<int>::size_type sz_ = myvector_.size();
 
-		fs1 << "Size of foo: " << int(foo.size()) << '\n';
-		fs1 << "Size of bar: " << int(bar.size()) << '\n' << std::flush;
+    // assign some values:
+    for (unsigned i = 0; i < sz_; i++) myvector_[i] = i;
 
+    // reverse vector using operator[]:
+    for (unsigned i = 0; i < sz_ / 2; i++) {
+      int temp;
+      temp = myvector_[sz_ - 1 - i];
+      myvector_[sz_ - 1 - i] = myvector_[i];
+      myvector_[i] = temp;
+    }
 
-		ft::vector<int> foo_ (3,0);
-		ft::vector<int> bar_ (5,0);
+    fs2 << "myvector contains:";
+    for (unsigned i = 0; i < sz_; i++) fs2 << ' ' << myvector_[i];
+    fs2 << '\n' << std::flush;
+  }
 
-		bar_ = foo_;
-		foo_ = ft::vector<int>();
+  judge();
 
-		fs2 << "Size of foo: " << int(foo_.size()) << '\n';
-		fs2 << "Size of bar: " << int(bar_.size()) << '\n' << std::flush;
-	
-		leak_check();
-	}
+  {
+    std::vector<int> myvector(10);  // 10 zero-initialized ints
 
-	judge();
+    // assign some values:
+    for (unsigned i = 0; i < myvector.size(); i++) myvector.at(i) = i;
 
-	{
-		std::vector<int> myvector;
-		for (int i=1; i<=5; i++) myvector.push_back(i);
+    try {
+      fs1 << "myvector contains:";
+      for (unsigned i = 0; i < 12; i++) fs1 << ' ' << myvector.at(i);
+      fs1 << '\n';
+    } catch (const std::out_of_range& e) {
+      fs1 << e.what() << '\n' << std::flush;
+    }
 
-		fs1 << "myvector contains:";
-		for (std::vector<int>::iterator it = myvector.begin() ; it != myvector.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    ft::vector<int> myvector_(10);  // 10 zero-initialized ints
 
+    // assign some values:
+    for (unsigned i = 0; i < myvector_.size(); i++) myvector_.at(i) = i;
 
-		ft::vector<int> myvector_;
-		for (int i=1; i<=5; i++) myvector_.push_back(i);
+    try {
+      fs2 << "myvector contains:";
+      for (unsigned i = 0; i < 12; i++) fs2 << ' ' << myvector_.at(i);
+      fs2 << '\n';
+    } catch (const std::out_of_range& e) {
+      fs2 << e.what() << '\n' << std::flush;
+    }
+  }
 
-		fs2 << "myvector contains:";
-		for (ft::vector<int>::iterator it = myvector_.begin() ; it != myvector_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+  judge();
 
-	judge();
+  {
+    std::vector<int> myvector;
 
-	{
-		std::vector<int> myvector (5);  // 5 default-constructed ints
+    myvector.push_back(78);
+    myvector.push_back(16);
 
-		int i=0;
+    // now front equals 78, and back 16
 
-		std::vector<int>::reverse_iterator rit = myvector.rbegin();
-		for (; rit!= myvector.rend(); ++rit)
-			*rit = ++i;
+    myvector.front() -= myvector.back();
 
-		fs1 << "myvector contains:";
-		for (std::vector<int>::iterator it = myvector.begin(); it != myvector.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    fs1 << "myvector.front() is now " << myvector.front() << '\n' << std::flush;
 
+    ft::vector<int> myvector_;
 
-		ft::vector<int> myvector_ (5);  // 5 default-constructed ints
+    myvector_.push_back(78);
+    myvector_.push_back(16);
 
-		int i_=0;
+    // now front equals 78, and back 16
 
-		ft::vector<int>::reverse_iterator rit_ = myvector_.rbegin();
-		for (; rit_!= myvector_.rend(); ++rit_)
-			*rit_ = ++i_;
+    myvector_.front() -= myvector_.back();
 
-		fs2 << "myvector contains:";
-		for (ft::vector<int>::iterator it = myvector_.begin(); it != myvector_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+    fs2 << "myvector.front() is now " << myvector_.front() << '\n'
+        << std::flush;
+  }
 
-	judge();
+  judge();
 
-	{
-		std::vector<int> myints;
-		fs1 << "0. size: " << myints.size() << '\n';
+  {
+    std::vector<int> myvector;
 
-		for (int i=0; i<10; i++) myints.push_back(i);
-		fs1 << "1. size: " << myints.size() << '\n';
+    myvector.push_back(10);
 
-		myints.insert (myints.end(),10,100);
-		fs1 << "2. size: " << myints.size() << '\n';
+    while (myvector.back() != 0) {
+      myvector.push_back(myvector.back() - 1);
+    }
 
-		myints.pop_back();
-		fs1 << "3. size: " << myints.size() << '\n' << std::flush;
+    fs1 << "myvector contains:";
+    for (unsigned i = 0; i < myvector.size(); i++) fs1 << ' ' << myvector[i];
+    fs1 << '\n' << std::flush;
 
+    ft::vector<int> myvector_;
 
-		ft::vector<int> myints_;
-		fs2 << "0. size: " << myints_.size() << '\n';
+    myvector_.push_back(10);
 
-		for (int i=0; i<10; i++) myints_.push_back(i);
-		fs2 << "1. size: " << myints_.size() << '\n';
+    while (myvector_.back() != 0) {
+      myvector_.push_back(myvector_.back() - 1);
+    }
 
-		myints_.insert (myints_.end(),10,100);
-		fs2 << "2. size: " << myints_.size() << '\n';
+    fs2 << "myvector contains:";
+    for (unsigned i = 0; i < myvector_.size(); i++) fs2 << ' ' << myvector_[i];
+    fs2 << '\n' << std::flush;
+  }
 
-		myints_.pop_back();
-		fs2 << "3. size: " << myints_.size() << '\n' << std::flush;
-	
-		leak_check();
-	}
+  judge();
 
-	judge();
+  {
+    std::vector<int> first;
+    std::vector<int> second;
+    std::vector<int> third;
 
-	{
-		std::vector<int> myvector;
+    first.assign(7, 100);  // 7 ints with a value of 100
 
-		// set some content in the vector:
-		for (int i=0; i<100; i++) myvector.push_back(i);
+    std::vector<int>::iterator it;
+    it = first.begin() + 1;
 
-		fs1 << "size: " << myvector.size() << "\n";
-		fs1 << "capacity: " << myvector.capacity() << "\n";
-		fs1 << "max_size: " << myvector.max_size() << "\n" << std::flush;
+    second.assign(it, first.end() - 1);  // the 5 central values of first
 
+    int myints[] = {1776, 7, 4};
+    third.assign(myints, myints + 3);  // assigning from array.
 
-		ft::vector<int> myvector_;
+    fs1 << "Size of first: " << int(first.size()) << '\n';
+    fs1 << "Size of second: " << int(second.size()) << '\n';
+    fs1 << "Size of third: " << int(third.size()) << '\n' << std::flush;
 
-		// set some content in the vector:
-		for (int i=0; i<100; i++) myvector_.push_back(i);
+    ft::vector<int> first_;
+    ft::vector<int> second_;
+    ft::vector<int> third_;
 
-		fs2 << "size: " << myvector_.size() << "\n";
-		fs2 << "capacity: " << myvector_.capacity() << "\n";
-		fs2 << "max_size: " << myvector_.max_size() << "\n" << std::flush;
-	
-		leak_check();
-	}
+    first_.assign(7, 100);  // 7 ints with a value of 100
 
-	judge();
+    ft::vector<int>::iterator it_;
+    it_ = first_.begin() + 1;
 
-	{
-		std::vector<int> myvector;
+    second_.assign(it_, first_.end() - 1);  // the 5 central values of first_
 
-		// set some initial content:
-		for (unsigned long i=1;i<10;i++) myvector.push_back(i);
+    int myints_[] = {1776, 7, 4};
+    third_.assign(myints_, myints_ + 3);  // assigning from array.
 
-		myvector.resize(5);
-		myvector.resize(8,100);
-		myvector.resize(12);
+    fs2 << "Size of first: " << int(first_.size()) << '\n';
+    fs2 << "Size of second: " << int(second_.size()) << '\n';
+    fs2 << "Size of third: " << int(third_.size()) << '\n' << std::flush;
+  }
 
-		fs1 << "myvector contains:";
-		for (unsigned long i=0;i<myvector.size();i++)
-			fs1 << ' ' << myvector[i];
-		fs1 << '\n' << std::flush;
+  judge();
 
+  {
+    std::vector<int> myvector;
 
-		ft::vector<int> myvector_;
+    fs1 << "Please enter some integers (enter 0 to end):\n";
 
-		// set some initial content:
-		for (unsigned long i=1;i<10;i++) myvector_.push_back(i);
+    for (int i = 0; i < 42; i++) myvector.push_back(i);
 
-		myvector_.resize(5);
-		myvector_.resize(8,100);
-		myvector_.resize(12);
+    fs1 << "myvector stores " << int(myvector.size()) << " numbers.\n"
+        << std::flush;
 
-		fs2 << "myvector contains:";
-		for (unsigned long i=0;i<myvector_.size();i++)
-			fs2 << ' ' << myvector_[i];
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+    ft::vector<int> myvector_;
 
-	judge();
+    fs2 << "Please enter some integers (enter 0 to end):\n";
 
-	{
-		std::vector<int> myvector;
+    for (int i = 0; i < 42; i++) myvector_.push_back(i);
 
-		// set some content in the vector:
-		for (int i=0; i<100; i++) myvector.push_back(i);
+    fs2 << "myvector stores " << int(myvector_.size()) << " numbers.\n"
+        << std::flush;
+  }
 
-		fs1 << "size: " << (int) myvector.size() << '\n';
-		fs1 << "capacity: " << (int) myvector.capacity() << '\n';
-		fs1 << "max_size: " << (int) myvector.max_size() << '\n' << std::flush;
+  judge();
 
+  {
+    std::vector<int> myvector;
+    int sum(0);
+    myvector.push_back(100);
+    myvector.push_back(200);
+    myvector.push_back(300);
 
-		ft::vector<int> myvector_;
+    while (!myvector.empty()) {
+      sum += myvector.back();
+      myvector.pop_back();
+    }
 
-		// set some content in the vector:
-		for (int i=0; i<100; i++) myvector_.push_back(i);
+    fs1 << "The elements of myvector add up to " << sum << '\n' << std::flush;
 
-		fs2 << "size: " << (int) myvector_.size() << '\n';
-		fs2 << "capacity: " << (int) myvector_.capacity() << '\n';
-		fs2 << "max_size: " << (int) myvector_.max_size() << '\n' << std::flush;
-	
-		leak_check();
-	}
+    ft::vector<int> myvector_;
+    int sum_(0);
+    myvector_.push_back(100);
+    myvector_.push_back(200);
+    myvector_.push_back(300);
 
-	judge();
+    while (!myvector_.empty()) {
+      sum_ += myvector_.back();
+      myvector_.pop_back();
+    }
 
-	{
-		std::vector<int> myvector;
-		int sum (0);
+    fs2 << "The elements of myvector add up to " << sum_ << '\n' << std::flush;
+  }
 
-		for (int i=1;i<=10;i++) myvector.push_back(i);
+  judge();
 
-		while (!myvector.empty())
-		{
-			sum += myvector.back();
-			myvector.pop_back();
-		}
+  {
+    std::vector<int> myvector(3, 100);
+    std::vector<int>::iterator it;
+    std::vector<int>::iterator it_tmp;
 
-		fs1 << "total: " << sum << '\n' << std::flush;
+    it_tmp = it = myvector.begin();
+    it = myvector.insert(it, 200);
 
+    myvector.insert(it, 2, 300);
 
-		ft::vector<int> myvector_;
-		int sum_ (0);
+    // "it" no longer valid, get a new one:
+    it = myvector.begin();
 
-		for (int i=1;i<=10;i++) myvector_.push_back(i);
+    std::vector<int> anothervector(2, 400);
+    myvector.insert(it + 2, anothervector.begin(), anothervector.end());
 
-		while (!myvector_.empty())
-		{
-			sum_ += myvector_.back();
-			myvector_.pop_back();
-		}
+    int myarray[] = {501, 502, 503};
+    myvector.insert(myvector.begin(), myarray, myarray + 3);
 
-		fs2 << "total: " << sum_ << '\n' << std::flush;
-	
-		leak_check();
-	}
+    fs1 << "myvector contains:";
+    for (it = myvector.begin(); it < myvector.end(); it++) fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-	judge();
+    ft::vector<int> myvector_(3, 100);
+    ft::vector<int>::iterator it_;
+    ft::vector<int>::iterator it__tmp;
 
-	{
-		std::vector<int>::size_type sz;
+    it__tmp = it_ = myvector_.begin();
+    it_ = myvector_.insert(it_, 200);
 
-		std::vector<int> foo;
-		sz = foo.capacity();
-		fs1 << "making foo grow:\n";
-		for (int i=0; i<100; ++i) {
-			foo.push_back(i);
-			if (sz!=foo.capacity()) {
-			sz = foo.capacity();
-			fs1 << "capacity changed: " << sz << '\n';
-			}
-		}
+    myvector_.insert(it_, 2, 300);
 
-		std::vector<int> bar;
-		sz = bar.capacity();
-		bar.reserve(100);   // this is the only difference with foo above
-		fs1 << "making bar grow:\n";
-		for (int i=0; i<100; ++i) {
-			bar.push_back(i);
-			if (sz!=bar.capacity()) {
-			sz = bar.capacity();
-			fs1 << "capacity changed: " << sz << '\n' << std::flush;
-			}
-		}
+    // "it_" no longer valid, get a new one:
+    it_ = myvector_.begin();
 
+    ft::vector<int> anothervector_(2, 400);
+    myvector_.insert(it_ + 2, anothervector_.begin(), anothervector_.end());
 
-		ft::vector<int>::size_type sz_;
+    int myarray_[] = {501, 502, 503};
+    myvector_.insert(myvector_.begin(), myarray_, myarray_ + 3);
 
-		ft::vector<int> foo_;
-		sz_ = foo_.capacity();
-		fs2 << "making foo grow:\n";
-		for (int i=0; i<100; ++i) {
-			foo_.push_back(i);
-			if (sz_!=foo_.capacity()) {
-			sz_ = foo_.capacity();
-			fs2 << "capacity changed: " << sz_ << '\n';
-			}
-		}
+    fs2 << "myvector contains:";
+    for (it_ = myvector_.begin(); it_ < myvector_.end(); it_++)
+      fs2 << ' ' << *it_;
+    fs2 << '\n' << std::flush;
+  }
 
-		ft::vector<int> bar_;
-		sz_ = bar_.capacity();
-		bar_.reserve(100);   // this is the only difference with foo above
-		fs2 << "making bar grow:\n";
-		for (int i=0; i<100; ++i) {
-			bar_.push_back(i);
-			if (sz_!=bar_.capacity()) {
-			sz_ = bar_.capacity();
-			fs2 << "capacity changed: " << sz_ << '\n' << std::flush;
-			}
-		}
-	
-		leak_check();
-	}
+  judge();
 
-	judge();
+  {
+    std::vector<int> myvector;
 
-	{
-		std::vector<int> myvector (10);   // 10 zero-initialized elements
+    // set some values (from 1 to 10)
+    for (int i = 1; i <= 10; i++) myvector.push_back(i);
 
-		std::vector<int>::size_type sz = myvector.size();
+    // erase the 6th element
+    myvector.erase(myvector.begin() + 5);
 
-		// assign some values:
-		for (unsigned i=0; i<sz; i++) myvector[i]=i;
+    // erase the first 3 elements:
+    myvector.erase(myvector.begin(), myvector.begin() + 3);
 
-		// reverse vector using operator[]:
-		for (unsigned i=0; i<sz/2; i++)
-		{
-			int temp;
-			temp = myvector[sz-1-i];
-			myvector[sz-1-i]=myvector[i];
-			myvector[i]=temp;
-		}
+    fs1 << "myvector contains:";
+    for (unsigned i = 0; i < myvector.size(); ++i) fs1 << ' ' << myvector[i];
+    fs1 << '\n' << std::flush;
 
-		fs1 << "myvector contains:";
-		for (unsigned i=0; i<sz; i++)
-			fs1 << ' ' << myvector[i];
-		fs1 << '\n' << std::flush;
+    ft::vector<int> myvector_;
 
+    // set some values (from 1 to 10)
+    for (int i = 1; i <= 10; i++) myvector_.push_back(i);
 
-		ft::vector<int> myvector_ (10);   // 10 zero-initialized elements
+    // erase the 6th element
+    myvector_.erase(myvector_.begin() + 5);
 
-		ft::vector<int>::size_type sz_ = myvector_.size();
+    // erase the first 3 elements:
+    myvector_.erase(myvector_.begin(), myvector_.begin() + 3);
 
-		// assign some values:
-		for (unsigned i=0; i<sz_; i++) myvector_[i]=i;
+    fs2 << "myvector contains:";
+    for (unsigned i = 0; i < myvector_.size(); ++i) fs2 << ' ' << myvector_[i];
+    fs2 << '\n' << std::flush;
+  }
 
-		// reverse vector using operator[]:
-		for (unsigned i=0; i<sz_/2; i++)
-		{
-			int temp;
-			temp = myvector_[sz_-1-i];
-			myvector_[sz_-1-i]=myvector_[i];
-			myvector_[i]=temp;
-		}
+  judge();
 
-		fs2 << "myvector contains:";
-		for (unsigned i=0; i<sz_; i++)
-			fs2 << ' ' << myvector_[i];
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+  {
+    std::vector<int> foo(3, 100);  // three ints with a value of 100
+    std::vector<int> bar(5, 200);  // five ints with a value of 200
 
-	judge();
+    foo.swap(bar);
 
-	{
-		std::vector<int> myvector (10);   // 10 zero-initialized ints
+    fs1 << "foo contains:";
+    for (unsigned i = 0; i < foo.size(); i++) fs1 << ' ' << foo[i];
+    fs1 << '\n';
 
-		// assign some values:
-		for (unsigned i=0; i<myvector.size(); i++)
-			myvector.at(i)=i;
-		
-		try
-		{
-			fs1 << "myvector contains:";
-			for (unsigned i=0; i<12; i++)
-				fs1 << ' ' << myvector.at(i);
-			fs1 << '\n';
-		}
-		catch(const std::out_of_range& e)
-		{
-			fs1 << e.what() << '\n' << std::flush;
-		}
+    fs1 << "bar contains:";
+    for (unsigned i = 0; i < bar.size(); i++) fs1 << ' ' << bar[i];
+    fs1 << '\n' << std::flush;
 
+    ft::vector<int> foo_(3, 100);  // three ints with a value of 100
+    ft::vector<int> bar_(5, 200);  // five ints with a value of 200
 
-		ft::vector<int> myvector_ (10);   // 10 zero-initialized ints
+    foo_.swap(bar_);
 
-		// assign some values:
-		for (unsigned i=0; i<myvector_.size(); i++)
-			myvector_.at(i)=i;
-		
-		try
-		{
-			fs2 << "myvector contains:";
-			for (unsigned i=0; i<12; i++)
-				fs2 << ' ' << myvector_.at(i);
-			fs2 << '\n';
-		}
-		catch(const std::out_of_range& e)
-		{
-			fs2 << e.what() << '\n' << std::flush;
-		}
-		
-	
-		leak_check();
-	}
+    fs2 << "foo contains:";
+    for (unsigned i = 0; i < foo_.size(); i++) fs2 << ' ' << foo_[i];
+    fs2 << '\n';
 
-	judge();
+    fs2 << "bar contains:";
+    for (unsigned i = 0; i < bar_.size(); i++) fs2 << ' ' << bar_[i];
+    fs2 << '\n' << std::flush;
+  }
 
-	{
-		std::vector<int> myvector;
+  judge();
 
-		myvector.push_back(78);
-		myvector.push_back(16);
+  {
+    std::vector<int> myvector;
+    myvector.push_back(100);
+    myvector.push_back(200);
+    myvector.push_back(300);
 
-		// now front equals 78, and back 16
+    fs1 << "myvector contains:";
+    for (unsigned i = 0; i < myvector.size(); i++) fs1 << ' ' << myvector[i];
+    fs1 << '\n';
 
-		myvector.front() -= myvector.back();
+    myvector.clear();
+    myvector.push_back(1101);
+    myvector.push_back(2202);
 
-		fs1 << "myvector.front() is now " << myvector.front() << '\n' << std::flush;
+    fs1 << "myvector contains:";
+    for (unsigned i = 0; i < myvector.size(); i++) fs1 << ' ' << myvector[i];
+    fs1 << '\n' << std::flush;
 
+    ft::vector<int> myvector_;
+    myvector_.push_back(100);
+    myvector_.push_back(200);
+    myvector_.push_back(300);
 
-		ft::vector<int> myvector_;
+    fs2 << "myvector contains:";
+    for (unsigned i = 0; i < myvector_.size(); i++) fs2 << ' ' << myvector_[i];
+    fs2 << '\n';
 
-		myvector_.push_back(78);
-		myvector_.push_back(16);
+    myvector_.clear();
+    myvector_.push_back(1101);
+    myvector_.push_back(2202);
 
-		// now front equals 78, and back 16
+    fs2 << "myvector contains:";
+    for (unsigned i = 0; i < myvector_.size(); i++) fs2 << ' ' << myvector_[i];
+    fs2 << '\n' << std::flush;
+  }
 
-		myvector_.front() -= myvector_.back();
+  judge();
 
-		fs2 << "myvector.front() is now " << myvector_.front() << '\n' << std::flush;
-	
-		leak_check();
-	}
+  {
+    std::vector<int> foo(3, 100);  // three ints with a value of 100
+    std::vector<int> bar(2, 200);  // two ints with a value of 200
 
-	judge();
+    if (foo == bar) fs1 << "foo and bar are equal\n";
+    if (foo != bar) fs1 << "foo and bar are not equal\n";
+    if (foo < bar) fs1 << "foo is less than bar\n";
+    if (foo > bar) fs1 << "foo is greater than bar\n";
+    if (foo <= bar) fs1 << "foo is less than or equal to bar\n";
+    if (foo >= bar)
+      fs1 << "foo is greater than or equal to bar\n" << std::flush;
 
-	{
-		std::vector<int> myvector;
+    ft::vector<int> foo_(3, 100);  // three ints with a value of 100
+    ft::vector<int> bar_(2, 200);  // two ints with a value of 200
 
-		myvector.push_back(10);
+    if (foo_ == bar_) fs2 << "foo and bar are equal\n";
+    if (foo_ != bar_) fs2 << "foo and bar are not equal\n";
+    if (foo_ < bar_) fs2 << "foo is less than bar\n";
+    if (foo_ > bar_) fs2 << "foo is greater than bar\n";
+    if (foo_ <= bar_) fs2 << "foo is less than or equal to bar\n";
+    if (foo_ >= bar_)
+      fs2 << "foo is greater than or equal to bar\n" << std::flush;
+  }
 
-		while (myvector.back() != 0)
-		{
-			myvector.push_back ( myvector.back() -1 );
-		}
+  judge();
 
-		fs1 << "myvector contains:";
-		for (unsigned i=0; i<myvector.size() ; i++)
-			fs1 << ' ' << myvector[i];
-		fs1 << '\n' << std::flush;
+  {
+    std::vector<int> foo(3, 100);  // three ints with a value of 100
+    std::vector<int> bar(5, 200);  // five ints with a value of 200
 
+    foo.swap(bar);
 
-		ft::vector<int> myvector_;
+    fs1 << "foo contains:";
+    for (std::vector<int>::iterator it = foo.begin(); it != foo.end(); ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n';
 
-		myvector_.push_back(10);
+    fs1 << "bar contains:";
+    for (std::vector<int>::iterator it = bar.begin(); it != bar.end(); ++it)
+      fs1 << ' ' << *it;
+    fs1 << '\n' << std::flush;
 
-		while (myvector_.back() != 0)
-		{
-			myvector_.push_back ( myvector_.back() -1 );
-		}
+    ft::vector<int> foo_(3, 100);  // three ints with a value of 100
+    ft::vector<int> bar_(5, 200);  // five ints with a value of 200
 
-		fs2 << "myvector contains:";
-		for (unsigned i=0; i<myvector_.size() ; i++)
-			fs2 << ' ' << myvector_[i];
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	} 
+    foo_.swap(bar_);
 
-	judge();
+    fs2 << "foo contains:";
+    for (ft::vector<int>::iterator it = foo_.begin(); it != foo_.end(); ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n';
 
-	{
-		std::vector<int> first;
-		std::vector<int> second;
-		std::vector<int> third;
+    fs2 << "bar contains:";
+    for (ft::vector<int>::iterator it = bar_.begin(); it != bar_.end(); ++it)
+      fs2 << ' ' << *it;
+    fs2 << '\n' << std::flush;
+  }
 
-		first.assign (7,100);             // 7 ints with a value of 100
+  judge();
 
-		std::vector<int>::iterator it;
-		it=first.begin()+1;
+  std::cout << "\n=== MAP ===" << std::endl;
+  fs1 << "\n=== MAP ===" << std::endl;
+  fs2 << "\n=== MAP ===" << std::endl;
+  {
+    std::map<char, int> first;
 
-		second.assign (it,first.end()-1); // the 5 central values of first
+    first['a'] = 10;
+    first['b'] = 30;
+    first['c'] = 50;
+    first['d'] = 70;
 
-		int myints[] = {1776,7,4};
-		third.assign (myints,myints+3);   // assigning from array.
+    std::map<char, int> second(first.begin(), first.end());
 
-		fs1 << "Size of first: " << int (first.size()) << '\n';
-		fs1 << "Size of second: " << int (second.size()) << '\n';
-		fs1 << "Size of third: " << int (third.size()) << '\n' << std::flush;
+    std::map<char, int> third(second);
 
+    std::map<char, int, classcomp> fourth;  // class as Compare
 
+    bool (*fn_pt)(char, char) = fncomp;
+    std::map<char, int, bool (*)(char, char)> fifth(
+        fn_pt);  // function pointer as Compare
 
-		ft::vector<int> first_;
-		ft::vector<int> second_;
-		ft::vector<int> third_;
+    for (std::map<char, int>::iterator it = first.begin(); it != first.end();
+         ++it)
+      fs1 << ' ' << it->first;
+    fs1 << '\n';
+    for (std::map<char, int>::iterator it = second.begin(); it != second.end();
+         ++it)
+      fs1 << ' ' << it->first;
+    fs1 << '\n';
+    for (std::map<char, int>::iterator it = third.begin(); it != third.end();
+         ++it)
+      fs1 << ' ' << it->first;
+    fs1 << '\n';
+    for (std::map<char, int, classcomp>::iterator it = fourth.begin();
+         it != fourth.end(); ++it)
+      fs1 << ' ' << it->first;
+    fs1 << '\n';
+    for (std::map<char, int, bool (*)(char, char)>::iterator it = fifth.begin();
+         it != fifth.end(); ++it)
+      fs1 << ' ' << it->first;
+    fs1 << '\n' << std::flush;
 
-		first_.assign (7,100);             // 7 ints with a value of 100
+    ft::map<char, int> first_;
 
-		ft::vector<int>::iterator it_;
-		it_=first_.begin()+1;
+    first_['a'] = 10;
+    first_['b'] = 30;
+    first_['c'] = 50;
+    first_['d'] = 70;
 
-		second_.assign (it_,first_.end()-1); // the 5 central values of first_
+    ft::map<char, int> second_(first_.begin(), first_.end());
 
-		int myints_[] = {1776,7,4};
-		third_.assign (myints_,myints_+3);   // assigning from array.
+    ft::map<char, int> third_(second_);
 
-		fs2 << "Size of first: " << int (first_.size()) << '\n';
-		fs2 << "Size of second: " << int (second_.size()) << '\n';
-		fs2 << "Size of third: " << int (third_.size()) << '\n' << std::flush;
-	
-		leak_check();
-	}
+    ft::map<char, int, classcomp> fourth_;  // class as Compare
 
-	judge();
+    bool (*fn_pt_)(char, char) = fncomp;
+    ft::map<char, int, bool (*)(char, char)> fifth_(
+        fn_pt_);  // function pointer as Compare
 
-	{
-		std::vector<int> myvector;
+    for (ft::map<char, int>::iterator it = first_.begin(); it != first_.end();
+         ++it)
+      fs2 << ' ' << it->first;
+    fs2 << '\n';
+    for (ft::map<char, int>::iterator it = second_.begin(); it != second_.end();
+         ++it)
+      fs2 << ' ' << it->first;
+    fs2 << '\n';
+    for (ft::map<char, int>::iterator it = third_.begin(); it != third_.end();
+         ++it)
+      fs2 << ' ' << it->first;
+    fs2 << '\n';
+    for (ft::map<char, int, classcomp>::iterator it = fourth_.begin();
+         it != fourth_.end(); ++it)
+      fs2 << ' ' << it->first;
+    fs2 << '\n';
+    for (ft::map<char, int, bool (*)(char, char)>::iterator it = fifth_.begin();
+         it != fifth_.end(); ++it)
+      fs2 << ' ' << it->first;
+    fs2 << '\n' << std::flush;
+  }
 
-		fs1 << "Please enter some integers (enter 0 to end):\n";
+  judge();
 
-		for (int i = 0; i < 42; i++)
-			myvector.push_back (i);
+  {
+    std::map<char, int> first;
+    std::map<char, int> second;
 
-		fs1 << "myvector stores " << int(myvector.size()) << " numbers.\n" << std::flush;
+    first['x'] = 8;
+    first['y'] = 16;
+    first['z'] = 32;
 
+    second = first;                 // second now contains 3 ints
+    first = std::map<char, int>();  // and first is now empty
 
-		ft::vector<int> myvector_;
+    fs1 << "Size of first: " << first.size() << '\n';
+    fs1 << "Size of second: " << second.size() << '\n' << std::flush;
 
-		fs2 << "Please enter some integers (enter 0 to end):\n";
+    ft::map<char, int> first_;
+    ft::map<char, int> second_;
 
-		for (int i = 0; i < 42; i++)
-			myvector_.push_back (i);
+    first_['x'] = 8;
+    first_['y'] = 16;
+    first_['z'] = 32;
 
-		fs2 << "myvector stores " << int(myvector_.size()) << " numbers.\n" << std::flush;
-	
-		leak_check();
-	}
+    second_ = first_;               // second_ now contains 3 ints
+    first_ = ft::map<char, int>();  // and first_ is now empty
 
-	judge();
+    fs2 << "Size of first: " << first_.size() << '\n';
+    fs2 << "Size of second: " << second_.size() << '\n' << std::flush;
+  }
 
-	{
-		std::vector<int> myvector;
-		int sum (0);
-		myvector.push_back (100);
-		myvector.push_back (200);
-		myvector.push_back (300);
+  judge();
 
-		while (!myvector.empty())
-		{
-			sum+=myvector.back();
-			myvector.pop_back();
-		}
+  {
+    std::map<char, int> mymap;
 
-		fs1 << "The elements of myvector add up to " << sum << '\n' << std::flush;
+    mymap['b'] = 100;
+    mymap['a'] = 200;
+    mymap['c'] = 300;
 
+    // show content:
+    for (std::map<char, int>::iterator it = mymap.begin(); it != mymap.end();
+         ++it)
+      fs1 << it->first << " => " << it->second << '\n';
+    fs1 << std::flush;
 
-		ft::vector<int> myvector_;
-		int sum_ (0);
-		myvector_.push_back (100);
-		myvector_.push_back (200);
-		myvector_.push_back (300);
+    ft::map<char, int> mymap_;
 
-		while (!myvector_.empty())
-		{
-			sum_+=myvector_.back();
-			myvector_.pop_back();
-		}
+    mymap_['b'] = 100;
+    mymap_['a'] = 200;
+    mymap_['c'] = 300;
 
-		fs2 << "The elements of myvector add up to " << sum_ << '\n' << std::flush;
-	
-		leak_check();
-	}
+    // show content:
+    for (ft::map<char, int>::iterator it = mymap_.begin(); it != mymap_.end();
+         ++it)
+      fs2 << it->first << " => " << it->second << '\n';
+    fs2 << std::flush;
+  }
 
-	judge();
+  judge();
 
-	{
-		std::vector<int> myvector (3,100);
-		std::vector<int>::iterator it;
-		std::vector<int>::iterator it_tmp;
+  {
+    std::map<char, int> mymap;
 
-		it_tmp = it = myvector.begin();
-		it = myvector.insert ( it , 200 );
+    mymap['b'] = 100;
+    mymap['a'] = 200;
+    mymap['c'] = 300;
 
-		myvector.insert (it,2,300);
+    // show content:
+    for (std::map<char, int>::iterator it = mymap.begin(); it != mymap.end();
+         ++it)
+      fs1 << it->first << " => " << it->second << '\n';
+    fs1 << std::flush;
 
-		// "it" no longer valid, get a new one:
-		it = myvector.begin();
+    ft::map<char, int> mymap_;
 
-		std::vector<int> anothervector (2,400);
-		myvector.insert (it+2,anothervector.begin(),anothervector.end());
+    mymap_['b'] = 100;
+    mymap_['a'] = 200;
+    mymap_['c'] = 300;
 
-		int myarray [] = { 501,502,503 };
-		myvector.insert (myvector.begin(), myarray, myarray+3);
+    // show content:
+    for (ft::map<char, int>::iterator it = mymap_.begin(); it != mymap_.end();
+         ++it)
+      fs2 << it->first << " => " << it->second << '\n';
+    fs2 << std::flush;
+  }
 
-		fs1 << "myvector contains:";
-		for (it=myvector.begin(); it<myvector.end(); it++)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+  judge();
 
+  {
+    std::map<char, int> mymap;
 
-		ft::vector<int> myvector_ (3,100);
-		ft::vector<int>::iterator it_;
-		ft::vector<int>::iterator it__tmp;
+    mymap['x'] = 100;
+    mymap['y'] = 200;
+    mymap['z'] = 300;
 
-		it__tmp = it_ = myvector_.begin();
-		it_ = myvector_.insert ( it_ , 200 );
+    // show content:
+    std::map<char, int>::reverse_iterator rit;
+    for (rit = mymap.rbegin(); rit != mymap.rend(); ++rit)
+      fs1 << rit->first << " => " << rit->second << '\n';
+    fs1 << std::flush;
 
-		myvector_.insert (it_,2,300);
+    ft::map<char, int> mymap_;
 
-		// "it_" no longer valid, get a new one:
-		it_ = myvector_.begin();
+    mymap_['x'] = 100;
+    mymap_['y'] = 200;
+    mymap_['z'] = 300;
 
-		ft::vector<int> anothervector_ (2,400);
-		myvector_.insert (it_+2,anothervector_.begin(),anothervector_.end());
+    // show content:
+    ft::map<char, int>::reverse_iterator rit_;
+    for (rit_ = mymap_.rbegin(); rit_ != mymap_.rend(); ++rit_)
+      fs2 << rit_->first << " => " << rit_->second << '\n';
+    fs2 << std::flush;
+  }
 
-		int myarray_ [] = { 501,502,503 };
-		myvector_.insert (myvector_.begin(), myarray_, myarray_+3);
+  judge();
 
-		fs2 << "myvector contains:";
-		for (it_=myvector_.begin(); it_<myvector_.end(); it_++)
-			fs2 << ' ' << *it_;
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+  {
+    std::map<char, int> mymap;
 
-	judge();
+    mymap['x'] = 100;
+    mymap['y'] = 200;
+    mymap['z'] = 300;
 
-	{
-		std::vector<int> myvector;
+    // show content:
+    std::map<char, int>::reverse_iterator rit;
+    for (rit = mymap.rbegin(); rit != mymap.rend(); ++rit)
+      fs1 << rit->first << " => " << rit->second << '\n';
+    fs1 << std::flush;
 
-		// set some values (from 1 to 10)
-		for (int i=1; i<=10; i++) myvector.push_back(i);
+    ft::map<char, int> mymap_;
 
-		// erase the 6th element
-		myvector.erase (myvector.begin()+5);
+    mymap_['x'] = 100;
+    mymap_['y'] = 200;
+    mymap_['z'] = 300;
 
-		// erase the first 3 elements:
-		myvector.erase (myvector.begin(),myvector.begin()+3);
+    // show content:
+    ft::map<char, int>::reverse_iterator rit_;
+    for (rit_ = mymap_.rbegin(); rit_ != mymap_.rend(); ++rit_)
+      fs2 << rit_->first << " => " << rit_->second << '\n';
+    fs2 << std::flush;
+  }
 
-		fs1 << "myvector contains:";
-		for (unsigned i=0; i<myvector.size(); ++i)
-			fs1 << ' ' << myvector[i];
-		fs1 << '\n' << std::flush;
+  judge();
 
+  {
+    std::map<char, int> mymap;
 
-		ft::vector<int> myvector_;
+    mymap['a'] = 10;
+    mymap['b'] = 20;
+    mymap['c'] = 30;
 
-		// set some values (from 1 to 10)
-		for (int i=1; i<=10; i++) myvector_.push_back(i);
+    while (!mymap.empty()) {
+      fs1 << mymap.begin()->first << " => " << mymap.begin()->second << '\n';
+      mymap.erase(mymap.begin());
+    }
+    fs1 << std::flush;
 
-		// erase the 6th element
-		myvector_.erase (myvector_.begin()+5);
+    ft::map<char, int> mymap_;
 
-		// erase the first 3 elements:
-		myvector_.erase (myvector_.begin(),myvector_.begin()+3);
+    mymap_['a'] = 10;
+    mymap_['b'] = 20;
+    mymap_['c'] = 30;
 
-		fs2 << "myvector contains:";
-		for (unsigned i=0; i<myvector_.size(); ++i)
-			fs2 << ' ' << myvector_[i];
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+    while (!mymap_.empty()) {
+      fs2 << mymap_.begin()->first << " => " << mymap_.begin()->second << '\n';
+      mymap_.erase(mymap_.begin());
+    }
+    fs2 << std::flush;
+  }
 
-	judge();
+  judge();
 
-	{
-		std::vector<int> foo (3,100);   // three ints with a value of 100
-		std::vector<int> bar (5,200);   // five ints with a value of 200
+  {
+    std::map<char, int> mymap;
+    mymap['a'] = 101;
+    mymap['b'] = 202;
+    mymap['c'] = 302;
 
-		foo.swap(bar);
+    fs1 << "mymap.size() is " << mymap.size() << '\n';
 
-		fs1 << "foo contains:";
-		for (unsigned i=0; i<foo.size(); i++)
-			fs1 << ' ' << foo[i];
-		fs1 << '\n';
+    ft::map<char, int> mymap_;
+    mymap_['a'] = 101;
+    mymap_['b'] = 202;
+    mymap_['c'] = 302;
 
-		fs1 << "bar contains:";
-		for (unsigned i=0; i<bar.size(); i++)
-			fs1 << ' ' << bar[i];
-		fs1 << '\n' << std::flush;
+    fs2 << "mymap.size() is " << mymap_.size() << '\n';
+  }
 
+  judge();
 
-		ft::vector<int> foo_ (3,100);   // three ints with a value of 100
-		ft::vector<int> bar_ (5,200);   // five ints with a value of 200
+  {
+    int i;
+    std::map<int, int> mymap;
 
-		foo_.swap(bar_);
+    if (mymap.max_size() > 1000) {
+      for (i = 0; i < 1000; i++) mymap[i] = 0;
+      fs1 << "The map contains 1000 elements.\n";
+    } else
+      fs1 << "The map could not hold 1000 elements.\n";
+    fs1 << std::flush;
 
-		fs2 << "foo contains:";
-		for (unsigned i=0; i<foo_.size(); i++)
-			fs2 << ' ' << foo_[i];
-		fs2 << '\n';
+    int i_;
+    ft::map<int, int> mymap_;
 
-		fs2 << "bar contains:";
-		for (unsigned i=0; i<bar_.size(); i++)
-			fs2 << ' ' << bar_[i];
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+    if (mymap_.max_size() > 1000) {
+      for (i_ = 0; i_ < 1000; i_++) mymap_[i_] = 0;
+      fs2 << "The map contains 1000 elements.\n";
+    } else
+      fs2 << "The map could not hold 1000 elements.\n";
+    fs2 << std::flush;
+  }
 
-	judge();
+  judge();
 
-	{
-		std::vector<int> myvector;
-		myvector.push_back (100);
-		myvector.push_back (200);
-		myvector.push_back (300);
+  {
+    std::map<char, std::string> mymap;
 
-		fs1 << "myvector contains:";
-		for (unsigned i=0; i<myvector.size(); i++)
-			fs1 << ' ' << myvector[i];
-		fs1 << '\n';
+    mymap['a'] = "an element";
+    mymap['b'] = "another element";
+    mymap['c'] = mymap['b'];
 
-		myvector.clear();
-		myvector.push_back (1101);
-		myvector.push_back (2202);
+    fs1 << "mymap['a'] is " << mymap['a'] << '\n';
+    fs1 << "mymap['b'] is " << mymap['b'] << '\n';
+    fs1 << "mymap['c'] is " << mymap['c'] << '\n';
+    fs1 << "mymap['d'] is " << mymap['d'] << '\n';
 
-		fs1 << "myvector contains:";
-		for (unsigned i=0; i<myvector.size(); i++)
-			fs1 << ' ' << myvector[i];
-		fs1 << '\n' << std::flush;
+    fs1 << "mymap now contains " << mymap.size() << " elements.\n"
+        << std::flush;
 
+    ft::map<char, std::string> mymap_;
 
-		ft::vector<int> myvector_;
-		myvector_.push_back (100);
-		myvector_.push_back (200);
-		myvector_.push_back (300);
+    mymap_['a'] = "an element";
+    mymap_['b'] = "another element";
+    mymap_['c'] = mymap_['b'];
 
-		fs2 << "myvector contains:";
-		for (unsigned i=0; i<myvector_.size(); i++)
-			fs2 << ' ' << myvector_[i];
-		fs2 << '\n';
+    fs2 << "mymap['a'] is " << mymap_['a'] << '\n';
+    fs2 << "mymap['b'] is " << mymap_['b'] << '\n';
+    fs2 << "mymap['c'] is " << mymap_['c'] << '\n';
+    fs2 << "mymap['d'] is " << mymap_['d'] << '\n';
 
-		myvector_.clear();
-		myvector_.push_back (1101);
-		myvector_.push_back (2202);
+    fs2 << "mymap now contains " << mymap_.size() << " elements.\n"
+        << std::flush;
+  }
 
-		fs2 << "myvector contains:";
-		for (unsigned i=0; i<myvector_.size(); i++)
-			fs2 << ' ' << myvector_[i];
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+  judge();
 
-	judge();
+  {
+    std::map<char, int> mymap;
 
-	{
-		std::vector<int> foo (3,100);   // three ints with a value of 100
-		std::vector<int> bar (2,200);   // two ints with a value of 200
+    // first insert function version (single parameter):
+    mymap.insert(std::pair<char, int>('a', 100));
+    mymap.insert(std::pair<char, int>('z', 200));
 
-		if (foo==bar) fs1 << "foo and bar are equal\n";
-		if (foo!=bar) fs1 << "foo and bar are not equal\n";
-		if (foo< bar) fs1 << "foo is less than bar\n";
-		if (foo> bar) fs1 << "foo is greater than bar\n";
-		if (foo<=bar) fs1 << "foo is less than or equal to bar\n";
-		if (foo>=bar) fs1 << "foo is greater than or equal to bar\n" << std::flush;
+    std::pair<std::map<char, int>::iterator, bool> ret;
+    ret = mymap.insert(std::pair<char, int>('z', 500));
+    if (ret.second == false) {
+      fs1 << "element 'z' already existed";
+      fs1 << " with a value of " << ret.first->second << '\n';
+    }
 
+    // second insert function version (with hint position):
+    std::map<char, int>::iterator it = mymap.begin();
+    mymap.insert(it,
+                 std::pair<char, int>('b', 300));  // max efficiency inserting
+    mymap.insert(
+        it, std::pair<char, int>('c', 400));  // no max efficiency inserting
 
-		ft::vector<int> foo_ (3,100);   // three ints with a value of 100
-		ft::vector<int> bar_ (2,200);   // two ints with a value of 200
+    // third insert function version (range insertion):
+    std::map<char, int> anothermap;
+    anothermap.insert(mymap.begin(), mymap.find('c'));
 
-		if (foo_==bar_) fs2 << "foo and bar are equal\n";
-		if (foo_!=bar_) fs2 << "foo and bar are not equal\n";
-		if (foo_< bar_) fs2 << "foo is less than bar\n";
-		if (foo_> bar_) fs2 << "foo is greater than bar\n";
-		if (foo_<=bar_) fs2 << "foo is less than or equal to bar\n";
-		if (foo_>=bar_) fs2 << "foo is greater than or equal to bar\n" << std::flush;
-	
-		leak_check();
-	}
+    // showing contents:
+    fs1 << "mymap contains:\n";
+    for (it = mymap.begin(); it != mymap.end(); ++it)
+      fs1 << it->first << " => " << it->second << '\n';
 
-	judge();
+    fs1 << "anothermap contains:\n";
+    for (it = anothermap.begin(); it != anothermap.end(); ++it)
+      fs1 << it->first << " => " << it->second << '\n';
+    fs1 << std::flush;
 
-	{
-		std::vector<int> foo (3,100);   // three ints with a value of 100
-		std::vector<int> bar (5,200);   // five ints with a value of 200
+    ft::map<char, int> mymap_;
 
-		foo.swap(bar);
+    // first insert function version (single parameter):
+    mymap_.insert(std::pair<char, int>('a', 100));
+    mymap_.insert(std::pair<char, int>('z', 200));
 
-		fs1 << "foo contains:";
-		for (std::vector<int>::iterator it = foo.begin(); it!=foo.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n';
+    std::pair<ft::map<char, int>::iterator, bool> ret_;
+    ret_ = mymap_.insert(std::pair<char, int>('z', 500));
+    if (ret_.second == false) {
+      fs2 << "element 'z' already existed";
+      fs2 << " with a value of " << ret.first->second << '\n';
+    }
 
-		fs1 << "bar contains:";
-		for (std::vector<int>::iterator it = bar.begin(); it!=bar.end(); ++it)
-			fs1 << ' ' << *it;
-		fs1 << '\n' << std::flush;
+    // second insert function version (with hint position):
+    ft::map<char, int>::iterator it_ = mymap_.begin();
+    mymap_.insert(it_,
+                  std::pair<char, int>('b', 300));  // max efficiency inserting
+    mymap_.insert(
+        it_, std::pair<char, int>('c', 400));  // no max efficiency inserting
 
+    // third insert function version (range insertion):
+    ft::map<char, int> anothermap_;
+    anothermap_.insert(mymap_.begin(), mymap_.find('c'));
 
-		ft::vector<int> foo_ (3,100);   // three ints with a value of 100
-		ft::vector<int> bar_ (5,200);   // five ints with a value of 200
+    // showing contents:
+    fs2 << "mymap contains:\n";
+    for (it_ = mymap_.begin(); it_ != mymap_.end(); ++it_)
+      fs2 << it_->first << " => " << it_->second << '\n';
 
-		foo_.swap(bar_);
+    fs2 << "anothermap contains:\n";
+    for (it_ = anothermap_.begin(); it_ != anothermap_.end(); ++it_)
+      fs2 << it_->first << " => " << it_->second << '\n';
+    fs2 << std::flush;
+  }
 
-		fs2 << "foo contains:";
-		for (ft::vector<int>::iterator it = foo_.begin(); it!=foo_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n';
+  judge();
 
-		fs2 << "bar contains:";
-		for (ft::vector<int>::iterator it = bar_.begin(); it!=bar_.end(); ++it)
-			fs2 << ' ' << *it;
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+  {
+    std::map<char, int> mymap;
+    std::map<char, int>::iterator it;
 
-	judge();
+    // insert some values:
+    mymap['a'] = 10;
+    mymap['b'] = 20;
+    mymap['c'] = 30;
+    mymap['d'] = 40;
+    mymap['e'] = 50;
+    mymap['f'] = 60;
 
-	std::cout << "\n=== MAP ===" << std::endl;
-	fs1 << "\n=== MAP ===" << std::endl;
-	fs2 << "\n=== MAP ===" << std::endl;
-	{
-		std::map<char,int> first;
+    it = mymap.find('b');
+    mymap.erase(it);  // erasing by iterator
 
-		first['a']=10;
-		first['b']=30;
-		first['c']=50;
-		first['d']=70;
+    mymap.erase('c');  // erasing by key
 
-		std::map<char,int> second (first.begin(),first.end());
+    it = mymap.find('e');
+    mymap.erase(it, mymap.end());  // erasing by range
 
-		std::map<char,int> third (second);
+    // show content:
+    for (it = mymap.begin(); it != mymap.end(); ++it)
+      fs1 << it->first << " => " << it->second << '\n';
+    fs1 << std::flush;
 
-		std::map<char,int,classcomp> fourth;                 // class as Compare
+    ft::map<char, int> mymap_;
+    ft::map<char, int>::iterator it_;
 
-		bool(*fn_pt)(char,char) = fncomp;
-		std::map<char,int,bool(*)(char,char)> fifth (fn_pt); // function pointer as Compare
+    // insert some values:
+    mymap_['a'] = 10;
+    mymap_['b'] = 20;
+    mymap_['c'] = 30;
+    mymap_['d'] = 40;
+    mymap_['e'] = 50;
+    mymap_['f'] = 60;
 
-		for (std::map<char,int>::iterator it = first.begin(); it != first.end(); ++it)
-			fs1 << ' ' << it->first;
-		fs1 << '\n';
-		for (std::map<char,int>::iterator it = second.begin(); it != second.end(); ++it)
-			fs1 << ' ' << it->first;
-		fs1 << '\n';
-		for (std::map<char,int>::iterator it = third.begin(); it != third.end(); ++it)
-			fs1 << ' ' << it->first;
-		fs1 << '\n';
-		for (std::map<char,int,classcomp>::iterator it = fourth.begin(); it != fourth.end(); ++it)
-			fs1 << ' ' << it->first;
-		fs1 << '\n';
-		for (std::map<char,int,bool(*)(char,char)>::iterator it = fifth.begin(); it != fifth.end(); ++it)
-			fs1 << ' ' << it->first;
-		fs1 << '\n' << std::flush;
+    it_ = mymap_.find('b');
+    mymap_.erase(it_);  // erasing by it_erator
 
+    mymap_.erase('c');  // erasing by key
 
-		ft::map<char,int> first_;
+    it_ = mymap_.find('e');
+    mymap_.erase(it_, mymap_.end());  // erasing by range
 
-		first_['a']=10;
-		first_['b']=30;
-		first_['c']=50;
-		first_['d']=70;
+    // show content:
+    for (it_ = mymap_.begin(); it_ != mymap_.end(); ++it_)
+      fs2 << it_->first << " => " << it_->second << '\n';
+    fs2 << std::flush;
+  }
 
-		ft::map<char,int> second_ (first_.begin(),first_.end());
+  judge();
 
-		ft::map<char,int> third_ (second_);
+  {
+    std::map<char, int> foo, bar;
 
-		ft::map<char,int,classcomp> fourth_;                 // class as Compare
+    foo['x'] = 100;
+    foo['y'] = 200;
 
-		bool(*fn_pt_)(char,char) = fncomp;
-		ft::map<char,int,bool(*)(char,char)> fifth_ (fn_pt_); // function pointer as Compare
+    bar['a'] = 11;
+    bar['b'] = 22;
+    bar['c'] = 33;
 
-		for (ft::map<char,int>::iterator it = first_.begin(); it != first_.end(); ++it)
-			fs2 << ' ' << it->first;
-		fs2 << '\n';
-		for (ft::map<char,int>::iterator it = second_.begin(); it != second_.end(); ++it)
-			fs2 << ' ' << it->first;
-		fs2 << '\n';
-		for (ft::map<char,int>::iterator it = third_.begin(); it != third_.end(); ++it)
-			fs2 << ' ' << it->first;
-		fs2 << '\n';
-		for (ft::map<char,int,classcomp>::iterator it = fourth_.begin(); it != fourth_.end(); ++it)
-			fs2 << ' ' << it->first;
-		fs2 << '\n';
-		for (ft::map<char,int,bool(*)(char,char)>::iterator it = fifth_.begin(); it != fifth_.end(); ++it)
-			fs2 << ' ' << it->first;
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+    foo.swap(bar);
 
-	judge();
+    fs1 << "foo contains:\n";
+    for (std::map<char, int>::iterator it = foo.begin(); it != foo.end(); ++it)
+      fs1 << it->first << " => " << it->second << '\n';
 
-	{
-		std::map<char,int> first;
-		std::map<char,int> second;
+    fs1 << "bar contains:\n";
+    for (std::map<char, int>::iterator it = bar.begin(); it != bar.end(); ++it)
+      fs1 << it->first << " => " << it->second << '\n' << std::flush;
 
-		first['x']=8;
-		first['y']=16;
-		first['z']=32;
+    ft::map<char, int> foo_, bar_;
 
-		second=first;                // second now contains 3 ints
-		first=std::map<char,int>();  // and first is now empty
+    foo_['x'] = 100;
+    foo_['y'] = 200;
 
-		fs1 << "Size of first: " << first.size() << '\n';
-		fs1 << "Size of second: " << second.size() << '\n' << std::flush;
+    bar_['a'] = 11;
+    bar_['b'] = 22;
+    bar_['c'] = 33;
 
+    foo_.swap(bar_);
 
-		ft::map<char,int> first_;
-		ft::map<char,int> second_;
+    fs2 << "foo contains:\n";
+    for (ft::map<char, int>::iterator it = foo_.begin(); it != foo_.end(); ++it)
+      fs2 << it->first << " => " << it->second << '\n';
 
-		first_['x']=8;
-		first_['y']=16;
-		first_['z']=32;
+    fs2 << "bar contains:\n";
+    for (ft::map<char, int>::iterator it = bar_.begin(); it != bar_.end(); ++it)
+      fs2 << it->first << " => " << it->second << '\n' << std::flush;
+  }
 
-		second_=first_;                // second_ now contains 3 ints
-		first_=ft::map<char,int>();  // and first_ is now empty
+  judge();
 
-		fs2 << "Size of first: " << first_.size() << '\n';
-		fs2 << "Size of second: " << second_.size() << '\n' <<std::flush;
-	
-		leak_check();
-	}
+  {
+    std::map<char, int> mymap;
 
-	judge();
+    mymap['x'] = 100;
+    mymap['y'] = 200;
+    mymap['z'] = 300;
 
-	{
-		std::map<char,int> mymap;
+    fs1 << "mymap contains:\n";
+    for (std::map<char, int>::iterator it = mymap.begin(); it != mymap.end();
+         ++it)
+      fs1 << it->first << " => " << it->second << '\n';
 
-		mymap['b'] = 100;
-		mymap['a'] = 200;
-		mymap['c'] = 300;
+    mymap.clear();
+    mymap['a'] = 1101;
+    mymap['b'] = 2202;
 
-		// show content:
-		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-			fs1 << it->first << " => " << it->second << '\n';
-		fs1 << std::flush;
+    fs1 << "mymap contains:\n";
+    for (std::map<char, int>::iterator it = mymap.begin(); it != mymap.end();
+         ++it)
+      fs1 << it->first << " => " << it->second << '\n' << std::flush;
 
+    ft::map<char, int> mymap_;
 
-		ft::map<char,int> mymap_;
+    mymap_['x'] = 100;
+    mymap_['y'] = 200;
+    mymap_['z'] = 300;
 
-		mymap_['b'] = 100;
-		mymap_['a'] = 200;
-		mymap_['c'] = 300;
+    fs2 << "mymap contains:\n";
+    for (ft::map<char, int>::iterator it = mymap_.begin(); it != mymap_.end();
+         ++it)
+      fs2 << it->first << " => " << it->second << '\n';
 
-		// show content:
-		for (ft::map<char,int>::iterator it=mymap_.begin(); it!=mymap_.end(); ++it)
-			fs2 << it->first << " => " << it->second << '\n';
-		fs2 << std::flush;
-	
-		leak_check();
-	}
+    mymap_.clear();
+    mymap_['a'] = 1101;
+    mymap_['b'] = 2202;
 
-	judge();
+    fs2 << "mymap contains:\n";
+    for (ft::map<char, int>::iterator it = mymap_.begin(); it != mymap_.end();
+         ++it)
+      fs2 << it->first << " => " << it->second << '\n' << std::flush;
+  }
 
-	{
-		std::map<char,int> mymap;
+  judge();
 
-		mymap['b'] = 100;
-		mymap['a'] = 200;
-		mymap['c'] = 300;
+  {
+    std::map<char, int> mymap;
 
-		// show content:
-		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-			fs1 << it->first << " => " << it->second << '\n';
-		fs1 << std::flush;
-		
-		ft::map<char,int> mymap_;
+    std::map<char, int>::key_compare mycomp = mymap.key_comp();
 
-		mymap_['b'] = 100;
-		mymap_['a'] = 200;
-		mymap_['c'] = 300;
+    mymap['a'] = 100;
+    mymap['b'] = 200;
+    mymap['c'] = 300;
 
-		// show content:
-		for (ft::map<char,int>::iterator it=mymap_.begin(); it!=mymap_.end(); ++it)
-			fs2 << it->first << " => " << it->second << '\n';
-		fs2 << std::flush;
-	
-		leak_check();
-	}
+    fs1 << "mymap contains:\n";
 
-	judge();
+    char highest = mymap.rbegin()->first;  // key value of last element
 
-	{
-		std::map<char,int> mymap;
+    std::map<char, int>::iterator it = mymap.begin();
+    do {
+      fs1 << it->first << " => " << it->second << '\n';
+    } while (mycomp((*it++).first, highest));
 
-		mymap['x'] = 100;
-		mymap['y'] = 200;
-		mymap['z'] = 300;
+    fs1 << '\n' << std::flush;
 
-		// show content:
-		std::map<char,int>::reverse_iterator rit;
-		for (rit=mymap.rbegin(); rit!=mymap.rend(); ++rit)
-			fs1 << rit->first << " => " << rit->second << '\n';
-		fs1 << std::flush;
+    ft::map<char, int> mymap_;
 
+    ft::map<char, int>::key_compare mycomp_ = mymap_.key_comp();
 
-		ft::map<char,int> mymap_;
+    mymap_['a'] = 100;
+    mymap_['b'] = 200;
+    mymap_['c'] = 300;
 
-		mymap_['x'] = 100;
-		mymap_['y'] = 200;
-		mymap_['z'] = 300;
+    fs2 << "mymap contains:\n";
 
-		// show content:
-		ft::map<char,int>::reverse_iterator rit_;
-		for (rit_=mymap_.rbegin(); rit_!=mymap_.rend(); ++rit_)
-			fs2 << rit_->first << " => " << rit_->second << '\n';
-		fs2 << std::flush;
-	
-		leak_check();
-	}
+    char highest_ = mymap_.rbegin()->first;  // key value of last element
 
-	judge();
+    ft::map<char, int>::iterator it_ = mymap_.begin();
+    do {
+      fs2 << it_->first << " => " << it_->second << '\n';
+    } while (mycomp_((*it_++).first, highest_));
 
-	{
-		std::map<char,int> mymap;
+    fs2 << '\n' << std::flush;
+  }
 
-		mymap['x'] = 100;
-		mymap['y'] = 200;
-		mymap['z'] = 300;
+  judge();
 
-		// show content:
-		std::map<char,int>::reverse_iterator rit;
-		for (rit=mymap.rbegin(); rit!=mymap.rend(); ++rit)
-			fs1 << rit->first << " => " << rit->second << '\n';
-		fs1 << std::flush;
+  {
+    std::map<char, int> mymap;
 
+    mymap['x'] = 1001;
+    mymap['y'] = 2002;
+    mymap['z'] = 3003;
 
-		ft::map<char,int> mymap_;
+    fs1 << "mymap contains:\n";
 
-		mymap_['x'] = 100;
-		mymap_['y'] = 200;
-		mymap_['z'] = 300;
+    std::pair<char, int> highest = *mymap.rbegin();  // last element
 
-		// show content:
-		ft::map<char,int>::reverse_iterator rit_;
-		for (rit_=mymap_.rbegin(); rit_!=mymap_.rend(); ++rit_)
-			fs2 << rit_->first << " => " << rit_->second << '\n';
-		fs2 << std::flush;
-	
-		leak_check();
-	}
+    std::map<char, int>::iterator it = mymap.begin();
+    do {
+      fs1 << it->first << " => " << it->second << '\n';
+    } while (mymap.value_comp()(*it++, highest));
+    fs1 << std::flush;
 
-	judge();
+    ft::map<char, int> mymap_;
 
-	{
-		std::map<char,int> mymap;
+    mymap_['x'] = 1001;
+    mymap_['y'] = 2002;
+    mymap_['z'] = 3003;
 
-		mymap['a']=10;
-		mymap['b']=20;
-		mymap['c']=30;
+    fs2 << "mymap contains:\n";
 
-		while (!mymap.empty())
-		{
-			fs1 << mymap.begin()->first << " => " << mymap.begin()->second << '\n';
-			mymap.erase(mymap.begin());
-		}
-		fs1 << std::flush;
+    std::pair<char, int> highest_ = *mymap_.rbegin();  // last element
 
+    ft::map<char, int>::iterator it_ = mymap_.begin();
+    do {
+      fs2 << it_->first << " => " << it_->second << '\n';
+    } while (mymap_.value_comp()(*it_++, highest_));
+    fs2 << std::flush;
+  }
 
-		ft::map<char,int> mymap_;
+  judge();
 
-		mymap_['a']=10;
-		mymap_['b']=20;
-		mymap_['c']=30;
+  {
+    std::map<char, int> mymap;
+    std::map<char, int>::iterator it;
 
-		while (!mymap_.empty())
-		{
-			fs2 << mymap_.begin()->first << " => " << mymap_.begin()->second << '\n';
-			mymap_.erase(mymap_.begin());
-		}
-		fs2 << std::flush;
-	
-		leak_check();
-	}
+    mymap['a'] = 50;
+    mymap['b'] = 100;
+    mymap['c'] = 150;
+    mymap['d'] = 200;
 
-	judge();
+    it = mymap.find('b');
+    if (it != mymap.end()) mymap.erase(it);
 
-	{
-		std::map<char,int> mymap;
-		mymap['a']=101;
-		mymap['b']=202;
-		mymap['c']=302;
+    // print content:
+    fs1 << "elements in mymap:" << '\n';
+    fs1 << "a => " << mymap.find('a')->second << '\n';
+    fs1 << "c => " << mymap.find('c')->second << '\n';
+    fs1 << "d => " << mymap.find('d')->second << '\n' << std::flush;
 
-		fs1 << "mymap.size() is " << mymap.size() << '\n';
+    ft::map<char, int> mymap_;
+    ft::map<char, int>::iterator it_;
 
+    mymap_['a'] = 50;
+    mymap_['b'] = 100;
+    mymap_['c'] = 150;
+    mymap_['d'] = 200;
 
-		ft::map<char,int> mymap_;
-		mymap_['a']=101;
-		mymap_['b']=202;
-		mymap_['c']=302;
+    it_ = mymap_.find('b');
+    if (it_ != mymap_.end()) mymap_.erase(it_);
 
-		fs2 << "mymap.size() is " << mymap_.size() << '\n';
-	
-		leak_check();
-	}
+    // print content:
+    fs2 << "elements in mymap:" << '\n';
+    fs2 << "a => " << mymap_.find('a')->second << '\n';
+    fs2 << "c => " << mymap_.find('c')->second << '\n';
+    fs2 << "d => " << mymap_.find('d')->second << '\n' << std::flush;
+  }
 
-	judge();
+  judge();
 
-	{
-		int i;
-		std::map<int,int> mymap;
+  {
+    std::map<char, int> mymap;
+    char c;
 
-		if (mymap.max_size()>1000)
-		{
-			for (i=0; i<1000; i++) mymap[i]=0;
-			fs1 << "The map contains 1000 elements.\n";
-		}
-		else fs1 << "The map could not hold 1000 elements.\n";
-		fs1 << std::flush;
+    mymap['a'] = 101;
+    mymap['c'] = 202;
+    mymap['f'] = 303;
 
-		int i_;
-		ft::map<int,int> mymap_;
+    for (c = 'a'; c < 'h'; c++) {
+      fs1 << c;
+      if (mymap.count(c) > 0)
+        fs1 << " is an element of mymap.\n";
+      else
+        fs1 << " is not an element of mymap.\n";
+    }
+    fs1 << std::flush;
 
-		if (mymap_.max_size()>1000)
-		{
-			for (i_=0; i_<1000; i_++) mymap_[i_]=0;
-			fs2 << "The map contains 1000 elements.\n";
-		}
-		else fs2 << "The map could not hold 1000 elements.\n";
-		fs2 << std::flush;
-	
-		leak_check();
-	}
+    ft::map<char, int> mymap_;
+    char c_;
 
-	judge();
+    mymap_['a'] = 101;
+    mymap_['c'] = 202;
+    mymap_['f'] = 303;
 
-	{
-		std::map<char,std::string> mymap;
+    for (c_ = 'a'; c_ < 'h'; c_++) {
+      fs2 << c_;
+      if (mymap_.count(c_) > 0)
+        fs2 << " is an element of mymap.\n";
+      else
+        fs2 << " is not an element of mymap.\n";
+    }
+    fs2 << std::flush;
+  }
 
-		mymap['a']="an element";
-		mymap['b']="another element";
-		mymap['c']=mymap['b'];
+  judge();
 
-		fs1 << "mymap['a'] is " << mymap['a'] << '\n';
-		fs1 << "mymap['b'] is " << mymap['b'] << '\n';
-		fs1 << "mymap['c'] is " << mymap['c'] << '\n';
-		fs1 << "mymap['d'] is " << mymap['d'] << '\n';
+  {
+    std::map<char, int> mymap;
+    std::map<char, int>::iterator itlow, itup;
 
-		fs1 << "mymap now contains " << mymap.size() << " elements.\n" << std::flush;
+    mymap['a'] = 20;
+    mymap['b'] = 40;
+    mymap['c'] = 60;
+    mymap['d'] = 80;
+    mymap['e'] = 100;
 
+    itlow = mymap.lower_bound('b');  // itlow points to b
+    itup = mymap.upper_bound('d');   // itup points to e (not d!)
 
-		ft::map<char,std::string> mymap_;
+    mymap.erase(itlow, itup);  // erases [itlow,itup)
 
-		mymap_['a']="an element";
-		mymap_['b']="another element";
-		mymap_['c']=mymap_['b'];
+    // print content:
+    for (std::map<char, int>::iterator it = mymap.begin(); it != mymap.end();
+         ++it)
+      fs1 << it->first << " => " << it->second << '\n' << std::flush;
 
-		fs2 << "mymap['a'] is " << mymap_['a'] << '\n';
-		fs2 << "mymap['b'] is " << mymap_['b'] << '\n';
-		fs2 << "mymap['c'] is " << mymap_['c'] << '\n';
-		fs2 << "mymap['d'] is " << mymap_['d'] << '\n';
+    ft::map<char, int> mymap_;
+    ft::map<char, int>::iterator itlow_, itup_;
 
-		fs2 << "mymap now contains " << mymap_.size() << " elements.\n" << std::flush;
-	
-		leak_check();
-	}
+    mymap_['a'] = 20;
+    mymap_['b'] = 40;
+    mymap_['c'] = 60;
+    mymap_['d'] = 80;
+    mymap_['e'] = 100;
 
-	judge();
+    itlow_ = mymap_.lower_bound('b');  // itlow_ points to b
+    itup_ = mymap_.upper_bound('d');   // itup_ points to e (not d!)
 
-	{
-		std::map<char,int> mymap;
+    mymap_.erase(itlow_, itup_);  // erases [itlow,itup_)
 
-		// first insert function version (single parameter):
-		mymap.insert ( std::pair<char,int>('a',100) );
-		mymap.insert ( std::pair<char,int>('z',200) );
+    // print content:
+    for (ft::map<char, int>::iterator it = mymap_.begin(); it != mymap_.end();
+         ++it)
+      fs2 << it->first << " => " << it->second << '\n' << std::flush;
+  }
 
-		std::pair<std::map<char,int>::iterator,bool> ret;
-		ret = mymap.insert ( std::pair<char,int>('z',500) );
-		if (ret.second==false) {
-			fs1 << "element 'z' already existed";
-			fs1 << " with a value of " << ret.first->second << '\n';
-		}
+  judge();
 
-		// second insert function version (with hint position):
-		std::map<char,int>::iterator it = mymap.begin();
-		mymap.insert (it, std::pair<char,int>('b',300));  // max efficiency inserting
-		mymap.insert (it, std::pair<char,int>('c',400));  // no max efficiency inserting
+  {
+    std::map<char, int> mymap;
 
-		// third insert function version (range insertion):
-		std::map<char,int> anothermap;
-		anothermap.insert(mymap.begin(),mymap.find('c'));
+    mymap['a'] = 10;
+    mymap['b'] = 20;
+    mymap['c'] = 30;
 
-		// showing contents:
-		fs1 << "mymap contains:\n";
-		for (it=mymap.begin(); it!=mymap.end(); ++it)
-			fs1 << it->first << " => " << it->second << '\n';
+    std::pair<std::map<char, int>::iterator, std::map<char, int>::iterator> ret;
+    ret = mymap.equal_range('b');
 
-		fs1 << "anothermap contains:\n";
-		for (it=anothermap.begin(); it!=anothermap.end(); ++it)
-			fs1 << it->first << " => " << it->second << '\n';
-		fs1 << std::flush;
+    fs1 << "lower bound points to: ";
+    fs1 << ret.first->first << " => " << ret.first->second << '\n';
 
-		
-		ft::map<char,int> mymap_;
+    fs1 << "upper bound points to: ";
+    fs1 << ret.second->first << " => " << ret.second->second << '\n'
+        << std::flush;
 
-		// first insert function version (single parameter):
-		mymap_.insert ( std::pair<char,int>('a',100) );
-		mymap_.insert ( std::pair<char,int>('z',200) );
+    ft::map<char, int> mymap_;
 
-		std::pair<ft::map<char,int>::iterator,bool> ret_;
-		ret_ = mymap_.insert ( std::pair<char,int>('z',500) );
-		if (ret_.second==false) {
-			fs2 << "element 'z' already existed";
-			fs2 << " with a value of " << ret.first->second << '\n';
-		}
+    mymap_['a'] = 10;
+    mymap_['b'] = 20;
+    mymap_['c'] = 30;
 
-		// second insert function version (with hint position):
-		ft::map<char,int>::iterator it_ = mymap_.begin();
-		mymap_.insert (it_, std::pair<char,int>('b',300));  // max efficiency inserting
-		mymap_.insert (it_, std::pair<char,int>('c',400));  // no max efficiency inserting
+    std::pair<ft::map<char, int>::iterator, ft::map<char, int>::iterator> ret_;
+    ret_ = mymap_.equal_range('b');
 
-		// third insert function version (range insertion):
-		ft::map<char,int> anothermap_;
-		anothermap_.insert(mymap_.begin(),mymap_.find('c'));
+    fs2 << "lower bound points to: ";
+    fs2 << ret_.first->first << " => " << ret_.first->second << '\n';
 
-		// showing contents:
-		fs2 << "mymap contains:\n";
-		for (it_=mymap_.begin(); it_!=mymap_.end(); ++it_)
-			fs2 << it_->first << " => " << it_->second << '\n';
+    fs2 << "upper bound points to: ";
+    fs2 << ret_.second->first << " => " << ret_.second->second << '\n'
+        << std::flush;
+  }
 
-		fs2 << "anothermap contains:\n";
-		for (it_=anothermap_.begin(); it_!=anothermap_.end(); ++it_)
-			fs2 << it_->first << " => " << it_->second << '\n';
-		fs2 << std::flush;
-	
-		leak_check();
-	}
-	
-	judge();
+  judge();
 
-	{
-		std::map<char,int> mymap;
-		std::map<char,int>::iterator it;
+  std::cout << "\n=== STACK ===" << std::endl;
+  fs1 << "\n=== STACK ===" << std::endl;
+  fs2 << "\n=== STACK ===" << std::endl;
+  {
+    std::deque<int> mydeque(3, 100);    // deque with 3 elements
+    std::vector<int> myvector(2, 200);  // vector with 2 elements
 
-		// insert some values:
-		mymap['a']=10;
-		mymap['b']=20;
-		mymap['c']=30;
-		mymap['d']=40;
-		mymap['e']=50;
-		mymap['f']=60;
+    std::stack<int> first;            // empty stack
+    std::stack<int> second(mydeque);  // stack initialized to copy of deque
 
-		it=mymap.find('b');
-		mymap.erase (it);                   // erasing by iterator
+    std::stack<int, std::vector<int> > third;  // empty stack using vector
+    std::stack<int, std::vector<int> > fourth(myvector);
 
-		mymap.erase ('c');                  // erasing by key
+    fs1 << "size of first: " << first.size() << '\n';
+    fs1 << "size of second: " << second.size() << '\n';
+    fs1 << "size of third: " << third.size() << '\n';
+    fs1 << "size of fourth: " << fourth.size() << '\n' << std::flush;
 
-		it=mymap.find ('e');
-		mymap.erase ( it, mymap.end() );    // erasing by range
+    ft::vector<int> mydeque_(3, 100);    // deque with 3 elements
+    std::vector<int> myvector_(2, 200);  // vector with 2 elements
 
-		// show content:
-		for (it=mymap.begin(); it!=mymap.end(); ++it)
-			fs1 << it->first << " => " << it->second << '\n';
-		fs1 << std::flush;
+    ft::stack<int> first_;             // empty stack
+    ft::stack<int> second_(mydeque_);  // stack initialized to copy of deque
 
-		ft::map<char,int> mymap_;
-		ft::map<char,int>::iterator it_;
+    ft::stack<int, std::vector<int> > third_;  // empty stack using vector
+    ft::stack<int, std::vector<int> > fourth_(myvector_);
 
-		// insert some values:
-		mymap_['a']=10;
-		mymap_['b']=20;
-		mymap_['c']=30;
-		mymap_['d']=40;
-		mymap_['e']=50;
-		mymap_['f']=60;
+    fs2 << "size of first: " << first_.size() << '\n';
+    fs2 << "size of second: " << second_.size() << '\n';
+    fs2 << "size of third: " << third_.size() << '\n';
+    fs2 << "size of fourth: " << fourth_.size() << '\n' << std::flush;
+  }
 
-		it_=mymap_.find('b');
-		mymap_.erase (it_);                   // erasing by it_erator
+  judge();
 
-		mymap_.erase ('c');                  // erasing by key
-		
-		it_=mymap_.find ('e');
-		mymap_.erase ( it_, mymap_.end());    // erasing by range
+  {
+    std::stack<int> mystack;
+    int sum(0);
 
-		// show content:
-		for (it_=mymap_.begin(); it_!=mymap_.end(); ++it_)
-			fs2 << it_->first << " => " << it_->second << '\n';
-		fs2 << std::flush;
-	
-		leak_check();
-	}
+    for (int i = 1; i <= 10; i++) mystack.push(i);
 
-	judge();
+    while (!mystack.empty()) {
+      sum += mystack.top();
+      mystack.pop();
+    }
 
-	{
-		std::map<char,int> foo,bar;
+    fs1 << "total: " << sum << '\n' << std::flush;
 
-		foo['x']=100;
-		foo['y']=200;
+    ft::stack<int> mystack_;
+    int sum_(0);
 
-		bar['a']=11;
-		bar['b']=22;
-		bar['c']=33;
+    for (int i = 1; i <= 10; i++) mystack_.push(i);
 
-		foo.swap(bar);
+    while (!mystack_.empty()) {
+      sum_ += mystack_.top();
+      mystack_.pop();
+    }
 
-		fs1 << "foo contains:\n";
-		for (std::map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
-			fs1 << it->first << " => " << it->second << '\n';
+    fs2 << "total: " << sum_ << '\n' << std::flush;
+  }
 
-		fs1 << "bar contains:\n";
-		for (std::map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
-			fs1 << it->first << " => " << it->second << '\n' << std::flush;
-		
+  judge();
 
-		ft::map<char,int> foo_,bar_;
+  {
+    std::stack<int> myints;
+    fs1 << "0. size: " << myints.size() << '\n';
 
-		foo_['x']=100;
-		foo_['y']=200;
+    for (int i = 0; i < 5; i++) myints.push(i);
+    fs1 << "1. size: " << myints.size() << '\n';
 
-		bar_['a']=11;
-		bar_['b']=22;
-		bar_['c']=33;
+    myints.pop();
+    fs1 << "2. size: " << myints.size() << '\n' << std::flush;
 
-		foo_.swap(bar_);
+    ft::stack<int> myints_;
+    fs2 << "0. size: " << myints_.size() << '\n';
 
-		fs2 << "foo contains:\n";
-		for (ft::map<char,int>::iterator it=foo_.begin(); it!=foo_.end(); ++it)
-			fs2 << it->first << " => " << it->second << '\n';
+    for (int i = 0; i < 5; i++) myints_.push(i);
+    fs2 << "1. size: " << myints_.size() << '\n';
 
-		fs2 << "bar contains:\n";
-		for (ft::map<char,int>::iterator it=bar_.begin(); it!=bar_.end(); ++it)
-			fs2 << it->first << " => " << it->second << '\n' << std::flush;
-	
-		leak_check();
-	}
+    myints_.pop();
+    fs2 << "2. size: " << myints_.size() << '\n' << std::flush;
+  }
 
-	judge();
+  judge();
 
-	{
-		std::map<char,int> mymap;
+  {
+    std::stack<int> mystack;
 
-		mymap['x']=100;
-		mymap['y']=200;
-		mymap['z']=300;
+    mystack.push(10);
+    mystack.push(20);
 
-		fs1 << "mymap contains:\n";
-		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-			fs1 << it->first << " => " << it->second << '\n';
+    mystack.top() -= 5;
 
-		mymap.clear();
-		mymap['a']=1101;
-		mymap['b']=2202;
+    fs1 << "mystack.top() is now " << mystack.top() << '\n' << std::flush;
 
-		fs1 << "mymap contains:\n";
-		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-			fs1 << it->first << " => " << it->second << '\n' << std::flush;
-		
+    ft::stack<int> mystack_;
 
-		ft::map<char,int> mymap_;
+    mystack_.push(10);
+    mystack_.push(20);
 
-		mymap_['x']=100;
-		mymap_['y']=200;
-		mymap_['z']=300;
+    mystack_.top() -= 5;
 
-		fs2 << "mymap contains:\n";
-		for (ft::map<char,int>::iterator it=mymap_.begin(); it!=mymap_.end(); ++it)
-			fs2 << it->first << " => " << it->second << '\n';
+    fs2 << "mystack.top() is now " << mystack_.top() << '\n' << std::flush;
+  }
 
-		mymap_.clear();
-		mymap_['a']=1101;
-		mymap_['b']=2202;
+  judge();
 
-		fs2 << "mymap contains:\n";
-		for (ft::map<char,int>::iterator it=mymap_.begin(); it!=mymap_.end(); ++it)
-			fs2 << it->first << " => " << it->second << '\n' << std::flush;
-	
-		leak_check();
-	}
+  {
+    std::stack<int> mystack;
 
-	judge();
+    for (int i = 0; i < 5; ++i) mystack.push(i);
 
-	{
-		std::map<char,int> mymap;
+    fs1 << "Popping out elements...";
+    while (!mystack.empty()) {
+      fs1 << ' ' << mystack.top();
+      mystack.pop();
+    }
+    fs1 << '\n' << std::flush;
 
-		std::map<char,int>::key_compare mycomp = mymap.key_comp();
+    ft::stack<int> mystack_;
 
-		mymap['a']=100;
-		mymap['b']=200;
-		mymap['c']=300;
+    for (int i = 0; i < 5; ++i) mystack_.push(i);
 
-		fs1 << "mymap contains:\n";
+    fs2 << "Popping out elements...";
+    while (!mystack_.empty()) {
+      fs2 << ' ' << mystack_.top();
+      mystack_.pop();
+    }
+    fs2 << '\n' << std::flush;
+  }
 
-		char highest = mymap.rbegin()->first;     // key value of last element
+  judge();
 
-		std::map<char,int>::iterator it = mymap.begin();
-		do {
-			fs1 << it->first << " => " << it->second << '\n';
-		} while ( mycomp((*it++).first, highest) );
+  {
+    std::stack<int> mystack;
 
-		fs1 << '\n' << std::flush;
+    for (int i = 0; i < 5; ++i) mystack.push(i);
 
+    fs1 << "Popping out elements...";
+    while (!mystack.empty()) {
+      fs1 << ' ' << mystack.top();
+      mystack.pop();
+    }
+    fs1 << '\n' << std::flush;
 
-		ft::map<char,int> mymap_;
+    ft::stack<int> mystack_;
 
-		ft::map<char,int>::key_compare mycomp_ = mymap_.key_comp();
+    for (int i = 0; i < 5; ++i) mystack_.push(i);
 
-		mymap_['a']=100;
-		mymap_['b']=200;
-		mymap_['c']=300;
+    fs2 << "Popping out elements...";
+    while (!mystack_.empty()) {
+      fs2 << ' ' << mystack_.top();
+      mystack_.pop();
+    }
+    fs2 << '\n' << std::flush;
+  }
 
-		fs2 << "mymap contains:\n";
+  judge();
 
-		char highest_ = mymap_.rbegin()->first;     // key value of last element
+  {
+    std::stack<int> foo;  // three ints with a value of 100
+    for (int i = 0; i < 3; i++) foo.push(100);
+    std::stack<int> bar;  // two ints with a value of 200
+    for (int i = 0; i < 2; i++) bar.push(200);
+    if (foo == bar) fs1 << "foo and bar are equal\n";
+    if (foo != bar) fs1 << "foo and bar are not equal\n";
+    if (foo < bar) fs1 << "foo is less than bar\n";
+    if (foo > bar) fs1 << "foo is greater than bar\n";
+    if (foo <= bar) fs1 << "foo is less than or equal to bar\n";
+    if (foo >= bar)
+      fs1 << "foo is greater than or equal to bar\n" << std::flush;
 
-		ft::map<char,int>::iterator it_ = mymap_.begin();
-		do {
-			fs2 << it_->first << " => " << it_->second << '\n';
-		} while ( mycomp_((*it_++).first, highest_) );
+    ft::stack<int> foo_;  // three ints with a value of 100
+    for (int i = 0; i < 3; i++) foo_.push(100);
+    ft::stack<int> bar_;  // two ints with a value of 200
+    for (int i = 0; i < 2; i++) bar_.push(200);
+    if (foo_ == bar_) fs2 << "foo and bar are equal\n";
+    if (foo_ != bar_) fs2 << "foo and bar are not equal\n";
+    if (foo_ < bar_) fs2 << "foo is less than bar\n";
+    if (foo_ > bar_) fs2 << "foo is greater than bar\n";
+    if (foo_ <= bar_) fs2 << "foo is less than or equal to bar\n";
+    if (foo_ >= bar_)
+      fs2 << "foo is greater than or equal to bar\n" << std::flush;
+  }
 
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
+  judge();
 
-	judge();
+  std::cout << "\n=== QUEUE ===" << std::endl;
+  fs1 << "\n=== QUEUE ===" << std::endl;
+  fs2 << "\n=== QUEUE ===" << std::endl;
+  {
+    std::deque<int> mydeque(3, 100);    // deque with 3 elements
+    std::vector<int> myvector(2, 200);  // vector with 2 elements
 
-	{
-		std::map<char,int> mymap;
+    std::queue<int> first;            // empty queue
+    std::queue<int> second(mydeque);  // queue initialized to copy of deque
 
-		mymap['x']=1001;
-		mymap['y']=2002;
-		mymap['z']=3003;
+    std::queue<int, std::vector<int> > third;  // empty queue using vector
+    std::queue<int, std::vector<int> > fourth(myvector);
 
-		fs1 << "mymap contains:\n";
+    fs1 << "size of first: " << first.size() << '\n';
+    fs1 << "size of second: " << second.size() << '\n';
+    fs1 << "size of third: " << third.size() << '\n';
+    fs1 << "size of fourth: " << fourth.size() << '\n' << std::flush;
 
-		std::pair<char,int> highest = *mymap.rbegin();          // last element
+    ft::list<int> mydeque_(3, 100);      // deque with 3 elements
+    std::vector<int> myvector_(2, 200);  // vector with 2 elements
 
-		std::map<char,int>::iterator it = mymap.begin();
-		do {
-			fs1 << it->first << " => " << it->second << '\n';
-		} while ( mymap.value_comp()(*it++, highest) );
-		fs1 << std::flush;
+    ft::queue<int> first_;             // empty queue
+    ft::queue<int> second_(mydeque_);  // queue initialized to copy of deque
 
+    ft::queue<int, std::vector<int> > third_;  // empty queue using vector
+    ft::queue<int, std::vector<int> > fourth_(myvector_);
 
-		ft::map<char,int> mymap_;
+    fs2 << "size of first: " << first_.size() << '\n';
+    fs2 << "size of second: " << second_.size() << '\n';
+    fs2 << "size of third: " << third_.size() << '\n';
+    fs2 << "size of fourth: " << fourth_.size() << '\n' << std::flush;
+  }
 
-		mymap_['x']=1001;
-		mymap_['y']=2002;
-		mymap_['z']=3003;
+  judge();
 
-		fs2 << "mymap contains:\n";
+  {
+    std::queue<int> myqueue;
+    int sum(0);
 
-		std::pair<char,int> highest_ = *mymap_.rbegin();          // last element
+    for (int i = 1; i <= 10; i++) myqueue.push(i);
 
-		ft::map<char,int>::iterator it_ = mymap_.begin();
-		do {
-			fs2 << it_->first << " => " << it_->second << '\n';
-		} while ( mymap_.value_comp()(*it_++, highest_) );
-		fs2 << std::flush;
-	
-		leak_check();
-	}
+    while (!myqueue.empty()) {
+      sum += myqueue.front();
+      myqueue.pop();
+    }
 
-	judge();
+    fs1 << "total: " << sum << '\n' << std::flush;
 
-	{
-		std::map<char,int> mymap;
-		std::map<char,int>::iterator it;
+    ft::queue<int> myqueue_;
+    int sum_(0);
 
-		mymap['a']=50;
-		mymap['b']=100;
-		mymap['c']=150;
-		mymap['d']=200;
+    for (int i = 1; i <= 10; i++) myqueue_.push(i);
 
-		it = mymap.find('b');
-		if (it != mymap.end())
-			mymap.erase (it);
+    while (!myqueue_.empty()) {
+      sum_ += myqueue_.front();
+      myqueue_.pop();
+    }
 
-		// print content:
-		fs1 << "elements in mymap:" << '\n';
-		fs1 << "a => " << mymap.find('a')->second << '\n';
-		fs1 << "c => " << mymap.find('c')->second << '\n';
-		fs1 << "d => " << mymap.find('d')->second << '\n' << std::flush;
+    fs2 << "total: " << sum_ << '\n' << std::flush;
+  }
 
+  judge();
 
-		ft::map<char,int> mymap_;
-		ft::map<char,int>::iterator it_;
+  {
+    std::queue<int> myints;
+    fs1 << "0. size: " << myints.size() << '\n';
 
-		mymap_['a']=50;
-		mymap_['b']=100;
-		mymap_['c']=150;
-		mymap_['d']=200;
+    for (int i = 0; i < 5; i++) myints.push(i);
+    fs1 << "1. size: " << myints.size() << '\n';
 
-		it_ = mymap_.find('b');
-		if (it_ != mymap_.end())
-			mymap_.erase (it_);
+    myints.pop();
+    fs1 << "2. size: " << myints.size() << '\n' << std::flush;
 
-		// print content:
-		fs2 << "elements in mymap:" << '\n';
-		fs2 << "a => " << mymap_.find('a')->second << '\n';
-		fs2 << "c => " << mymap_.find('c')->second << '\n';
-		fs2 << "d => " << mymap_.find('d')->second << '\n' << std::flush;
-	
-		leak_check();
-	}
+    ft::queue<int> myints_;
+    fs2 << "0. size: " << myints_.size() << '\n';
 
-	judge();
+    for (int i = 0; i < 5; i++) myints_.push(i);
+    fs2 << "1. size: " << myints_.size() << '\n';
 
-	{
-		std::map<char,int> mymap;
-		char c;
+    myints_.pop();
+    fs2 << "2. size: " << myints_.size() << '\n' << std::flush;
+  }
 
-		mymap ['a']=101;
-		mymap ['c']=202;
-		mymap ['f']=303;
+  judge();
 
-		for (c='a'; c<'h'; c++)
-		{
-			fs1 << c;
-			if (mymap.count(c)>0)
-			fs1 << " is an element of mymap.\n";
-			else 
-			fs1 << " is not an element of mymap.\n";
-		}
-		fs1 << std::flush;
+  {
+    std::queue<int> myqueue;
 
+    myqueue.push(77);
+    myqueue.push(16);
 
-		ft::map<char,int> mymap_;
-		char c_;
+    myqueue.front() -= myqueue.back();  // 77-16=61
 
-		mymap_ ['a']=101;
-		mymap_ ['c']=202;
-		mymap_ ['f']=303;
+    fs1 << "myqueue.front() is now " << myqueue.front() << '\n' << std::flush;
 
-		for (c_='a'; c_<'h'; c_++)
-		{
-			fs2 << c_;
-			if (mymap_.count(c_)>0)
-			fs2 << " is an element of mymap.\n";
-			else 
-			fs2 << " is not an element of mymap.\n";
-		}
-		fs2 << std::flush;
-	
-		leak_check();
-	}
+    ft::queue<int> myqueue_;
 
-	judge();
+    myqueue_.push(77);
+    myqueue_.push(16);
 
-	{
-		std::map<char,int> mymap;
-		std::map<char,int>::iterator itlow,itup;
+    myqueue_.front() -= myqueue_.back();  // 77-16=61
 
-		mymap['a']=20;
-		mymap['b']=40;
-		mymap['c']=60;
-		mymap['d']=80;
-		mymap['e']=100;
+    fs2 << "myqueue.front() is now " << myqueue_.front() << '\n' << std::flush;
+  }
 
-		itlow=mymap.lower_bound ('b');  // itlow points to b
-		itup=mymap.upper_bound ('d');   // itup points to e (not d!)
+  judge();
 
-		mymap.erase(itlow,itup);        // erases [itlow,itup)
+  {
+    std::queue<int> myqueue;
 
-		// print content:
-		for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
-			fs1 << it->first << " => " << it->second << '\n' << std::flush;
-		
+    myqueue.push(12);
+    myqueue.push(75);  // this is now the back
 
-		ft::map<char,int> mymap_;
-		ft::map<char,int>::iterator itlow_,itup_;
+    myqueue.back() -= myqueue.front();
 
-		mymap_['a']=20;
-		mymap_['b']=40;
-		mymap_['c']=60;
-		mymap_['d']=80;
-		mymap_['e']=100;
+    fs1 << "myqueue.back() is now " << myqueue.back() << '\n' << std::flush;
 
-		itlow_=mymap_.lower_bound ('b');  // itlow_ points to b
-		itup_=mymap_.upper_bound ('d');   // itup_ points to e (not d!)
+    ft::queue<int> myqueue_;
 
-		mymap_.erase(itlow_,itup_);        // erases [itlow,itup_)
+    myqueue_.push(12);
+    myqueue_.push(75);  // this is now the back
 
-		// print content:
-		for (ft::map<char,int>::iterator it=mymap_.begin(); it!=mymap_.end(); ++it)
-			fs2 << it->first << " => " << it->second << '\n' << std::flush;
-	
-		leak_check();
-	}
+    myqueue_.back() -= myqueue_.front();
 
-	judge();
+    fs2 << "myqueue.back() is now " << myqueue_.back() << '\n' << std::flush;
+  }
 
-	{
-		std::map<char,int> mymap;
+  judge();
 
-		mymap['a']=10;
-		mymap['b']=20;
-		mymap['c']=30;
+  {
+    std::queue<int> myqueue;
 
-		std::pair<std::map<char,int>::iterator,std::map<char,int>::iterator> ret;
-		ret = mymap.equal_range('b');
+    fs1 << "Please enter some integers (enter 0 to end):\n";
 
-		fs1 << "lower bound points to: ";
-		fs1 << ret.first->first << " => " << ret.first->second << '\n';
+    for (int i = 0; i < 42; i++) myqueue.push(i);
 
-		fs1 << "upper bound points to: ";
-		fs1 << ret.second->first << " => " << ret.second->second << '\n' << std::flush;
+    fs1 << "myqueue contains: ";
+    while (!myqueue.empty()) {
+      fs1 << ' ' << myqueue.front();
+      myqueue.pop();
+    }
+    fs1 << '\n' << std::flush;
 
+    ft::queue<int> myqueue_;
 
-		ft::map<char,int> mymap_;
+    fs2 << "Please enter some integers (enter 0 to end):\n";
 
-		mymap_['a']=10;
-		mymap_['b']=20;
-		mymap_['c']=30;
+    for (int i = 0; i < 42; i++) myqueue_.push(i);
 
-		std::pair<ft::map<char,int>::iterator,ft::map<char,int>::iterator> ret_;
-		ret_ = mymap_.equal_range('b');
+    fs2 << "myqueue contains: ";
+    while (!myqueue_.empty()) {
+      fs2 << ' ' << myqueue_.front();
+      myqueue_.pop();
+    }
+    fs2 << '\n' << std::flush;
+  }
 
-		fs2 << "lower bound points to: ";
-		fs2 << ret_.first->first << " => " << ret_.first->second << '\n';
+  judge();
 
-		fs2 << "upper bound points to: ";
-		fs2 << ret_.second->first << " => " << ret_.second->second << '\n' << std::flush;
-	
-		leak_check();
-	}
+  {
+    std::queue<int> foo;  // three ints with a value of 100
+    for (int i = 0; i < 3; i++) foo.push(100);
+    std::queue<int> bar;  // two ints with a value of 200
+    for (int i = 0; i < 2; i++) bar.push(200);
+    if (foo == bar) fs1 << "foo and bar are equal\n";
+    if (foo != bar) fs1 << "foo and bar are not equal\n";
+    if (foo < bar) fs1 << "foo is less than bar\n";
+    if (foo > bar) fs1 << "foo is greater than bar\n";
+    if (foo <= bar) fs1 << "foo is less than or equal to bar\n";
+    if (foo >= bar)
+      fs1 << "foo is greater than or equal to bar\n" << std::flush;
 
-	judge();
+    ft::queue<int> foo_;  // three ints with a value of 100
+    for (int i = 0; i < 3; i++) foo_.push(100);
+    ft::queue<int> bar_;  // two ints with a value of 200
+    for (int i = 0; i < 2; i++) bar_.push(200);
+    if (foo_ == bar_) fs2 << "foo and bar are equal\n";
+    if (foo_ != bar_) fs2 << "foo and bar are not equal\n";
+    if (foo_ < bar_) fs2 << "foo is less than bar\n";
+    if (foo_ > bar_) fs2 << "foo is greater than bar\n";
+    if (foo_ <= bar_) fs2 << "foo is less than or equal to bar\n";
+    if (foo_ >= bar_)
+      fs2 << "foo is greater than or equal to bar\n" << std::flush;
+  }
 
-	std::cout << "\n=== STACK ===" << std::endl;
-	fs1 << "\n=== STACK ===" << std::endl;
-	fs2 << "\n=== STACK ===" << std::endl;
-	{
-		std::deque<int> mydeque (3,100);          // deque with 3 elements
-		std::vector<int> myvector (2,200);        // vector with 2 elements
+  judge();
 
-		std::stack<int> first;                    // empty stack
-		std::stack<int> second (mydeque);         // stack initialized to copy of deque
+  std::cout << std::endl;
+  fs1.close();
+  fs2.close();
+  system("rm 1 2");
 
-		std::stack<int,std::vector<int> > third;  // empty stack using vector
-		std::stack<int,std::vector<int> > fourth (myvector);
-
-		fs1 << "size of first: " << first.size() << '\n';
-		fs1 << "size of second: " << second.size() << '\n';
-		fs1 << "size of third: " << third.size() << '\n';
-		fs1 << "size of fourth: " << fourth.size() << '\n' << std::flush;
-
-
-		ft::vector<int> mydeque_ (3,100);          // deque with 3 elements
-		std::vector<int> myvector_ (2,200);        // vector with 2 elements
-
-		ft::stack<int> first_;                    // empty stack
-		ft::stack<int> second_ (mydeque_);         // stack initialized to copy of deque
-
-		ft::stack<int,std::vector<int> > third_;  // empty stack using vector
-		ft::stack<int,std::vector<int> > fourth_ (myvector_);
-
-		fs2 << "size of first: " << first_.size() << '\n';
-		fs2 << "size of second: " << second_.size() << '\n';
-		fs2 << "size of third: " << third_.size() << '\n';
-		fs2 << "size of fourth: " << fourth_.size() << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::stack<int> mystack;
-		int sum (0);
-
-		for (int i=1;i<=10;i++) mystack.push(i);
-
-		while (!mystack.empty())
-		{
-			sum += mystack.top();
-			mystack.pop();
-		}
-
-		fs1 << "total: " << sum << '\n' << std::flush;
-
-
-		ft::stack<int> mystack_;
-		int sum_ (0);
-
-		for (int i=1;i<=10;i++) mystack_.push(i);
-
-		while (!mystack_.empty())
-		{
-			sum_ += mystack_.top();
-			mystack_.pop();
-		}
-
-		fs2 << "total: " << sum_ << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::stack<int> myints;
-		fs1 << "0. size: " << myints.size() << '\n';
-
-		for (int i=0; i<5; i++) myints.push(i);
-		fs1 << "1. size: " << myints.size() << '\n';
-
-		myints.pop();
-		fs1 << "2. size: " << myints.size() << '\n' << std::flush;
-
-
-		ft::stack<int> myints_;
-		fs2 << "0. size: " << myints_.size() << '\n';
-
-		for (int i=0; i<5; i++) myints_.push(i);
-		fs2 << "1. size: " << myints_.size() << '\n';
-
-		myints_.pop();
-		fs2 << "2. size: " << myints_.size() << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::stack<int> mystack;
-
-		mystack.push(10);
-		mystack.push(20);
-
-		mystack.top() -= 5;
-
-		fs1 << "mystack.top() is now " << mystack.top() << '\n' << std::flush;
-
-
-		ft::stack<int> mystack_;
-
-		mystack_.push(10);
-		mystack_.push(20);
-
-		mystack_.top() -= 5;
-
-		fs2 << "mystack.top() is now " << mystack_.top() << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::stack<int> mystack;
-
-		for (int i=0; i<5; ++i) mystack.push(i);
-
-		fs1 << "Popping out elements...";
-		while (!mystack.empty())
-		{
-			fs1 << ' ' << mystack.top();
-			mystack.pop();
-		}
-		fs1 << '\n' << std::flush;
-
-
-		ft::stack<int> mystack_;
-
-		for (int i=0; i<5; ++i) mystack_.push(i);
-
-		fs2 << "Popping out elements...";
-		while (!mystack_.empty())
-		{
-			fs2 << ' ' << mystack_.top();
-			mystack_.pop();
-		}
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::stack<int> mystack;
-
-		for (int i=0; i<5; ++i) mystack.push(i);
-
-		fs1 << "Popping out elements...";
-		while (!mystack.empty())
-		{
-			fs1 << ' ' << mystack.top();
-			mystack.pop();
-		}
-		fs1 << '\n' << std::flush;
-
-
-		ft::stack<int> mystack_;
-
-		for (int i=0; i<5; ++i) mystack_.push(i);
-
-		fs2 << "Popping out elements...";
-		while (!mystack_.empty())
-		{
-			fs2 << ' ' << mystack_.top();
-			mystack_.pop();
-		}
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::stack<int> foo;   // three ints with a value of 100
-		for (int i = 0; i < 3; i++)foo.push(100);
-		std::stack<int> bar;   // two ints with a value of 200
-		for (int i = 0; i < 2; i++)bar.push(200);
-		if (foo==bar) fs1 << "foo and bar are equal\n";
-		if (foo!=bar) fs1 << "foo and bar are not equal\n";
-		if (foo< bar) fs1 << "foo is less than bar\n";
-		if (foo> bar) fs1 << "foo is greater than bar\n";
-		if (foo<=bar) fs1 << "foo is less than or equal to bar\n";
-		if (foo>=bar) fs1 << "foo is greater than or equal to bar\n" << std::flush;
-
-
-		ft::stack<int> foo_;   // three ints with a value of 100
-		for (int i = 0; i < 3; i++)foo_.push(100);
-		ft::stack<int> bar_;   // two ints with a value of 200
-		for (int i = 0; i < 2; i++)bar_.push(200);
-		if (foo_==bar_) fs2 << "foo and bar are equal\n";
-		if (foo_!=bar_) fs2 << "foo and bar are not equal\n";
-		if (foo_< bar_) fs2 << "foo is less than bar\n";
-		if (foo_> bar_) fs2 << "foo is greater than bar\n";
-		if (foo_<=bar_) fs2 << "foo is less than or equal to bar\n";
-		if (foo_>=bar_) fs2 << "foo is greater than or equal to bar\n" << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	std::cout << "\n=== QUEUE ===" << std::endl;
-	fs1 << "\n=== QUEUE ===" << std::endl;
-	fs2 << "\n=== QUEUE ===" << std::endl;
-	{
-		std::deque<int> mydeque (3,100);          // deque with 3 elements
-		std::vector<int> myvector (2,200);        // vector with 2 elements
-
-		std::queue<int> first;                    // empty queue
-		std::queue<int> second (mydeque);         // queue initialized to copy of deque
-
-		std::queue<int,std::vector<int> > third;  // empty queue using vector
-		std::queue<int,std::vector<int> > fourth (myvector);
-
-		fs1 << "size of first: " << first.size() << '\n';
-		fs1 << "size of second: " << second.size() << '\n';
-		fs1 << "size of third: " << third.size() << '\n';
-		fs1 << "size of fourth: " << fourth.size() << '\n' << std::flush;
-
-
-		ft::list<int> mydeque_ (3,100);          // deque with 3 elements
-		std::vector<int> myvector_ (2,200);        // vector with 2 elements
-
-		ft::queue<int> first_;                    // empty queue
-		ft::queue<int> second_ (mydeque_);         // queue initialized to copy of deque
-
-		ft::queue<int,std::vector<int> > third_;  // empty queue using vector
-		ft::queue<int,std::vector<int> > fourth_ (myvector_);
-
-		fs2 << "size of first: " << first_.size() << '\n';
-		fs2 << "size of second: " << second_.size() << '\n';
-		fs2 << "size of third: " << third_.size() << '\n';
-		fs2 << "size of fourth: " << fourth_.size() << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::queue<int> myqueue;
-		int sum (0);
-
-		for (int i=1;i<=10;i++) myqueue.push(i);
-
-		while (!myqueue.empty())
-		{
-			sum += myqueue.front();
-			myqueue.pop();
-		}
-
-		fs1 << "total: " << sum << '\n' << std::flush;
-
-
-		ft::queue<int> myqueue_;
-		int sum_ (0);
-
-		for (int i=1;i<=10;i++) myqueue_.push(i);
-
-		while (!myqueue_.empty())
-		{
-			sum_ += myqueue_.front();
-			myqueue_.pop();
-		}
-
-		fs2 << "total: " << sum_ << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::queue<int> myints;
-		fs1 << "0. size: " << myints.size() << '\n';
-
-		for (int i=0; i<5; i++) myints.push(i);
-		fs1 << "1. size: " << myints.size() << '\n';
-
-		myints.pop();
-		fs1 << "2. size: " << myints.size() << '\n' << std::flush;
-
-
-		ft::queue<int> myints_;
-		fs2 << "0. size: " << myints_.size() << '\n';
-
-		for (int i=0; i<5; i++) myints_.push(i);
-		fs2 << "1. size: " << myints_.size() << '\n';
-
-		myints_.pop();
-		fs2 << "2. size: " << myints_.size() << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::queue<int> myqueue;
-
-		myqueue.push(77);
-		myqueue.push(16);
-
-		myqueue.front() -= myqueue.back();    // 77-16=61
-
-		fs1 << "myqueue.front() is now " << myqueue.front() << '\n' << std::flush;
-
-
-		ft::queue<int> myqueue_;
-
-		myqueue_.push(77);
-		myqueue_.push(16);
-
-		myqueue_.front() -= myqueue_.back();    // 77-16=61
-
-		fs2<< "myqueue.front() is now " << myqueue_.front() << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::queue<int> myqueue;
-
-		myqueue.push(12);
-		myqueue.push(75);   // this is now the back
-
-		myqueue.back() -= myqueue.front();
-
-		fs1 << "myqueue.back() is now " << myqueue.back() << '\n' << std::flush;
-
-
-		ft::queue<int> myqueue_;
-
-		myqueue_.push(12);
-		myqueue_.push(75);   // this is now the back
-
-		myqueue_.back() -= myqueue_.front();
-
-		fs2 << "myqueue.back() is now " << myqueue_.back() << '\n' << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	{
-		std::queue<int> myqueue;
-
-		fs1 << "Please enter some integers (enter 0 to end):\n";
-
-		for (int i = 0; i < 42; i++)
-			myqueue.push(i);
-
-		fs1 << "myqueue contains: ";
-		while (!myqueue.empty())
-		{
-			fs1 << ' ' << myqueue.front();
-			myqueue.pop();
-		}
-		fs1 << '\n' << std::flush;
-
-
-		ft::queue<int> myqueue_;
-
-		fs2 << "Please enter some integers (enter 0 to end):\n";
-
-		for (int i = 0; i < 42; i++)
-			myqueue_.push(i);
-
-		fs2 << "myqueue contains: ";
-		while (!myqueue_.empty())
-		{
-			fs2 << ' ' << myqueue_.front();
-			myqueue_.pop();
-		}
-		fs2 << '\n' << std::flush;
-	
-		leak_check();
-	}
-	
-	judge();
-
-	{
-		std::queue<int> foo;   // three ints with a value of 100
-		for (int i = 0; i < 3; i++)foo.push(100);
-		std::queue<int> bar;   // two ints with a value of 200
-		for (int i = 0; i < 2; i++)bar.push(200);
-		if (foo==bar) fs1 << "foo and bar are equal\n";
-		if (foo!=bar) fs1 << "foo and bar are not equal\n";
-		if (foo< bar) fs1 << "foo is less than bar\n";
-		if (foo> bar) fs1 << "foo is greater than bar\n";
-		if (foo<=bar) fs1 << "foo is less than or equal to bar\n";
-		if (foo>=bar) fs1 << "foo is greater than or equal to bar\n" << std::flush;
-
-
-		ft::queue<int> foo_;   // three ints with a value of 100
-		for (int i = 0; i < 3; i++)foo_.push(100);
-		ft::queue<int> bar_;   // two ints with a value of 200
-		for (int i = 0; i < 2; i++)bar_.push(200);
-		if (foo_==bar_) fs2 << "foo and bar are equal\n";
-		if (foo_!=bar_) fs2 << "foo and bar are not equal\n";
-		if (foo_< bar_) fs2 << "foo is less than bar\n";
-		if (foo_> bar_) fs2 << "foo is greater than bar\n";
-		if (foo_<=bar_) fs2 << "foo is less than or equal to bar\n";
-		if (foo_>=bar_) fs2 << "foo is greater than or equal to bar\n" << std::flush;
-	
-		leak_check();
-	}
-
-	judge();
-
-	std::cout << std::endl;
-	fs1.close();
-	fs2.close();
-	system("rm 1 2");
-	
-    return(EXIT_SUCCESS);
+  return (EXIT_SUCCESS);
 }
